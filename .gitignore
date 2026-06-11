@@ -1,0 +1,9 @@
+node_modules/
+dist/
+backend/bin/
+*.db
+.env
+.DS_Store
+.loki/
+/data/
+backend/data/uploads/

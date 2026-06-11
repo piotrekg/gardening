@@ -1,0 +1,25 @@
+# PlantDiary systemd unit.
+# NOT ACTIVE on ds9 (no passwordless sudo to install system units); the app runs
+# under docker compose with restart=unless-stopped instead. Kept for a future
+# standalone deployment per the original spec.
+[Unit]
+Description=PlantDiary Backend
+After=network.target
+
+[Service]
+Type=simple
+User=piotrek
+WorkingDirectory=/home/piotrek/srv/rpi-backup/private/plantdiary
+ExecStart=/home/piotrek/srv/rpi-backup/private/plantdiary/bin/plantdiary-server
+Restart=always
+RestartSec=5
+Environment=GIN_MODE=release
+Environment=PORT=8080
+Environment=DB_PATH=/home/piotrek/srv/rpi-backup/private/plantdiary/data/plantdiary.db
+Environment=UPLOAD_PATH=/home/piotrek/srv/rpi-backup/private/plantdiary/data/uploads
+Environment=FRONTEND_DIST=/home/piotrek/srv/rpi-backup/private/plantdiary/frontend
+# Set the real secret in a drop-in or EnvironmentFile, never in this unit file.
+EnvironmentFile=/home/piotrek/srv/rpi-backup/private/plantdiary/.env
+
+[Install]
+WantedBy=multi-user.target

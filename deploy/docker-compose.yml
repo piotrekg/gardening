@@ -1,0 +1,35 @@
+# PlantDiary deployment for ds9 (192.168.50.11).
+# The host runs a Traefik instance (container "reverse-proxy", host network,
+# docker provider with exposedbydefault=false) that owns ports 80/8080, and the
+# deploy user has no sudo — so the app ships as a compose service with Traefik
+# labels instead of the nginx/systemd path (see deploy/manual-deploy.sh for that).
+#
+# Routes:
+#   http://plantdiary.local/      (Pi-hole local DNS entry, priority 10)
+#   http://192.168.50.11/         (bare-IP fallback, priority 1 so it never
+#                                  shadows the other *.local services)
+services:
+  plantdiary:
+    build: .
+    container_name: plantdiary
+    restart: unless-stopped
+    environment:
+      - GIN_MODE=release
+      - PORT=8080
+      - DB_PATH=/data/plantdiary.db
+      - UPLOAD_PATH=/data/uploads
+      - FRONTEND_DIST=/app/frontend
+      - JWT_SECRET=${JWT_SECRET:?set JWT_SECRET in .env}
+    volumes:
+      - ./data:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.plantdiary.loadbalancer.server.port=8080
+      - traefik.http.routers.plantdiary.service=plantdiary
+      - traefik.http.routers.plantdiary.rule=Host(`plantdiary.local`)
+      - traefik.http.routers.plantdiary.entrypoints=web
+      - traefik.http.routers.plantdiary.priority=10
+      - traefik.http.routers.plantdiary-ip.service=plantdiary
+      - traefik.http.routers.plantdiary-ip.rule=Host(`192.168.50.11`)
+      - traefik.http.routers.plantdiary-ip.entrypoints=web
+      - traefik.http.routers.plantdiary-ip.priority=1
