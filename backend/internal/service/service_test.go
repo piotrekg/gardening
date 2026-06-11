@@ -94,6 +94,56 @@ func TestComputeCareStatus(t *testing.T) {
 	}
 }
 
+func TestCustomFrequencyOverride(t *testing.T) {
+	lib := testLibrary(t)
+	now := time.Now()
+	watered := now.AddDate(0, 0, -4) // 4 days ago
+	intp := func(v int) *int { return &v }
+
+	// Library tomato waters every 2 days → 4 days ago is overdue.
+	id := "tomato-beefsteak"
+	base := &models.PlantInstance{PlantLibraryID: &id, LastWateredAt: &watered}
+	if st := ComputeCareStatus(base, lib); st.Water != "overdue" {
+		t.Errorf("library freq: water = %q, want overdue", st.Water)
+	}
+
+	// Override to every 10 days → 4 days ago is ok.
+	withOverride := &models.PlantInstance{PlantLibraryID: &id, LastWateredAt: &watered,
+		CustomWaterFrequencyDays: intp(10)}
+	if st := ComputeCareStatus(withOverride, lib); st.Water != "ok" {
+		t.Errorf("override 10d: water = %q, want ok", st.Water)
+	}
+
+	// Custom plant (no library) with an override gets a real status instead of unknown.
+	custom := &models.PlantInstance{LastWateredAt: &watered, CustomWaterFrequencyDays: intp(3)}
+	if st := ComputeCareStatus(custom, lib); st.Water != "overdue" {
+		t.Errorf("custom plant + override 3d: water = %q, want overdue", st.Water)
+	}
+	// ...and without one it stays unknown.
+	bare := &models.PlantInstance{LastWateredAt: &watered}
+	if st := ComputeCareStatus(bare, lib); st.Water != "unknown" {
+		t.Errorf("custom plant no override: water = %q, want unknown", st.Water)
+	}
+}
+
+func TestApplyCustomFrequency(t *testing.T) {
+	intp := func(v int) *int { return &v }
+	var dst *int
+
+	if err := applyCustomFrequency(&dst, nil); err != nil || dst != nil {
+		t.Errorf("nil input should leave dst unchanged, got %v err=%v", dst, err)
+	}
+	if err := applyCustomFrequency(&dst, intp(7)); err != nil || dst == nil || *dst != 7 {
+		t.Errorf("value 7 should set dst=7, got %v err=%v", dst, err)
+	}
+	if err := applyCustomFrequency(&dst, intp(0)); err != nil || dst != nil {
+		t.Errorf("value 0 should clear dst, got %v err=%v", dst, err)
+	}
+	if err := applyCustomFrequency(&dst, intp(9999)); err == nil {
+		t.Error("out-of-range value should error")
+	}
+}
+
 func TestLibrarySearch(t *testing.T) {
 	lib := testLibrary(t)
 

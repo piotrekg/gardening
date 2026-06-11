@@ -35,15 +35,18 @@ Catalog (`gbif`) plants have no care schedule: numeric care fields are `0` and m
 - `GET /api/plants/library/:id/companions` → `{companions: [plant...], antagonists: [plant...]}` (full library objects; unresolvable slugs omitted)
 
 ## Plant instances
-Instance object: `{id, garden_id, user_id, plant_library_id, custom_name, display_name, planted_date, quantity, location_notes, status, last_watered_at, last_fertilized_at, care_status, library, created_at, updated_at}`
+Instance object: `{id, garden_id, user_id, plant_library_id, custom_name, display_name, planted_date, quantity, location_notes, status, last_watered_at, last_fertilized_at, custom_water_frequency_days, custom_fertilize_frequency_days, effective_water_frequency_days, effective_fertilize_frequency_days, care_status, library, created_at, updated_at}`
 - `display_name`: custom_name if set, else library common_name_pl.
 - `status` ∈ `active|harvested|removed|dead`.
-- `care_status`: `{water: "overdue|due_today|ok|unknown", fertilize: same}` — unknown when no library entry / never watered+no planted date.
+- `care_status`: `{water: "overdue|due_today|ok|unknown", fertilize: same}` — unknown when no effective frequency / no reference date.
+- `custom_water_frequency_days` / `custom_fertilize_frequency_days`: per-instance overrides (null = use library). Let catalog/custom plants (no library schedule) get a real care status.
+- `effective_water_frequency_days` / `effective_fertilize_frequency_days`: frequency actually used for status (override if set, else library; `0` = unknown).
 - `library`: embedded library plant or null.
-- `POST /api/gardens/:gardenId/plants` `{plant_library_id?, custom_name?, planted_date?, location_notes?, quantity?}` (at least one of plant_library_id/custom_name) → 201 `{plant}`
+- `POST /api/gardens/:gardenId/plants` `{plant_library_id?, custom_name?, planted_date?, location_notes?, quantity?, custom_water_frequency_days?, custom_fertilize_frequency_days?}` (at least one of plant_library_id/custom_name) → 201 `{plant}`
 - `GET /api/gardens/:gardenId/plants` → `{plants: [...]}`
 - `GET /api/gardens/:gardenId/plants/:id` → `{plant, recent_care: [entry...]}` (last 10)
-- `PUT /api/gardens/:gardenId/plants/:id` `{custom_name?, location_notes?, quantity?, status?, planted_date?}` → `{plant}`
+- `PUT /api/gardens/:gardenId/plants/:id` `{custom_name?, location_notes?, quantity?, status?, planted_date?, custom_water_frequency_days?, custom_fertilize_frequency_days?}` → `{plant}`
+  - care frequency fields: value 1–365 sets the override, `0` clears it back to the library default, omitted leaves it unchanged.
 - `DELETE /api/gardens/:gardenId/plants/:id` → 204
 
 ## Care log

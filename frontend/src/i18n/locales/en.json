@@ -15,6 +15,20 @@
     "everyDays_one": "every {{count}} day",
     "everyDays_other": "every {{count}} days"
   },
+  "plant": {
+    "customSchedule": {
+      "sectionTitle": "Set a custom schedule",
+      "sectionHint": "This plant has no care schedule. Set your own intervals to track watering and fertilizing.",
+      "waterLabel": "Water every (days)",
+      "fertilizeLabel": "Fertilize every (days)",
+      "rangeInvalid": "Interval must be a whole number between 1 and 365.",
+      "waterEffective": "💧 {{schedule}}",
+      "fertilizeEffective": "🌾 {{schedule}}",
+      "scheduleTitle": "Care schedule",
+      "customBadge": "custom",
+      "unknownHint": "No schedule yet — set your own watering and fertilizing intervals via Edit."
+    }
+  },
   "errors": {
     "generic": "Something went wrong. Please try again.",
     "network": "Cannot reach the server. Please check your connection."

@@ -123,12 +123,10 @@ func (s *DashboardService) Build(userID string) (*Dashboard, error) {
 
 // maybeNotify creates an overdue_water notification when a plant has gone more
 // than 2x its watering frequency without water, at most once per plant per day.
+// The frequency is the effective one (per-instance override or library value).
 func (s *DashboardService) maybeNotify(userID string, p *models.PlantInstance, now time.Time) {
-	if p.PlantLibraryID == nil {
-		return
-	}
-	lp, ok := s.lib.Get(*p.PlantLibraryID)
-	if !ok || lp.WaterFrequencyDays <= 0 {
+	waterFreq, _ := effectiveFrequencies(p, s.lib)
+	if waterFreq <= 0 {
 		return
 	}
 	ref := p.LastWateredAt
@@ -138,7 +136,7 @@ func (s *DashboardService) maybeNotify(userID string, p *models.PlantInstance, n
 	if ref == nil {
 		return
 	}
-	if now.Sub(*ref) <= time.Duration(2*lp.WaterFrequencyDays)*24*time.Hour {
+	if now.Sub(*ref) <= time.Duration(2*waterFreq)*24*time.Hour {
 		return
 	}
 	dayStart := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
@@ -153,6 +151,6 @@ func (s *DashboardService) maybeNotify(userID string, p *models.PlantInstance, n
 		UserID:          userID,
 		PlantInstanceID: &p.ID,
 		Type:            "overdue_water",
-		Message:         fmt.Sprintf("%s has not been watered for %d days (needs water every %d days)", p.DisplayName, days, lp.WaterFrequencyDays),
+		Message:         fmt.Sprintf("%s has not been watered for %d days (needs water every %d days)", p.DisplayName, days, waterFreq),
 	})
 }

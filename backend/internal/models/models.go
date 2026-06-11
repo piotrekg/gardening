@@ -52,6 +52,9 @@ type PlantInstance struct {
 	Status           string         `json:"status"`
 	LastWateredAt    *time.Time     `json:"last_watered_at"`
 	LastFertilizedAt *time.Time     `json:"last_fertilized_at"`
+	// Per-instance overrides of the library care frequencies (nil = use library).
+	CustomWaterFrequencyDays     *int      `json:"custom_water_frequency_days"`
+	CustomFertilizeFrequencyDays *int      `json:"custom_fertilize_frequency_days"`
 	CreatedAt        time.Time      `json:"created_at"`
 	UpdatedAt        time.Time      `json:"updated_at"`
 	DeletedAt        gorm.DeletedAt `gorm:"index" json:"-"`
@@ -60,6 +63,9 @@ type PlantInstance struct {
 	CareStatus  *CareStatus `gorm:"-" json:"care_status,omitempty"`
 	Library     any         `gorm:"-" json:"library,omitempty"`
 	GardenName  string      `gorm:"-" json:"garden_name,omitempty"`
+	// Effective frequencies actually used for status (custom override or library); 0 = unknown.
+	EffectiveWaterFrequencyDays     int `gorm:"-" json:"effective_water_frequency_days"`
+	EffectiveFertilizeFrequencyDays int `gorm:"-" json:"effective_fertilize_frequency_days"`
 }
 
 func (PlantInstance) TableName() string { return "plant_instances" }

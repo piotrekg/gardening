@@ -61,8 +61,32 @@ function EditPlantModal({
   const [locationNotes, setLocationNotes] = useState(plant.location_notes ?? '');
   const [quantity, setQuantity] = useState(String(plant.quantity));
   const [plantedDate, setPlantedDate] = useState(plant.planted_date?.slice(0, 10) ?? '');
+  const [customWater, setCustomWater] = useState(
+    plant.custom_water_frequency_days !== null ? String(plant.custom_water_frequency_days) : '',
+  );
+  const [customFertilize, setCustomFertilize] = useState(
+    plant.custom_fertilize_frequency_days !== null
+      ? String(plant.custom_fertilize_frequency_days)
+      : '',
+  );
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Empty input → 0 (clear override). Positive number → set. Invalid → null (block submit).
+  const parseFrequency = (value: string): number | null => {
+    const trimmed = value.trim();
+    if (trimmed === '') return 0;
+    const n = Number(trimmed);
+    if (!Number.isInteger(n) || n < 1 || n > 365) return null;
+    return n;
+  };
+
+  const waterPlaceholder =
+    plant.effective_water_frequency_days > 0 ? String(plant.effective_water_frequency_days) : '—';
+  const fertilizePlaceholder =
+    plant.effective_fertilize_frequency_days > 0
+      ? String(plant.effective_fertilize_frequency_days)
+      : '—';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,11 +95,19 @@ function EditPlantModal({
       setError(t('plantDetail.quantityInvalid'));
       return;
     }
+    const water = parseFrequency(customWater);
+    const fertilize = parseFrequency(customFertilize);
+    if (water === null || fertilize === null) {
+      setError(t('plant.customSchedule.rangeInvalid'));
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
       const updated = await updateGardenPlant(plant.garden_id, plant.id, {
         quantity: qty,
+        custom_water_frequency_days: water,
+        custom_fertilize_frequency_days: fertilize,
         ...(customName.trim() ? { custom_name: customName.trim() } : {}),
         ...(locationNotes.trim() ? { location_notes: locationNotes.trim() } : {}),
         ...(plantedDate ? { planted_date: plantedDate } : {}),
@@ -148,6 +180,40 @@ function EditPlantModal({
               value={plantedDate}
               onChange={(e) => setPlantedDate(e.target.value)}
               className="input-field"
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label htmlFor="ep-water" className="mb-1 block text-sm font-medium text-gray-700">
+              {t('plant.customSchedule.waterLabel')}{' '}
+              <span className="font-normal text-gray-400">({t('common.optional')})</span>
+            </label>
+            <input
+              id="ep-water"
+              type="number"
+              min={1}
+              max={365}
+              value={customWater}
+              onChange={(e) => setCustomWater(e.target.value)}
+              className="input-field"
+              placeholder={waterPlaceholder}
+            />
+          </div>
+          <div>
+            <label htmlFor="ep-fertilize" className="mb-1 block text-sm font-medium text-gray-700">
+              {t('plant.customSchedule.fertilizeLabel')}{' '}
+              <span className="font-normal text-gray-400">({t('common.optional')})</span>
+            </label>
+            <input
+              id="ep-fertilize"
+              type="number"
+              min={1}
+              max={365}
+              value={customFertilize}
+              onChange={(e) => setCustomFertilize(e.target.value)}
+              className="input-field"
+              placeholder={fertilizePlaceholder}
             />
           </div>
         </div>
@@ -431,6 +497,43 @@ export function PlantDetailPage() {
               <StatusBadge status={plant.care_status.water} label={t('status.waterLabel')} />
               <StatusBadge status={plant.care_status.fertilize} label={t('status.feedLabel')} />
             </div>
+            {(plant.effective_water_frequency_days > 0 ||
+              plant.effective_fertilize_frequency_days > 0) && (
+              <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                {plant.effective_water_frequency_days > 0 && (
+                  <span className="inline-flex items-center gap-1">
+                    {t('plant.customSchedule.waterEffective', {
+                      schedule: t('common.everyDays', {
+                        count: plant.effective_water_frequency_days,
+                      }),
+                    })}
+                    {plant.custom_water_frequency_days !== null && (
+                      <span className="rounded-full bg-accent-light px-1.5 py-0.5 text-[10px] font-semibold text-primary-dark">
+                        {t('plant.customSchedule.customBadge')}
+                      </span>
+                    )}
+                  </span>
+                )}
+                {plant.effective_fertilize_frequency_days > 0 && (
+                  <span className="inline-flex items-center gap-1">
+                    {t('plant.customSchedule.fertilizeEffective', {
+                      schedule: t('common.everyDays', {
+                        count: plant.effective_fertilize_frequency_days,
+                      }),
+                    })}
+                    {plant.custom_fertilize_frequency_days !== null && (
+                      <span className="rounded-full bg-accent-light px-1.5 py-0.5 text-[10px] font-semibold text-primary-dark">
+                        {t('plant.customSchedule.customBadge')}
+                      </span>
+                    )}
+                  </span>
+                )}
+              </div>
+            )}
+            {plant.effective_water_frequency_days === 0 &&
+              plant.effective_fertilize_frequency_days === 0 && (
+                <p className="mt-2 text-xs text-gray-400">{t('plant.customSchedule.unknownHint')}</p>
+              )}
           </div>
           <div className="flex shrink-0 flex-wrap items-center gap-2">
             <label htmlFor="pd-status" className="sr-only">

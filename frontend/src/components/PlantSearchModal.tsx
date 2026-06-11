@@ -23,8 +23,17 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
   const [quantity, setQuantity] = useState('1');
   const [plantedDate, setPlantedDate] = useState('');
   const [customName, setCustomName] = useState('');
+  const [customWater, setCustomWater] = useState('');
+  const [customFertilize, setCustomFertilize] = useState('');
+  const [scheduleOpen, setScheduleOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Catalog/custom plants have no schedule; auto-reveal the custom inputs for them.
+  const hasSchedule = !!(selected && selected.water_frequency_days);
+  useEffect(() => {
+    if (selected) setScheduleOpen(!selected.water_frequency_days);
+  }, [selected]);
 
   // Debounced library search.
   useEffect(() => {
@@ -56,6 +65,20 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
       setError(t('plantSearch.quantityInvalid'));
       return;
     }
+    // Empty → omit (no override at creation). Positive 1–365 → set. Anything else → invalid.
+    const parseFrequency = (value: string): number | 'empty' | 'invalid' => {
+      const trimmed = value.trim();
+      if (trimmed === '') return 'empty';
+      const n = Number(trimmed);
+      if (!Number.isInteger(n) || n < 1 || n > 365) return 'invalid';
+      return n;
+    };
+    const water = parseFrequency(customWater);
+    const fertilize = parseFrequency(customFertilize);
+    if (water === 'invalid' || fertilize === 'invalid') {
+      setError(t('plant.customSchedule.rangeInvalid'));
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -64,6 +87,8 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
         quantity: qty,
         ...(plantedDate ? { planted_date: plantedDate } : {}),
         ...(customName.trim() ? { custom_name: customName.trim() } : {}),
+        ...(typeof water === 'number' ? { custom_water_frequency_days: water } : {}),
+        ...(typeof fertilize === 'number' ? { custom_fertilize_frequency_days: fertilize } : {}),
       });
       onAdded(plant);
       onClose();
@@ -177,6 +202,66 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
               placeholder={libName(selected)}
               className="input-field"
             />
+          </div>
+          <div className="rounded-lg border border-gray-100 p-3">
+            {hasSchedule && !scheduleOpen ? (
+              <button
+                type="button"
+                onClick={() => setScheduleOpen(true)}
+                className="text-sm font-medium text-primary hover:underline"
+              >
+                + {t('plant.customSchedule.sectionTitle')}
+              </button>
+            ) : (
+              <>
+                <p className="mb-2 text-sm font-medium text-gray-700">
+                  {t('plant.customSchedule.sectionTitle')}
+                </p>
+                {!hasSchedule && (
+                  <p className="mb-3 text-xs text-gray-400">
+                    {t('plant.customSchedule.sectionHint')}
+                  </p>
+                )}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label
+                      htmlFor="psm-water"
+                      className="mb-1 block text-sm font-medium text-gray-700"
+                    >
+                      {t('plant.customSchedule.waterLabel')}{' '}
+                      <span className="font-normal text-gray-400">({t('common.optional')})</span>
+                    </label>
+                    <input
+                      id="psm-water"
+                      type="number"
+                      min={1}
+                      max={365}
+                      value={customWater}
+                      onChange={(e) => setCustomWater(e.target.value)}
+                      className="input-field"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="psm-fertilize"
+                      className="mb-1 block text-sm font-medium text-gray-700"
+                    >
+                      {t('plant.customSchedule.fertilizeLabel')}{' '}
+                      <span className="font-normal text-gray-400">({t('common.optional')})</span>
+                    </label>
+                    <input
+                      id="psm-fertilize"
+                      type="number"
+                      min={1}
+                      max={365}
+                      value={customFertilize}
+                      onChange={(e) => setCustomFertilize(e.target.value)}
+                      className="input-field"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="flex justify-end gap-2 pt-1">

@@ -19,6 +19,20 @@
     "everyDays_many": "co {{count}} dni",
     "everyDays_other": "co {{count}} dnia"
   },
+  "plant": {
+    "customSchedule": {
+      "sectionTitle": "Ustaw własny harmonogram",
+      "sectionHint": "Ta roślina nie ma harmonogramu pielęgnacji. Ustaw własne odstępy, aby śledzić podlewanie i nawożenie.",
+      "waterLabel": "Podlewanie co (dni)",
+      "fertilizeLabel": "Nawożenie co (dni)",
+      "rangeInvalid": "Odstęp musi być liczbą całkowitą od 1 do 365.",
+      "waterEffective": "💧 {{schedule}}",
+      "fertilizeEffective": "🌾 {{schedule}}",
+      "scheduleTitle": "Harmonogram pielęgnacji",
+      "customBadge": "własny",
+      "unknownHint": "Brak harmonogramu — ustaw własne odstępy podlewania i nawożenia przez „Edytuj”."
+    }
+  },
   "errors": {
     "generic": "Coś poszło nie tak. Spróbuj ponownie.",
     "network": "Brak połączenia z serwerem. Sprawdź połączenie z internetem."

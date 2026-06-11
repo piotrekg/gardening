@@ -18,6 +18,30 @@ type PlantInput struct {
 	LocationNotes  *string    `json:"location_notes"`
 	Quantity       *int       `json:"quantity"`
 	Status         *string    `json:"status"`
+	// Care frequency overrides. Value ≥1 sets the override, 0 clears it back to the
+	// library default, nil (omitted) leaves it unchanged.
+	CustomWaterFrequencyDays     *int `json:"custom_water_frequency_days"`
+	CustomFertilizeFrequencyDays *int `json:"custom_fertilize_frequency_days"`
+}
+
+const maxCareFrequencyDays = 365
+
+// effectiveFrequencies returns the watering/fertilizing intervals actually used
+// for status: a per-instance override when present, otherwise the library value.
+func effectiveFrequencies(p *models.PlantInstance, lib *plantlib.Library) (water, fertilize int) {
+	if p.PlantLibraryID != nil {
+		if libPlant, ok := lib.Get(*p.PlantLibraryID); ok {
+			water = libPlant.WaterFrequencyDays
+			fertilize = libPlant.FertilizeFrequencyDays
+		}
+	}
+	if p.CustomWaterFrequencyDays != nil {
+		water = *p.CustomWaterFrequencyDays
+	}
+	if p.CustomFertilizeFrequencyDays != nil {
+		fertilize = *p.CustomFertilizeFrequencyDays
+	}
+	return water, fertilize
 }
 
 type PlantService struct {
@@ -33,17 +57,11 @@ func NewPlantService(repo *repository.Repository, lib *plantlib.Library) *PlantS
 // the library frequencies. The planted date seeds the schedule for plants that
 // have never been watered/fertilized; without any reference point the status is unknown.
 func ComputeCareStatus(p *models.PlantInstance, lib *plantlib.Library) models.CareStatus {
-	st := models.CareStatus{Water: "unknown", Fertilize: "unknown"}
-	if p.PlantLibraryID == nil {
-		return st
+	water, fertilize := effectiveFrequencies(p, lib)
+	return models.CareStatus{
+		Water:     scheduleStatus(p.LastWateredAt, p.PlantedDate, water),
+		Fertilize: scheduleStatus(p.LastFertilizedAt, p.PlantedDate, fertilize),
 	}
-	libPlant, ok := lib.Get(*p.PlantLibraryID)
-	if !ok {
-		return st
-	}
-	st.Water = scheduleStatus(p.LastWateredAt, p.PlantedDate, libPlant.WaterFrequencyDays)
-	st.Fertilize = scheduleStatus(p.LastFertilizedAt, p.PlantedDate, libPlant.FertilizeFrequencyDays)
-	return st
 }
 
 func scheduleStatus(last, planted *time.Time, freqDays int) string {
@@ -86,6 +104,25 @@ func (s *PlantService) Enrich(p *models.PlantInstance) {
 	}
 	st := ComputeCareStatus(p, s.lib)
 	p.CareStatus = &st
+	p.EffectiveWaterFrequencyDays, p.EffectiveFertilizeFrequencyDays = effectiveFrequencies(p, s.lib)
+}
+
+// applyCustomFrequency maps an input override onto a stored pointer: ≥1 sets it,
+// 0 clears it back to the library default, nil leaves it unchanged.
+func applyCustomFrequency(dst **int, in *int) error {
+	if in == nil {
+		return nil
+	}
+	if *in == 0 {
+		*dst = nil
+		return nil
+	}
+	if *in < 1 || *in > maxCareFrequencyDays {
+		return Invalid("care frequency must be between 1 and %d days", maxCareFrequencyDays)
+	}
+	v := *in
+	*dst = &v
+	return nil
 }
 
 func (s *PlantService) Add(userID, gardenID string, in PlantInput) (*models.PlantInstance, error) {
@@ -125,6 +162,12 @@ func (s *PlantService) Add(userID, gardenID string, in PlantInput) (*models.Plan
 			return nil, Invalid("quantity must be at least 1")
 		}
 		p.Quantity = *in.Quantity
+	}
+	if err := applyCustomFrequency(&p.CustomWaterFrequencyDays, in.CustomWaterFrequencyDays); err != nil {
+		return nil, err
+	}
+	if err := applyCustomFrequency(&p.CustomFertilizeFrequencyDays, in.CustomFertilizeFrequencyDays); err != nil {
+		return nil, err
 	}
 	if err := s.repo.CreatePlantInstance(p); err != nil {
 		return nil, err
@@ -190,6 +233,12 @@ func (s *PlantService) Update(userID, gardenID, id string, in PlantInput) (*mode
 	}
 	if in.PlantedDate != nil {
 		p.PlantedDate = in.PlantedDate
+	}
+	if err := applyCustomFrequency(&p.CustomWaterFrequencyDays, in.CustomWaterFrequencyDays); err != nil {
+		return nil, err
+	}
+	if err := applyCustomFrequency(&p.CustomFertilizeFrequencyDays, in.CustomFertilizeFrequencyDays); err != nil {
+		return nil, err
 	}
 	if err := s.repo.SavePlantInstance(p); err != nil {
 		return nil, err

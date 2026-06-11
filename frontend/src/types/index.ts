@@ -188,6 +188,14 @@ export interface PlantInstance {
   last_watered_at: string | null;
   last_fertilized_at: string | null;
   care_status: CareStatus;
+  /** Per-instance watering override in days (null = use library default). */
+  custom_water_frequency_days: number | null;
+  /** Per-instance fertilizing override in days (null = use library default). */
+  custom_fertilize_frequency_days: number | null;
+  /** Frequency actually used for status (override if set, else library; 0 = unknown). */
+  effective_water_frequency_days: number;
+  /** Frequency actually used for status (override if set, else library; 0 = unknown). */
+  effective_fertilize_frequency_days: number;
   library: LibraryPlant | null;
   created_at: string;
   updated_at: string;
@@ -204,6 +212,10 @@ export interface CreatePlantInstanceRequest {
   planted_date?: string;
   location_notes?: string;
   quantity?: number;
+  /** 1–365 sets a per-instance watering override; 0 clears it. */
+  custom_water_frequency_days?: number;
+  /** 1–365 sets a per-instance fertilizing override; 0 clears it. */
+  custom_fertilize_frequency_days?: number;
 }
 
 export interface UpdatePlantInstanceRequest {
@@ -212,6 +224,10 @@ export interface UpdatePlantInstanceRequest {
   quantity?: number;
   status?: PlantStatus;
   planted_date?: string;
+  /** 1–365 sets a per-instance watering override; 0 clears it; omit to leave unchanged. */
+  custom_water_frequency_days?: number;
+  /** 1–365 sets a per-instance fertilizing override; 0 clears it; omit to leave unchanged. */
+  custom_fertilize_frequency_days?: number;
 }
 
 export interface PlantInstanceResponse {

@@ -1,0 +1,2 @@
+ALTER TABLE plant_instances DROP COLUMN custom_fertilize_frequency_days;
+ALTER TABLE plant_instances DROP COLUMN custom_water_frequency_days;
