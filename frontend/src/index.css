@@ -1,0 +1,38 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #2d6a4f;
+  --color-primary-dark: #1b4332;
+  --color-primary-light: #d8f3dc;
+  --color-accent: #74c69d;
+  --color-accent-light: #b7e4c7;
+  --color-surface: #f8f9fa;
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+
+  --shadow-card: 0 1px 3px 0 rgb(27 67 50 / 0.08), 0 1px 2px -1px rgb(27 67 50 / 0.06);
+  --shadow-card-hover: 0 6px 16px -4px rgb(27 67 50 / 0.14), 0 2px 4px -2px rgb(27 67 50 / 0.08);
+}
+
+body {
+  @apply bg-surface text-gray-800 antialiased;
+}
+
+/* Reusable composites */
+@utility card {
+  @apply rounded-xl bg-white shadow-card;
+}
+
+@utility input-field {
+  @apply w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 placeholder-gray-400 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20;
+}
+
+@utility btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+@utility btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-60;
+}
