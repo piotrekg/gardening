@@ -32,14 +32,18 @@ rsync -az --delete \
   --exclude .env \
   "$STAGE/" "$HOST:$APP_DIR/"
 
-echo "==> Ensuring JWT secret exists (generated once, never overwritten)"
-ssh "$HOST" "cd $APP_DIR && [ -f .env ] || echo \"JWT_SECRET=\$(head -c32 /dev/urandom | base64 | tr -d '=+/')\" > .env; chmod 600 .env"
+echo "==> Ensuring secrets exist (generated once, never overwritten)"
+ssh "$HOST" "cd $APP_DIR && {
+  [ -f .env ] && grep -q '^JWT_SECRET=' .env || echo \"JWT_SECRET=\$(head -c32 /dev/urandom | base64 | tr -d '=+/')\" >> .env
+  grep -q '^POSTGRES_PASSWORD=' .env || echo \"POSTGRES_PASSWORD=\$(head -c24 /dev/urandom | base64 | tr -d '=+/')\" >> .env
+  chmod 600 .env
+}"
 
-echo "==> Building image and starting service"
+echo "==> Building image and starting services (db + app)"
 ssh "$HOST" "cd $APP_DIR && docker compose build --quiet && docker compose up -d"
 
 echo "==> Waiting for health"
-for i in $(seq 1 20); do
+for i in $(seq 1 40); do
   if ssh "$HOST" "curl -fsS -H 'Host: plantdiary.local' http://localhost/api/health" 2>/dev/null; then
     echo; echo "==> Deployed and healthy"
     exit 0

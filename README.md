@@ -9,12 +9,12 @@ gardens (climate zone 6a).
 
 | Layer | Tech |
 |---|---|
-| Backend | Go · Gin · GORM · SQLite (pure-Go, PostgreSQL-ready schema) |
+| Backend | Go · Gin · GORM · PostgreSQL 17 (pure-Go pgx driver) |
 | Frontend | React 18 · TypeScript · Vite · TailwindCSS v4 · Zustand · Axios |
 | Auth | JWT (15 min access / 7 day refresh with rotation) · bcrypt |
-| Plant data | Curated `plants.json` (86 species, full care data) + GBIF `catalog.json` (~5.9k European species), both embedded & cached in memory |
-| Migrations | Embedded sequential SQL runner (golang-migrate file/table convention) |
-| Deployment | Docker Compose behind the host's Traefik · systemd/nginx configs included |
+| Plant data | Curated JSON (570 plants, full care data) + GBIF catalog (~13.3k European species), seeded into the `library_plants` Postgres table; search served by SQL, hot per-plant lookups by an in-memory cache |
+| Migrations | Embedded sequential SQL runner (golang-migrate file/table convention), PostgreSQL dialect |
+| Deployment | Docker Compose (app + dedicated Postgres) behind the host's Traefik · systemd/nginx configs included |
 
 ## Features
 

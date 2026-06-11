@@ -1,5 +1,9 @@
-// Package plantlib loads the bundled plant library into an in-memory cache
-// and answers all read queries against it. No external API calls at runtime.
+// Package plantlib is the plant-library access layer. In production it is backed
+// by the PostgreSQL library_plants table (seeded from the bundled JSON sources)
+// and serves search/list/count via SQL; a small in-memory cache holds every row
+// for the hot per-plant lookups (Get/Resolve/month filters). With a nil db it
+// falls back to a pure in-memory implementation, used by unit tests.
+// No external API calls at runtime.
 package plantlib
 
 import (
@@ -9,6 +13,8 @@ import (
 	"sort"
 	"strings"
 	"sync"
+
+	"gorm.io/gorm"
 )
 
 type Plant struct {
@@ -38,8 +44,9 @@ type Plant struct {
 }
 
 type Library struct {
-	cache sync.Map // id -> *Plant
-	ids   []string // sorted by common_name_pl for stable listing order
+	db    *gorm.DB // nil → pure in-memory mode (tests)
+	cache sync.Map // id -> *Plant (always populated)
+	ids   []string // ids in listing order (curated first, then by name)
 	count int
 }
 
@@ -68,6 +75,25 @@ func LoadMerged(curatedRaw, catalogRaw []byte) (*Library, error) {
 // by a bare catalog stub. Earlier curated sources win over later ones on a
 // collision. Listing order puts curated plants first, then alphabetical.
 func LoadMergedMulti(curatedRaws [][]byte, catalogRaw []byte) (*Library, error) {
+	all, err := mergePlants(curatedRaws, catalogRaw)
+	if err != nil {
+		return nil, err
+	}
+	lib := &Library{}
+	for i := range all {
+		p := all[i]
+		lib.cache.Store(p.ID, &p)
+		lib.ids = append(lib.ids, p.ID)
+	}
+	lib.count = len(all)
+	return lib, nil
+}
+
+// mergePlants parses and merges the curated sources and the optional GBIF
+// catalog into a single deduplicated, listing-ordered slice. Curated entries
+// always win on a latin-name collision; among curated sources the earlier one
+// wins. The result is sorted curated-first, then by display name.
+func mergePlants(curatedRaws [][]byte, catalogRaw []byte) ([]Plant, error) {
 	var curated []Plant
 	for i, raw := range curatedRaws {
 		if len(raw) == 0 {
@@ -83,7 +109,6 @@ func LoadMergedMulti(curatedRaws [][]byte, catalogRaw []byte) (*Library, error) 
 		return nil, fmt.Errorf("curated plant library is empty")
 	}
 
-	lib := &Library{}
 	seenLatin := map[string]bool{}
 	seenID := map[string]bool{}
 	var all []Plant
@@ -124,13 +149,7 @@ func LoadMergedMulti(curatedRaws [][]byte, catalogRaw []byte) (*Library, error) 
 		}
 		return displayName(all[i]) < displayName(all[j])
 	})
-	for i := range all {
-		p := all[i]
-		lib.cache.Store(p.ID, &p)
-		lib.ids = append(lib.ids, p.ID)
-	}
-	lib.count = len(all)
-	return lib, nil
+	return all, nil
 }
 
 // displayName picks the best label for ordering: Polish name, else English, else latin.
@@ -144,7 +163,12 @@ func displayName(p Plant) string {
 	return strings.ToLower(p.LatinName)
 }
 
-func (l *Library) Count() int { return l.count }
+func (l *Library) Count() int {
+	if l.db != nil {
+		return l.countDB()
+	}
+	return l.count
+}
 
 func (l *Library) Get(id string) (*Plant, bool) {
 	v, ok := l.cache.Load(id)
@@ -155,8 +179,12 @@ func (l *Library) Get(id string) (*Plant, bool) {
 }
 
 // Search filters by case-insensitive substring on names plus exact category/lifecycle,
-// returning the requested page and the total match count.
+// returning the requested page and the total match count. Backed by SQL when a
+// database is configured, otherwise by the in-memory cache.
 func (l *Library) Search(query, category, lifecycle string, page, pageSize int) ([]*Plant, int) {
+	if l.db != nil {
+		return l.searchDB(query, category, lifecycle, page, pageSize)
+	}
 	query = strings.ToLower(strings.TrimSpace(query))
 	var matches []*Plant
 	for _, id := range l.ids {
@@ -198,6 +226,9 @@ func (l *Library) Search(query, category, lifecycle string, page, pageSize int) 
 }
 
 func (l *Library) Categories() []string {
+	if l.db != nil {
+		return l.categoriesDB()
+	}
 	seen := map[string]bool{}
 	var out []string
 	for _, id := range l.ids {

@@ -2,24 +2,46 @@
 # The host runs a Traefik instance (container "reverse-proxy", host network,
 # docker provider with exposedbydefault=false) that owns ports 80/8080, and the
 # deploy user has no sudo — so the app ships as a compose service with Traefik
-# labels instead of the nginx/systemd path (see deploy/manual-deploy.sh for that).
+# labels instead of the nginx/systemd path (see deploy/manual-deploy.sh).
+#
+# Postgres runs as a dedicated sibling container; only the app talks to it, over
+# the compose network (no published port). Data persists under ./data/postgres.
 #
 # Routes:
 #   http://plantdiary.local/      (Pi-hole local DNS entry, priority 10)
 #   http://192.168.50.11/         (bare-IP fallback, priority 1 so it never
 #                                  shadows the other *.local services)
 services:
+  plantdiary-db:
+    image: postgres:17
+    container_name: plantdiary-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-plantdiary}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      - POSTGRES_DB=${POSTGRES_DB:-plantdiary}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-plantdiary} -d ${POSTGRES_DB:-plantdiary}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   plantdiary:
     build: .
     container_name: plantdiary
     restart: unless-stopped
+    depends_on:
+      plantdiary-db:
+        condition: service_healthy
     environment:
       - GIN_MODE=release
       - PORT=8080
-      - DB_PATH=/data/plantdiary.db
       - UPLOAD_PATH=/data/uploads
       - FRONTEND_DIST=/app/frontend
       - JWT_SECRET=${JWT_SECRET:?set JWT_SECRET in .env}
+      - DATABASE_URL=postgres://${POSTGRES_USER:-plantdiary}:${POSTGRES_PASSWORD}@plantdiary-db:5432/${POSTGRES_DB:-plantdiary}?sslmode=disable
     volumes:
       - ./data:/data
     labels:

@@ -8,23 +8,22 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"path/filepath"
 	"syscall"
 	"time"
 
-	"github.com/glebarez/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
 	plantdata "github.com/piotrekg/gardening/backend/data/plants"
 	"github.com/piotrekg/gardening/backend/internal/auth"
-	"github.com/piotrekg/gardening/backend/migrations"
 	"github.com/piotrekg/gardening/backend/internal/config"
 	"github.com/piotrekg/gardening/backend/internal/handlers"
 	"github.com/piotrekg/gardening/backend/internal/migrate"
 	"github.com/piotrekg/gardening/backend/internal/plantlib"
 	"github.com/piotrekg/gardening/backend/internal/repository"
 	"github.com/piotrekg/gardening/backend/internal/service"
+	"github.com/piotrekg/gardening/backend/migrations"
 )
 
 const version = "1.0.0"
@@ -41,11 +40,7 @@ func run() error {
 		return err
 	}
 
-	if err := os.MkdirAll(filepath.Dir(cfg.DBPath), 0o755); err != nil {
-		return fmt.Errorf("create db dir: %w", err)
-	}
-
-	db, err := gorm.Open(sqlite.Open(cfg.DBPath+"?_pragma=foreign_keys(1)&_pragma=busy_timeout(5000)"), &gorm.Config{
+	db, err := gorm.Open(postgres.Open(cfg.DatabaseURL), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Warn),
 	})
 	if err != nil {
@@ -55,19 +50,26 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	sqlDB.SetMaxOpenConns(20)
+	sqlDB.SetMaxIdleConns(5)
+	sqlDB.SetConnMaxLifetime(time.Hour)
+
+	if err := waitForDB(sqlDB); err != nil {
+		return err
+	}
 	if err := migrate.Up(sqlDB, migrations.FS); err != nil {
 		return fmt.Errorf("migrations: %w", err)
 	}
 	log.Println("database migrations up to date")
 
-	lib, err := plantlib.LoadMergedMulti(
-		[][]byte{plantdata.PlantsJSON, plantdata.PlantsExtraJSON},
+	lib, err := plantlib.Open(db,
+		[][]byte{plantdata.PlantsJSON, plantdata.PlantsExtraJSON, plantdata.PlantsExtra2JSON},
 		plantdata.CatalogJSON,
 	)
 	if err != nil {
 		return err
 	}
-	log.Printf("plant library loaded: %d plants (curated + cultivars + European catalog)", lib.Count())
+	log.Printf("plant library ready: %d plants (curated + cultivars + European catalog)", lib.Count())
 
 	repo := repository.New(db)
 	tm := auth.NewTokenManager(cfg.JWTSecret)
@@ -122,4 +124,18 @@ func run() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	return srv.Shutdown(ctx)
+}
+
+// waitForDB retries the initial connection so the app can start alongside its
+// database container before Postgres finishes accepting connections.
+func waitForDB(sqlDB interface{ Ping() error }) error {
+	var err error
+	for i := 0; i < 30; i++ {
+		if err = sqlDB.Ping(); err == nil {
+			return nil
+		}
+		log.Printf("waiting for database (attempt %d/30): %v", i+1, err)
+		time.Sleep(2 * time.Second)
+	}
+	return fmt.Errorf("database not reachable: %w", err)
 }

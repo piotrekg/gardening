@@ -23,7 +23,7 @@ CREATE TABLE gardens (
     name          TEXT NOT NULL,
     description   TEXT NOT NULL DEFAULT '',
     location_type TEXT NOT NULL DEFAULT 'outdoor',
-    area_sqm      REAL,
+    area_sqm      DOUBLE PRECISION,
     created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at    TIMESTAMP
@@ -57,7 +57,7 @@ CREATE TABLE care_log (
     user_id            TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     action             TEXT NOT NULL,
     note               TEXT NOT NULL DEFAULT '',
-    quantity_harvested REAL,
+    quantity_harvested DOUBLE PRECISION,
     timestamp          TIMESTAMP NOT NULL,
     created_at         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -1,5 +1,5 @@
 # Runtime-only image: the static linux/amd64 binary is cross-compiled on the
-# build machine (CGO_ENABLED=0, pure-Go sqlite), so no Go toolchain is needed here.
+# build machine (CGO_ENABLED=0, pure-Go pgx driver), so no Go toolchain is needed.
 FROM alpine:3.20
 
 RUN apk add --no-cache ca-certificates tzdata curl \
@@ -14,7 +14,6 @@ USER plantdiary
 EXPOSE 8080
 
 ENV PORT=8080 \
-    DB_PATH=/data/plantdiary.db \
     UPLOAD_PATH=/data/uploads \
     FRONTEND_DIST=/app/frontend \
     GIN_MODE=release

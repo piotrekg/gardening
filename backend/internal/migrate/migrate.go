@@ -1,10 +1,9 @@
-// Package migrate is a minimal sequential SQL migration runner.
+// Package migrate is a minimal sequential SQL migration runner for PostgreSQL.
 //
-// golang-migrate's sqlite driver (modernc.org/sqlite) and the pure-Go GORM
-// driver (glebarez/go-sqlite) both register a database/sql driver named
-// "sqlite", which panics at init when imported together. This runner keeps the
-// single pure-Go sqlite stack and the golang-migrate file naming convention
-// (NNNNNN_name.up.sql) and schema_migrations table shape (version, dirty).
+// It keeps the golang-migrate file naming convention (NNNNNN_name.up.sql) and a
+// compatible schema_migrations table (version, dirty). Each migration runs in
+// its own transaction with a dirty flag set around execution, so an interrupted
+// run is detected and refused on the next start.
 package migrate
 
 import (
@@ -25,7 +24,7 @@ type migration struct {
 // Up applies every pending .up.sql migration from fsys in version order.
 func Up(db *sql.DB, fsys fs.FS) error {
 	if _, err := db.Exec(`CREATE TABLE IF NOT EXISTS schema_migrations (
-		version BIGINT PRIMARY KEY, dirty BOOLEAN NOT NULL DEFAULT 0)`); err != nil {
+		version BIGINT PRIMARY KEY, dirty BOOLEAN NOT NULL DEFAULT false)`); err != nil {
 		return fmt.Errorf("create schema_migrations: %w", err)
 	}
 
@@ -85,11 +84,12 @@ func load(fsys fs.FS) ([]migration, error) {
 	return out, nil
 }
 
-// apply runs one migration inside a transaction, marking the dirty flag
-// around execution so an interrupted run is detected on restart.
+// apply runs one migration inside a transaction, marking the dirty flag around
+// execution so an interrupted run is detected on restart.
 func apply(db *sql.DB, m migration) error {
 	if _, err := db.Exec(
-		`INSERT OR REPLACE INTO schema_migrations (version, dirty) VALUES (?, 1)`, m.version); err != nil {
+		`INSERT INTO schema_migrations (version, dirty) VALUES ($1, true)
+		 ON CONFLICT (version) DO UPDATE SET dirty = true`, m.version); err != nil {
 		return fmt.Errorf("mark dirty %s: %w", m.name, err)
 	}
 	tx, err := db.Begin()
@@ -103,12 +103,11 @@ func apply(db *sql.DB, m migration) error {
 	if err := tx.Commit(); err != nil {
 		return fmt.Errorf("commit %s: %w", m.name, err)
 	}
-	if _, err := db.Exec(
-		`UPDATE schema_migrations SET dirty = 0 WHERE version = ?`, m.version); err != nil {
+	if _, err := db.Exec(`UPDATE schema_migrations SET dirty = false WHERE version = $1`, m.version); err != nil {
 		return fmt.Errorf("clear dirty %s: %w", m.name, err)
 	}
 	// Keep only the latest row so the table mirrors golang-migrate's shape.
-	if _, err := db.Exec(`DELETE FROM schema_migrations WHERE version < ?`, m.version); err != nil {
+	if _, err := db.Exec(`DELETE FROM schema_migrations WHERE version < $1`, m.version); err != nil {
 		return fmt.Errorf("prune schema_migrations: %w", err)
 	}
 	return nil
