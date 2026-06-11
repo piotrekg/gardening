@@ -56,14 +56,28 @@ func Load(path string, embedded []byte) (*Library, error) {
 	return LoadMerged(raw, nil)
 }
 
-// LoadMerged builds the library from the curated source plus an optional GBIF
-// catalog. Curated entries always win: a catalog plant sharing a latin name with
-// a curated one is dropped, so the rich care data is never shadowed by a bare
-// catalog stub. Listing order puts curated plants first, then alphabetical.
+// LoadMerged builds the library from one curated source plus an optional GBIF
+// catalog. See LoadMergedMulti for the merge semantics.
 func LoadMerged(curatedRaw, catalogRaw []byte) (*Library, error) {
+	return LoadMergedMulti([][]byte{curatedRaw}, catalogRaw)
+}
+
+// LoadMergedMulti builds the library from one or more curated sources plus an
+// optional GBIF catalog. Curated entries always win: a catalog plant sharing a
+// latin name with a curated one is dropped, so rich care data is never shadowed
+// by a bare catalog stub. Earlier curated sources win over later ones on a
+// collision. Listing order puts curated plants first, then alphabetical.
+func LoadMergedMulti(curatedRaws [][]byte, catalogRaw []byte) (*Library, error) {
 	var curated []Plant
-	if err := json.Unmarshal(curatedRaw, &curated); err != nil {
-		return nil, fmt.Errorf("parse curated library: %w", err)
+	for i, raw := range curatedRaws {
+		if len(raw) == 0 {
+			continue
+		}
+		var part []Plant
+		if err := json.Unmarshal(raw, &part); err != nil {
+			return nil, fmt.Errorf("parse curated library #%d: %w", i, err)
+		}
+		curated = append(curated, part...)
 	}
 	if len(curated) == 0 {
 		return nil, fmt.Errorf("curated plant library is empty")
@@ -157,7 +171,8 @@ func (l *Library) Search(query, category, lifecycle string, page, pageSize int) 
 			continue
 		}
 		if query != "" {
-			hay := strings.ToLower(p.CommonNamePL + " " + p.CommonNameEN + " " + p.LatinName + " " + p.Family)
+			hay := strings.ToLower(p.CommonNamePL + " " + p.CommonNameEN + " " +
+				p.LatinName + " " + p.Family + " " + strings.Join(p.Tags, " "))
 			if !strings.Contains(hay, query) {
 				continue
 			}
