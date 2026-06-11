@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS photos;
+DROP TABLE IF EXISTS care_log;
+DROP TABLE IF EXISTS plant_instances;
+DROP TABLE IF EXISTS gardens;
+DROP TABLE IF EXISTS refresh_tokens;
+DROP TABLE IF EXISTS users;
