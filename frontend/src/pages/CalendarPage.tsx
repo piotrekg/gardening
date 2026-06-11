@@ -1,25 +1,18 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
 import { getCalendar } from '../api/calendar';
 import { getApiErrorMessage } from '../api/client';
 import { SeasonalTip } from '../components/SeasonalTip';
 import { Skeleton } from '../components/Skeleton';
+import { useDateFnsLocale } from '../i18n/dateLocale';
+import { useLibraryPlantName } from '../i18n/libraryName';
 import type { CalendarResponse, PlantInstance } from '../types';
 
-const MONTH_NAMES = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
+function capitalize(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
 
 function TaskSection({
   title,
@@ -67,6 +60,9 @@ function TaskSection({
 }
 
 export function CalendarPage() {
+  const { t } = useTranslation();
+  const dateLocale = useDateFnsLocale();
+  const { name: libName } = useLibraryPlantName();
   const now = new Date();
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [year, setYear] = useState(now.getFullYear());
@@ -85,7 +81,7 @@ export function CalendarPage() {
         }
       })
       .catch((err) => {
-        if (!cancelled) setError(getApiErrorMessage(err, 'Could not load the calendar.'));
+        if (!cancelled) setError(getApiErrorMessage(err, t('calendar.loadError')));
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -93,7 +89,7 @@ export function CalendarPage() {
     return () => {
       cancelled = true;
     };
-  }, [month, year]);
+  }, [month, year, t]);
 
   const shift = (delta: number) => {
     let m = month + delta;
@@ -110,22 +106,33 @@ export function CalendarPage() {
   };
 
   const isCurrentMonth = month === now.getMonth() + 1 && year === now.getFullYear();
+  const monthName = (m: number) => capitalize(format(new Date(2000, m - 1, 1), 'LLLL', { locale: dateLocale }));
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Garden calendar</h1>
-          <p className="mt-0.5 text-sm text-gray-500">What to sow, transplant and harvest.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('calendar.title')}</h1>
+          <p className="mt-0.5 text-sm text-gray-500">{t('calendar.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
-          <button type="button" onClick={() => shift(-1)} className="btn-secondary !px-3" aria-label="Previous month">
+          <button
+            type="button"
+            onClick={() => shift(-1)}
+            className="btn-secondary !px-3"
+            aria-label={t('calendar.prevMonth')}
+          >
             ←
           </button>
           <span className="min-w-40 text-center text-base font-semibold text-primary-dark">
-            {MONTH_NAMES[month - 1]} {year}
+            {monthName(month)} {year}
           </span>
-          <button type="button" onClick={() => shift(1)} className="btn-secondary !px-3" aria-label="Next month">
+          <button
+            type="button"
+            onClick={() => shift(1)}
+            className="btn-secondary !px-3"
+            aria-label={t('calendar.nextMonth')}
+          >
             →
           </button>
           {!isCurrentMonth && (
@@ -137,7 +144,7 @@ export function CalendarPage() {
               }}
               className="text-xs font-medium text-primary hover:underline"
             >
-              Today
+              {t('calendar.today')}
             </button>
           )}
         </div>
@@ -162,7 +169,7 @@ export function CalendarPage() {
                 ❄️
               </span>
               <div>
-                <p className="text-sm font-semibold text-blue-800">Frost risk this month</p>
+                <p className="text-sm font-semibold text-blue-800">{t('calendar.frostTitle')}</p>
                 <p className="mt-0.5 text-sm text-blue-700">{data.frost_note}</p>
               </div>
             </div>
@@ -172,34 +179,32 @@ export function CalendarPage() {
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             <TaskSection
-              title="Sow"
+              title={t('calendar.sow')}
               icon="🌱"
               items={data.garden_tasks.sow}
-              emptyText="Nothing in your gardens to sow this month."
+              emptyText={t('calendar.sowEmpty')}
             />
             <TaskSection
-              title="Transplant"
+              title={t('calendar.transplant')}
               icon="🌿"
               items={data.garden_tasks.transplant}
-              emptyText="No transplanting tasks this month."
+              emptyText={t('calendar.transplantEmpty')}
             />
             <TaskSection
-              title="Harvest"
+              title={t('calendar.harvest')}
               icon="🧺"
               items={data.garden_tasks.harvest}
-              emptyText="No harvests expected this month."
+              emptyText={t('calendar.harvestEmpty')}
             />
           </div>
 
           <section className="card p-5">
             <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-800">
               <span aria-hidden="true">💡</span>
-              Recommended to sow in {MONTH_NAMES[data.month - 1]}
+              {t('calendar.recommended', { month: monthName(data.month) })}
             </h2>
             {data.recommendations.length === 0 ? (
-              <p className="text-sm text-gray-400">
-                No sowing recommendations for this month — a good time to plan ahead.
-              </p>
+              <p className="text-sm text-gray-400">{t('calendar.recommendedEmpty')}</p>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {data.recommendations.map((p) => (
@@ -208,7 +213,7 @@ export function CalendarPage() {
                     to={`/library/${p.id}`}
                     className="rounded-full bg-primary-light/60 px-3 py-1 text-xs font-semibold text-primary-dark transition hover:bg-accent-light"
                   >
-                    {p.common_name_pl}
+                    {libName(p)}
                   </Link>
                 ))}
               </div>

@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
+import { useDateFnsLocale } from '../i18n/dateLocale';
 import { useNotificationStore } from '../store/notifications';
 
 export function NotificationBell() {
+  const { t } = useTranslation();
+  const dateLocale = useDateFnsLocale();
   const { notifications, unreadCount, loading, fetch, markAllRead } = useNotificationStore();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -30,7 +34,11 @@ export function NotificationBell() {
           if (!open) void fetch();
         }}
         className="relative rounded-full p-2 text-gray-500 transition hover:bg-primary-light/60 hover:text-primary"
-        aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
+        aria-label={
+          unreadCount > 0
+            ? t('notifications.ariaUnread', { count: unreadCount })
+            : t('notifications.aria')
+        }
       >
         <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
           <path
@@ -49,23 +57,23 @@ export function NotificationBell() {
       {open && (
         <div className="absolute right-0 z-40 mt-2 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl bg-white shadow-card-hover ring-1 ring-gray-100">
           <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-            <span className="text-sm font-semibold text-gray-800">Notifications</span>
+            <span className="text-sm font-semibold text-gray-800">{t('notifications.title')}</span>
             {unreadCount > 0 && (
               <button
                 type="button"
                 onClick={() => void markAllRead()}
                 className="text-xs font-medium text-primary hover:underline"
               >
-                Mark all read
+                {t('notifications.markAllRead')}
               </button>
             )}
           </div>
           <div className="max-h-80 overflow-y-auto">
             {loading && notifications.length === 0 ? (
-              <p className="px-4 py-6 text-center text-sm text-gray-400">Loading…</p>
+              <p className="px-4 py-6 text-center text-sm text-gray-400">{t('common.loading')}</p>
             ) : notifications.length === 0 ? (
               <p className="px-4 py-6 text-center text-sm text-gray-400">
-                You're all caught up. 🌿
+                {t('notifications.empty')}
               </p>
             ) : (
               <ul className="divide-y divide-gray-50">
@@ -73,8 +81,14 @@ export function NotificationBell() {
                   <li key={n.id} className="px-4 py-3">
                     <p className="text-sm text-gray-700">{n.message}</p>
                     <p className="mt-0.5 text-xs text-gray-400">
-                      {n.type.replace(/_/g, ' ')} ·{' '}
-                      {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
+                      {t(`notifications.types.${n.type}`, {
+                        defaultValue: n.type.replace(/_/g, ' '),
+                      })}{' '}
+                      ·{' '}
+                      {formatDistanceToNow(new Date(n.created_at), {
+                        addSuffix: true,
+                        locale: dateLocale,
+                      })}
                     </p>
                   </li>
                 ))}
@@ -87,7 +101,7 @@ export function NotificationBell() {
               onClick={() => setOpen(false)}
               className="text-xs font-medium text-primary hover:underline"
             >
-              Go to dashboard
+              {t('notifications.goToDashboard')}
             </Link>
           </div>
         </div>

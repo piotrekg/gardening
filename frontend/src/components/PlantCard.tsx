@@ -1,5 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
+import { useDateFnsLocale } from '../i18n/dateLocale';
 import type { PlantInstance } from '../types';
 import { CareButton } from './CareButton';
 import { StatusBadge } from './StatusBadge';
@@ -13,16 +15,24 @@ interface PlantCardProps {
 }
 
 export function PlantCard({ plant, thumbUrl, onUpdated, onError }: PlantCardProps) {
+  const { t } = useTranslation();
+  const dateLocale = useDateFnsLocale();
+
   const lastWatered = plant.last_watered_at
-    ? `Watered ${formatDistanceToNow(new Date(plant.last_watered_at), { addSuffix: true })}`
-    : 'Never watered';
+    ? t('plantCard.wateredAgo', {
+        distance: formatDistanceToNow(new Date(plant.last_watered_at), {
+          addSuffix: true,
+          locale: dateLocale,
+        }),
+      })
+    : t('plantCard.neverWatered');
 
   return (
     <div className="card group relative flex flex-col overflow-hidden transition hover:shadow-card-hover">
       <Link
         to={`/gardens/${plant.garden_id}/plants/${plant.id}`}
         className="absolute inset-0 z-0"
-        aria-label={`Open ${plant.display_name}`}
+        aria-label={t('plantCard.open', { name: plant.display_name })}
       />
       <div className="pointer-events-none relative flex h-28 items-center justify-center bg-primary-light/40">
         {thumbUrl ? (
@@ -39,7 +49,7 @@ export function PlantCard({ plant, thumbUrl, onUpdated, onError }: PlantCardProp
         )}
         {plant.status !== 'active' && (
           <span className="absolute right-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-500">
-            {plant.status}
+            {t(`plantStatus.${plant.status}`)}
           </span>
         )}
       </div>
@@ -57,8 +67,8 @@ export function PlantCard({ plant, thumbUrl, onUpdated, onError }: PlantCardProp
         </div>
         <p className="text-xs text-gray-500">{lastWatered}</p>
         <div className="flex flex-wrap gap-1.5">
-          <StatusBadge status={plant.care_status.water} label="Water" />
-          <StatusBadge status={plant.care_status.fertilize} label="Feed" />
+          <StatusBadge status={plant.care_status.water} label={t('status.waterLabel')} />
+          <StatusBadge status={plant.care_status.fertilize} label={t('status.feedLabel')} />
         </div>
         <div className="pointer-events-auto z-10 mt-auto flex gap-2 pt-1">
           <CareButton plant={plant} action="watered" onUpdated={onUpdated} onError={onError} />

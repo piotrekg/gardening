@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { login } from '../api/auth';
 import { getApiErrorMessage } from '../api/client';
 import { useAuthStore } from '../store/auth';
 
 export function LoginPage() {
+  const { t } = useTranslation();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const setAuth = useAuthStore((s) => s.setAuth);
   const navigate = useNavigate();
@@ -23,8 +25,8 @@ export function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errors: { email?: string; password?: string } = {};
-    if (!email.trim()) errors.email = 'Email is required.';
-    if (!password) errors.password = 'Password is required.';
+    if (!email.trim()) errors.email = t('auth.login.emailRequired');
+    if (!password) errors.password = t('auth.login.passwordRequired');
     setFieldErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
@@ -36,7 +38,7 @@ export function LoginPage() {
       const state = location.state as { from?: string } | null;
       navigate(state?.from ?? '/dashboard', { replace: true });
     } catch (err) {
-      setApiError(getApiErrorMessage(err, 'Login failed. Check your credentials.'));
+      setApiError(getApiErrorMessage(err, t('auth.login.failed')));
     } finally {
       setSubmitting(false);
     }
@@ -50,7 +52,7 @@ export function LoginPage() {
             🌿
           </span>
           <h1 className="text-2xl font-bold tracking-tight text-primary-dark">PlantDiary</h1>
-          <p className="mt-1 text-sm text-gray-500">Welcome back — your plants missed you.</p>
+          <p className="mt-1 text-sm text-gray-500">{t('auth.login.subtitle')}</p>
         </div>
 
         <form onSubmit={(e) => void handleSubmit(e)} className="card space-y-4 p-6" noValidate>
@@ -61,7 +63,7 @@ export function LoginPage() {
           )}
           <div>
             <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">
-              Email
+              {t('auth.login.email')}
             </label>
             <input
               id="email"
@@ -70,13 +72,13 @@ export function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="input-field"
-              placeholder="you@example.com"
+              placeholder={t('auth.login.emailPlaceholder')}
             />
             {fieldErrors.email && <p className="mt-1 text-xs text-red-600">{fieldErrors.email}</p>}
           </div>
           <div>
             <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700">
-              Password
+              {t('auth.login.password')}
             </label>
             <input
               id="password"
@@ -92,14 +94,14 @@ export function LoginPage() {
             )}
           </div>
           <button type="submit" disabled={submitting} className="btn-primary w-full">
-            {submitting ? 'Signing in…' : 'Sign in'}
+            {submitting ? t('auth.login.submitting') : t('auth.login.submit')}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-500">
-          New to PlantDiary?{' '}
+          {t('auth.login.noAccount')}{' '}
           <Link to="/register" className="font-semibold text-primary hover:underline">
-            Create an account
+            {t('auth.login.createAccount')}
           </Link>
         </p>
       </div>

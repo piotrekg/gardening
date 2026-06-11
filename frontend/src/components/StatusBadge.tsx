@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { CareStatusValue } from '../types';
 
 const STYLES: Record<CareStatusValue, string> = {
@@ -7,11 +8,11 @@ const STYLES: Record<CareStatusValue, string> = {
   unknown: 'bg-gray-100 text-gray-500 ring-gray-200',
 };
 
-const LABELS: Record<CareStatusValue, string> = {
-  overdue: 'Overdue',
-  due_today: 'Due today',
-  ok: 'OK',
-  unknown: 'Unknown',
+const LABEL_KEYS: Record<CareStatusValue, string> = {
+  overdue: 'status.overdue',
+  due_today: 'status.dueToday',
+  ok: 'status.ok',
+  unknown: 'status.unknown',
 };
 
 interface StatusBadgeProps {
@@ -20,12 +21,13 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ status, label }: StatusBadgeProps) {
+  const { t } = useTranslation();
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ring-inset ${STYLES[status]}`}
     >
       {label ? `${label}: ` : ''}
-      {LABELS[status]}
+      {t(LABEL_KEYS[status])}
     </span>
   );
 }

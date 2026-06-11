@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
 import { getCareLog, logCare } from '../api/care';
@@ -10,6 +11,8 @@ import { PhotoUpload } from '../components/PhotoUpload';
 import { Skeleton } from '../components/Skeleton';
 import { Spinner } from '../components/Spinner';
 import { StatusBadge } from '../components/StatusBadge';
+import { useDateFnsLocale } from '../i18n/dateLocale';
+import { useLibraryPlantName } from '../i18n/libraryName';
 import type {
   CareAction,
   CareEntry,
@@ -19,14 +22,14 @@ import type {
   PlantStatus,
 } from '../types';
 
-const CARE_ACTIONS: { action: CareAction; icon: string; label: string }[] = [
-  { action: 'watered', icon: '💧', label: 'Water' },
-  { action: 'fertilized', icon: '🌾', label: 'Fertilize' },
-  { action: 'pruned', icon: '✂️', label: 'Prune' },
-  { action: 'repotted', icon: '🪴', label: 'Repot' },
-  { action: 'treated', icon: '🧪', label: 'Treat' },
-  { action: 'observed', icon: '👀', label: 'Observe' },
-  { action: 'harvested', icon: '🧺', label: 'Harvest' },
+const CARE_ACTIONS: { action: CareAction; icon: string }[] = [
+  { action: 'watered', icon: '💧' },
+  { action: 'fertilized', icon: '🌾' },
+  { action: 'pruned', icon: '✂️' },
+  { action: 'repotted', icon: '🪴' },
+  { action: 'treated', icon: '🧪' },
+  { action: 'observed', icon: '👀' },
+  { action: 'harvested', icon: '🧺' },
 ];
 
 const ACTION_ICONS: Record<CareAction, string> = {
@@ -52,6 +55,8 @@ function EditPlantModal({
   onClose: () => void;
   onSaved: (p: PlantInstance) => void;
 }) {
+  const { t } = useTranslation();
+  const { name: libName } = useLibraryPlantName();
   const [customName, setCustomName] = useState(plant.custom_name ?? '');
   const [locationNotes, setLocationNotes] = useState(plant.location_notes ?? '');
   const [quantity, setQuantity] = useState(String(plant.quantity));
@@ -63,7 +68,7 @@ function EditPlantModal({
     e.preventDefault();
     const qty = Number(quantity);
     if (!Number.isInteger(qty) || qty < 1) {
-      setError('Quantity must be a whole number of at least 1.');
+      setError(t('plantDetail.quantityInvalid'));
       return;
     }
     setSubmitting(true);
@@ -78,14 +83,14 @@ function EditPlantModal({
       onSaved(updated);
       onClose();
     } catch (err) {
-      setError(getApiErrorMessage(err, 'Could not save changes.'));
+      setError(getApiErrorMessage(err, t('plantDetail.edit.failed')));
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Modal title="Edit plant" onClose={onClose}>
+    <Modal title={t('plantDetail.edit.title')} onClose={onClose}>
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4" noValidate>
         {error && (
           <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
@@ -94,7 +99,7 @@ function EditPlantModal({
         )}
         <div>
           <label htmlFor="ep-name" className="mb-1 block text-sm font-medium text-gray-700">
-            Custom name
+            {t('plantDetail.edit.customName')}
           </label>
           <input
             id="ep-name"
@@ -102,25 +107,27 @@ function EditPlantModal({
             value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             className="input-field"
-            placeholder={plant.library?.common_name_pl ?? 'My plant'}
+            placeholder={
+              plant.library ? libName(plant.library) : t('plantDetail.edit.customNamePlaceholder')
+            }
           />
         </div>
         <div>
           <label htmlFor="ep-notes" className="mb-1 block text-sm font-medium text-gray-700">
-            Location notes
+            {t('plantDetail.edit.locationNotes')}
           </label>
           <textarea
             id="ep-notes"
             value={locationNotes}
             onChange={(e) => setLocationNotes(e.target.value)}
             className="input-field min-h-16 resize-y"
-            placeholder="Bed 3, by the fence…"
+            placeholder={t('plantDetail.edit.locationNotesPlaceholder')}
           />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label htmlFor="ep-qty" className="mb-1 block text-sm font-medium text-gray-700">
-              Quantity
+              {t('plantDetail.edit.quantity')}
             </label>
             <input
               id="ep-qty"
@@ -133,7 +140,7 @@ function EditPlantModal({
           </div>
           <div>
             <label htmlFor="ep-date" className="mb-1 block text-sm font-medium text-gray-700">
-              Planted date
+              {t('plantDetail.edit.plantedDate')}
             </label>
             <input
               id="ep-date"
@@ -146,10 +153,10 @@ function EditPlantModal({
         </div>
         <div className="flex justify-end gap-2 pt-1">
           <button type="button" onClick={onClose} className="btn-secondary">
-            Cancel
+            {t('common.cancel')}
           </button>
           <button type="submit" disabled={submitting} className="btn-primary">
-            {submitting ? 'Saving…' : 'Save changes'}
+            {submitting ? t('plantDetail.edit.submitting') : t('plantDetail.edit.submit')}
           </button>
         </div>
       </form>
@@ -168,6 +175,7 @@ function LogCareModal({
   onClose: () => void;
   onLogged: () => void;
 }) {
+  const { t } = useTranslation();
   const [note, setNote] = useState('');
   const [quantityHarvested, setQuantityHarvested] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -179,7 +187,7 @@ function LogCareModal({
     if (action === 'harvested' && quantityHarvested.trim() !== '') {
       qty = Number(quantityHarvested);
       if (!Number.isFinite(qty) || qty < 0) {
-        setError('Harvested quantity must be a non-negative number.');
+        setError(t('plantDetail.log.quantityInvalid'));
         return;
       }
     }
@@ -194,14 +202,14 @@ function LogCareModal({
       onLogged();
       onClose();
     } catch (err) {
-      setError(getApiErrorMessage(err, 'Could not log this care action.'));
+      setError(getApiErrorMessage(err, t('plantDetail.log.failed')));
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Modal title={`Log: ${action}`} onClose={onClose}>
+    <Modal title={t('plantDetail.log.title', { action: t(`care.noun.${action}`) })} onClose={onClose}>
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4" noValidate>
         {error && (
           <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
@@ -210,7 +218,8 @@ function LogCareModal({
         )}
         <div>
           <label htmlFor="lc-note" className="mb-1 block text-sm font-medium text-gray-700">
-            Note <span className="font-normal text-gray-400">(optional)</span>
+            {t('plantDetail.log.note')}{' '}
+            <span className="font-normal text-gray-400">({t('common.optional')})</span>
           </label>
           <textarea
             id="lc-note"
@@ -218,13 +227,14 @@ function LogCareModal({
             value={note}
             onChange={(e) => setNote(e.target.value)}
             className="input-field min-h-16 resize-y"
-            placeholder="Anything worth remembering…"
+            placeholder={t('plantDetail.log.notePlaceholder')}
           />
         </div>
         {action === 'harvested' && (
           <div>
             <label htmlFor="lc-qty" className="mb-1 block text-sm font-medium text-gray-700">
-              Quantity harvested <span className="font-normal text-gray-400">(optional)</span>
+              {t('plantDetail.log.quantityHarvested')}{' '}
+              <span className="font-normal text-gray-400">({t('common.optional')})</span>
             </label>
             <input
               id="lc-qty"
@@ -234,16 +244,16 @@ function LogCareModal({
               value={quantityHarvested}
               onChange={(e) => setQuantityHarvested(e.target.value)}
               className="input-field"
-              placeholder="e.g. 2.5"
+              placeholder={t('plantDetail.log.quantityHarvestedPlaceholder')}
             />
           </div>
         )}
         <div className="flex justify-end gap-2 pt-1">
           <button type="button" onClick={onClose} className="btn-secondary">
-            Cancel
+            {t('common.cancel')}
           </button>
           <button type="submit" disabled={submitting} className="btn-primary">
-            {submitting ? 'Logging…' : 'Log it'}
+            {submitting ? t('plantDetail.log.submitting') : t('plantDetail.log.submit')}
           </button>
         </div>
       </form>
@@ -252,6 +262,8 @@ function LogCareModal({
 }
 
 export function PlantDetailPage() {
+  const { t } = useTranslation();
+  const dateLocale = useDateFnsLocale();
   const { id, plantId } = useParams<{ id: string; plantId: string }>();
   const gardenId = id ?? '';
   const instanceId = plantId ?? '';
@@ -274,9 +286,9 @@ export function PlantDetailPage() {
       setPlant(detail.plant);
       setError(null);
     } catch (err) {
-      setError(getApiErrorMessage(err, 'Could not load this plant.'));
+      setError(getApiErrorMessage(err, t('plantDetail.loadError')));
     }
-  }, [gardenId, instanceId]);
+  }, [gardenId, instanceId, t]);
 
   const loadCareLog = useCallback(
     async (page: number) => {
@@ -328,29 +340,29 @@ export function PlantDetailPage() {
       const updated = await updateGardenPlant(gardenId, instanceId, { status });
       setPlant(updated);
     } catch (err) {
-      setActionError(getApiErrorMessage(err, 'Could not update status.'));
+      setActionError(getApiErrorMessage(err, t('plantDetail.statusError')));
     } finally {
       setStatusSaving(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Remove this plant from the garden? This cannot be undone.')) return;
+    if (!window.confirm(t('plantDetail.deleteConfirm'))) return;
     try {
       await deleteGardenPlant(gardenId, instanceId);
       navigate(`/gardens/${gardenId}`);
     } catch (err) {
-      setActionError(getApiErrorMessage(err, 'Could not delete this plant.'));
+      setActionError(getApiErrorMessage(err, t('plantDetail.deleteError')));
     }
   };
 
   const handleDeletePhoto = async (photoId: string) => {
-    if (!window.confirm('Delete this photo?')) return;
+    if (!window.confirm(t('plantDetail.deletePhotoConfirm'))) return;
     try {
       await deletePhoto(gardenId, instanceId, photoId);
       setPhotos((prev) => prev?.filter((p) => p.id !== photoId) ?? prev);
     } catch (err) {
-      setActionError(getApiErrorMessage(err, 'Could not delete the photo.'));
+      setActionError(getApiErrorMessage(err, t('plantDetail.deletePhotoError')));
     }
   };
 
@@ -362,7 +374,7 @@ export function PlantDetailPage() {
           to={`/gardens/${gardenId}`}
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
         >
-          ← Back to garden
+          {t('plantDetail.backToGarden')}
         </Link>
       </div>
     );
@@ -385,11 +397,11 @@ export function PlantDetailPage() {
     <div className="space-y-6">
       <nav className="text-xs text-gray-400">
         <Link to="/gardens" className="hover:text-primary hover:underline">
-          Gardens
+          {t('nav.gardens')}
         </Link>{' '}
         /{' '}
         <Link to={`/gardens/${gardenId}`} className="hover:text-primary hover:underline">
-          Garden
+          {t('plantDetail.breadcrumbGarden')}
         </Link>{' '}
         / <span className="text-gray-600">{plant.display_name}</span>
       </nav>
@@ -416,13 +428,13 @@ export function PlantDetailPage() {
               </p>
             )}
             <div className="mt-2 flex flex-wrap gap-1.5">
-              <StatusBadge status={plant.care_status.water} label="Water" />
-              <StatusBadge status={plant.care_status.fertilize} label="Feed" />
+              <StatusBadge status={plant.care_status.water} label={t('status.waterLabel')} />
+              <StatusBadge status={plant.care_status.fertilize} label={t('status.feedLabel')} />
             </div>
           </div>
           <div className="flex shrink-0 flex-wrap items-center gap-2">
             <label htmlFor="pd-status" className="sr-only">
-              Plant status
+              {t('plantDetail.statusAria')}
             </label>
             <select
               id="pd-status"
@@ -433,48 +445,56 @@ export function PlantDetailPage() {
             >
               {STATUS_OPTIONS.map((s) => (
                 <option key={s} value={s}>
-                  {s}
+                  {t(`plantStatus.${s}`)}
                 </option>
               ))}
             </select>
             <button type="button" onClick={() => setShowEdit(true)} className="btn-secondary">
-              Edit
+              {t('common.edit')}
             </button>
             <button
               type="button"
               onClick={() => void handleDelete()}
               className="rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
             >
-              Delete
+              {t('common.delete')}
             </button>
           </div>
         </div>
 
         <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-4">
           <div>
-            <dt className="text-xs text-gray-400">Planted</dt>
+            <dt className="text-xs text-gray-400">{t('plantDetail.planted')}</dt>
             <dd className="text-gray-700">
-              {plant.planted_date ? format(new Date(plant.planted_date), 'd MMM yyyy') : '—'}
+              {plant.planted_date
+                ? format(new Date(plant.planted_date), 'd MMM yyyy', { locale: dateLocale })
+                : '—'}
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-gray-400">Last watered</dt>
+            <dt className="text-xs text-gray-400">{t('plantDetail.lastWatered')}</dt>
             <dd className="text-gray-700">
               {plant.last_watered_at
-                ? formatDistanceToNow(new Date(plant.last_watered_at), { addSuffix: true })
-                : 'never'}
+                ? formatDistanceToNow(new Date(plant.last_watered_at), {
+                    addSuffix: true,
+                    locale: dateLocale,
+                  })
+                : t('common.never')}
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-gray-400">Last fertilized</dt>
+            <dt className="text-xs text-gray-400">{t('plantDetail.lastFertilized')}</dt>
             <dd className="text-gray-700">
               {plant.last_fertilized_at
-                ? formatDistanceToNow(new Date(plant.last_fertilized_at), { addSuffix: true })
-                : 'never'}
+                ? formatDistanceToNow(new Date(plant.last_fertilized_at), {
+                    addSuffix: true,
+                    locale: dateLocale,
+                  })
+                : t('common.never')}
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-gray-400">Location notes</dt>
+            <dt className="text-xs text-gray-400">{t('plantDetail.locationNotes')}</dt>
             <dd className="text-gray-700">{plant.location_notes ?? '—'}</dd>
           </div>
         </dl>
@@ -482,9 +502,9 @@ export function PlantDetailPage() {
 
       {/* Quick care actions */}
       <section className="card p-5">
-        <h2 className="mb-3 text-sm font-semibold text-gray-800">Quick care</h2>
+        <h2 className="mb-3 text-sm font-semibold text-gray-800">{t('plantDetail.quickCare')}</h2>
         <div className="flex flex-wrap gap-2">
-          {CARE_ACTIONS.map(({ action, icon, label }) => (
+          {CARE_ACTIONS.map(({ action, icon }) => (
             <button
               key={action}
               type="button"
@@ -492,7 +512,7 @@ export function PlantDetailPage() {
               className="inline-flex items-center gap-1.5 rounded-lg bg-primary-light/60 px-3 py-2 text-sm font-semibold text-primary-dark transition hover:bg-accent-light"
             >
               <span aria-hidden="true">{icon}</span>
-              {label}
+              {t(`care.action.${action}`)}
             </button>
           ))}
         </div>
@@ -501,13 +521,11 @@ export function PlantDetailPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Care log timeline */}
         <section className="card p-5">
-          <h2 className="mb-3 text-sm font-semibold text-gray-800">Care log</h2>
+          <h2 className="mb-3 text-sm font-semibold text-gray-800">{t('plantDetail.careLog')}</h2>
           {careLog === null ? (
-            <Spinner label="Loading care log…" />
+            <Spinner label={t('plantDetail.careLogLoading')} />
           ) : careLog.entries.length === 0 ? (
-            <p className="py-4 text-sm text-gray-400">
-              No care logged yet — tap a quick action above to start the journal.
-            </p>
+            <p className="py-4 text-sm text-gray-400">{t('plantDetail.careLogEmpty')}</p>
           ) : (
             <>
               <ol className="relative space-y-4 border-l border-primary-light pl-5">
@@ -517,15 +535,22 @@ export function PlantDetailPage() {
                       {ACTION_ICONS[entry.action]}
                     </span>
                     <p className="text-sm text-gray-800">
-                      <span className="font-semibold capitalize">{entry.action}</span>
+                      <span className="font-semibold">{t(`care.past.${entry.action}`)}</span>
                       {entry.quantity_harvested !== null && (
                         <span className="text-gray-500"> · {entry.quantity_harvested}</span>
                       )}
                     </p>
                     {entry.note && <p className="text-sm text-gray-500">{entry.note}</p>}
                     <p className="text-xs text-gray-400">
-                      {format(new Date(entry.timestamp), 'd MMM yyyy, HH:mm')} (
-                      {formatDistanceToNow(new Date(entry.timestamp), { addSuffix: true })})
+                      {format(new Date(entry.timestamp), 'd MMM yyyy, HH:mm', {
+                        locale: dateLocale,
+                      })}{' '}
+                      (
+                      {formatDistanceToNow(new Date(entry.timestamp), {
+                        addSuffix: true,
+                        locale: dateLocale,
+                      })}
+                      )
                     </p>
                   </li>
                 ))}
@@ -538,10 +563,10 @@ export function PlantDetailPage() {
                     onClick={() => setCarePage((p) => p - 1)}
                     className="btn-secondary !px-3 !py-1.5 text-xs"
                   >
-                    ← Newer
+                    {t('plantDetail.newer')}
                   </button>
                   <span className="text-xs text-gray-400">
-                    Page {careLog.page} of {totalPages}
+                    {t('common.pageOf', { page: careLog.page, total: totalPages })}
                   </span>
                   <button
                     type="button"
@@ -549,7 +574,7 @@ export function PlantDetailPage() {
                     onClick={() => setCarePage((p) => p + 1)}
                     className="btn-secondary !px-3 !py-1.5 text-xs"
                   >
-                    Older →
+                    {t('plantDetail.older')}
                   </button>
                 </div>
               )}
@@ -559,15 +584,13 @@ export function PlantDetailPage() {
 
         {/* Photos */}
         <section className="card p-5">
-          <h2 className="mb-3 text-sm font-semibold text-gray-800">Photos</h2>
+          <h2 className="mb-3 text-sm font-semibold text-gray-800">{t('plantDetail.photos')}</h2>
           {photos === null ? (
-            <Spinner label="Loading photos…" />
+            <Spinner label={t('plantDetail.photosLoading')} />
           ) : (
             <>
               {photos.length === 0 ? (
-                <p className="mb-3 text-sm text-gray-400">
-                  No photos yet — document your plant's progress!
-                </p>
+                <p className="mb-3 text-sm text-gray-400">{t('plantDetail.photosEmpty')}</p>
               ) : (
                 <div className="mb-4 grid grid-cols-3 gap-2">
                   {photos.map((photo) => (
@@ -575,7 +598,7 @@ export function PlantDetailPage() {
                       <a href={photo.url} target="_blank" rel="noreferrer">
                         <img
                           src={photo.thumb_url}
-                          alt={`${plant.display_name} photo`}
+                          alt={t('plantDetail.photoAlt', { name: plant.display_name })}
                           className="h-full w-full object-cover transition group-hover:scale-105"
                           loading="lazy"
                         />
@@ -584,7 +607,7 @@ export function PlantDetailPage() {
                         type="button"
                         onClick={() => void handleDeletePhoto(photo.id)}
                         className="absolute right-1 top-1 rounded-full bg-black/50 p-1 text-white opacity-0 transition hover:bg-red-600 group-hover:opacity-100"
-                        aria-label="Delete photo"
+                        aria-label={t('plantDetail.deletePhotoAria')}
                       >
                         <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
@@ -608,31 +631,39 @@ export function PlantDetailPage() {
       {lib && (
         <section className="card p-5">
           <div className="mb-3 flex items-center justify-between gap-2">
-            <h2 className="text-sm font-semibold text-gray-800">Growing guide</h2>
+            <h2 className="text-sm font-semibold text-gray-800">{t('plantDetail.growingGuide')}</h2>
             <Link to={`/library/${lib.id}`} className="text-xs font-medium text-primary hover:underline">
-              Open in library →
+              {t('plantDetail.openInLibrary')}
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-4">
             <div>
-              <dt className="text-xs text-gray-400">Sun</dt>
-              <dd className="text-gray-700">{lib.sun_requirement}</dd>
-            </div>
-            <div>
-              <dt className="text-xs text-gray-400">Water every</dt>
+              <dt className="text-xs text-gray-400">{t('plantDetail.sun')}</dt>
               <dd className="text-gray-700">
-                {lib.water_frequency_days !== null ? `${lib.water_frequency_days} days` : '—'}
+                {t(`library.sun.${lib.sun_requirement}`, { defaultValue: lib.sun_requirement })}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-gray-400">Fertilize every</dt>
+              <dt className="text-xs text-gray-400">{t('plantDetail.waterEvery')}</dt>
               <dd className="text-gray-700">
-                {lib.fertilize_frequency_days !== null ? `${lib.fertilize_frequency_days} days` : '—'}
+                {lib.water_frequency_days !== null
+                  ? t('common.everyDays', { count: lib.water_frequency_days })
+                  : '—'}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-gray-400">Difficulty</dt>
-              <dd className="text-gray-700">{lib.difficulty}</dd>
+              <dt className="text-xs text-gray-400">{t('plantDetail.fertilizeEvery')}</dt>
+              <dd className="text-gray-700">
+                {lib.fertilize_frequency_days !== null
+                  ? t('common.everyDays', { count: lib.fertilize_frequency_days })
+                  : '—'}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs text-gray-400">{t('plantDetail.difficulty')}</dt>
+              <dd className="text-gray-700">
+                {t(`library.difficulty.${lib.difficulty}`, { defaultValue: lib.difficulty })}
+              </dd>
             </div>
           </div>
           {lib.care_notes && <p className="mt-3 text-sm text-gray-600">{lib.care_notes}</p>}

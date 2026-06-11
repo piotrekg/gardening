@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
 import { getApiErrorMessage } from '../api/client';
@@ -6,6 +7,8 @@ import { getDashboard } from '../api/dashboard';
 import { SeasonalTip } from '../components/SeasonalTip';
 import { Skeleton } from '../components/Skeleton';
 import { StatusBadge } from '../components/StatusBadge';
+import { useDateFnsLocale } from '../i18n/dateLocale';
+import { useLibraryPlantName } from '../i18n/libraryName';
 import type { DashboardPlantInstance, DashboardResponse, LibraryPlant } from '../types';
 
 function StatCard({ label, value, icon }: { label: string; value: number; icon: string }) {
@@ -87,6 +90,7 @@ function LibraryChipList({
   plants: LibraryPlant[];
   emptyText: string;
 }) {
+  const { name: libName } = useLibraryPlantName();
   return (
     <section className="card p-5">
       <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-800">
@@ -103,7 +107,7 @@ function LibraryChipList({
               to={`/library/${p.id}`}
               className="rounded-full bg-primary-light/60 px-3 py-1 text-xs font-semibold text-primary-dark transition hover:bg-accent-light"
             >
-              {p.common_name_pl}
+              {libName(p)}
             </Link>
           ))}
         </div>
@@ -113,6 +117,8 @@ function LibraryChipList({
 }
 
 export function DashboardPage() {
+  const { t } = useTranslation();
+  const dateLocale = useDateFnsLocale();
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -123,12 +129,12 @@ export function DashboardPage() {
         if (!cancelled) setData(d);
       })
       .catch((err) => {
-        if (!cancelled) setError(getApiErrorMessage(err, 'Could not load your dashboard.'));
+        if (!cancelled) setError(getApiErrorMessage(err, t('dashboard.loadError')));
       });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [t]);
 
   if (error) {
     return (
@@ -160,89 +166,97 @@ export function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">Today's overview</h1>
-        <p className="mt-0.5 text-sm text-gray-500">{format(new Date(), 'EEEE, d MMMM yyyy')}</p>
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('dashboard.title')}</h1>
+        <p className="mt-0.5 text-sm text-gray-500">
+          {format(new Date(), 'EEEE, d MMMM yyyy', { locale: dateLocale })}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard label="Gardens" value={data.stats.garden_count} icon="🌻" />
-        <StatCard label="Plants" value={data.stats.plant_count} icon="🪴" />
-        <StatCard label="Care actions this week" value={data.stats.care_actions_this_week} icon="🧤" />
+        <StatCard label={t('dashboard.stats.gardens')} value={data.stats.garden_count} icon="🌻" />
+        <StatCard label={t('dashboard.stats.plants')} value={data.stats.plant_count} icon="🪴" />
+        <StatCard
+          label={t('dashboard.stats.careWeek')}
+          value={data.stats.care_actions_this_week}
+          icon="🧤"
+        />
       </div>
 
       <SeasonalTip month={month} />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <InstanceList
-          title="Overdue watering"
+          title={t('dashboard.overdueWater')}
           icon="💧"
           items={data.overdue_water}
           tone="red"
-          emptyText="Nothing is thirsty — great job!"
+          emptyText={t('dashboard.overdueWaterEmpty')}
           badge={(p) => <StatusBadge status={p.care_status.water} />}
         />
         <InstanceList
-          title="Overdue fertilizing"
+          title={t('dashboard.overdueFertilize')}
           icon="🌾"
           items={data.overdue_fertilize}
           tone="red"
-          emptyText="Everyone is well fed."
+          emptyText={t('dashboard.overdueFertilizeEmpty')}
           badge={(p) => <StatusBadge status={p.care_status.fertilize} />}
         />
         <InstanceList
-          title="Due today"
+          title={t('dashboard.dueToday')}
           icon="⏰"
           items={data.due_today}
           tone="yellow"
-          emptyText="No care tasks due today."
+          emptyText={t('dashboard.dueTodayEmpty')}
         />
         <InstanceList
-          title="Upcoming harvests"
+          title={t('dashboard.upcomingHarvests')}
           icon="🧺"
           items={data.upcoming_harvests}
           tone="green"
-          emptyText="No harvests on the horizon yet."
+          emptyText={t('dashboard.upcomingHarvestsEmpty')}
         />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <LibraryChipList
-          title="Sow this month"
+          title={t('dashboard.sowThisMonth')}
           icon="🌱"
           plants={data.sow_this_month}
-          emptyText="Nothing to sow this month."
+          emptyText={t('dashboard.sowThisMonthEmpty')}
         />
         <LibraryChipList
-          title="Transplant this month"
+          title={t('dashboard.transplantThisMonth')}
           icon="🌿"
           plants={data.transplant_this_month}
-          emptyText="Nothing to transplant this month."
+          emptyText={t('dashboard.transplantThisMonthEmpty')}
         />
       </div>
 
       <section className="card p-5">
         <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-800">
           <span aria-hidden="true">📋</span>
-          Recent care
+          {t('dashboard.recentCare')}
         </h2>
         {data.recent_care.length === 0 ? (
-          <p className="text-sm text-gray-400">
-            No care logged yet. Water a plant to get the journal going!
-          </p>
+          <p className="text-sm text-gray-400">{t('dashboard.recentCareEmpty')}</p>
         ) : (
           <ul className="divide-y divide-gray-50">
             {data.recent_care.map((entry) => (
               <li key={entry.id} className="flex items-center justify-between gap-3 py-2.5">
                 <div className="min-w-0">
                   <p className="truncate text-sm text-gray-700">
-                    <span className="font-semibold capitalize">{entry.action}</span>{' '}
+                    <span className="font-semibold">{t(`care.past.${entry.action}`)}</span>
+                    {' · '}
                     {entry.plant_name}
                     {entry.note && <span className="text-gray-400"> — {entry.note}</span>}
                   </p>
                   <p className="text-xs text-gray-400">{entry.garden_name}</p>
                 </div>
                 <span className="shrink-0 text-xs text-gray-400">
-                  {formatDistanceToNow(new Date(entry.timestamp), { addSuffix: true })}
+                  {formatDistanceToNow(new Date(entry.timestamp), {
+                    addSuffix: true,
+                    locale: dateLocale,
+                  })}
                 </span>
               </li>
             ))}

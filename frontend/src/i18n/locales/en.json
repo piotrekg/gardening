@@ -1,0 +1,426 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading…",
+    "optional": "optional",
+    "never": "never",
+    "pageOf": "Page {{page}} of {{total}}",
+    "previous": "← Previous",
+    "next": "Next →",
+    "plantCount_one": "{{count}} plant",
+    "plantCount_other": "{{count}} plants",
+    "everyDays_one": "every {{count}} day",
+    "everyDays_other": "every {{count}} days"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Cannot reach the server. Please check your connection."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "gardens": "Gardens",
+    "library": "Library",
+    "calendar": "Calendar",
+    "settings": "Settings"
+  },
+  "layout": {
+    "tagline": "PlantDiary · grow happy 🌱",
+    "userMenu": "User menu",
+    "logout": "Log out"
+  },
+  "language": {
+    "label": "Language",
+    "switch": "Change language",
+    "description": "Choose the interface language. The change applies immediately.",
+    "pl": "Polish",
+    "en": "English"
+  },
+  "auth": {
+    "login": {
+      "subtitle": "Welcome back — your plants missed you.",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "emailRequired": "Email is required.",
+      "password": "Password",
+      "passwordRequired": "Password is required.",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "failed": "Login failed. Check your credentials.",
+      "noAccount": "New to PlantDiary?",
+      "createAccount": "Create an account"
+    },
+    "register": {
+      "title": "Join PlantDiary",
+      "subtitle": "Start tracking your garden in minutes.",
+      "name": "Name",
+      "namePlaceholder": "Jane Gardener",
+      "nameRequired": "Name is required.",
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Enter a valid email address.",
+      "passwordPlaceholder": "Min 8 chars, 1 uppercase, 1 number",
+      "passwordHint": "At least 8 characters, one uppercase letter and one number.",
+      "passwordMinLength": "Password must be at least 8 characters.",
+      "passwordUppercase": "Password must contain at least one uppercase letter.",
+      "passwordNumber": "Password must contain at least one number.",
+      "confirm": "Confirm password",
+      "confirmPlaceholder": "Repeat your password",
+      "confirmMismatch": "Passwords do not match.",
+      "submit": "Create account",
+      "submitting": "Creating account…",
+      "failed": "Registration failed. Please try again.",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in"
+    }
+  },
+  "status": {
+    "overdue": "Overdue",
+    "dueToday": "Due today",
+    "ok": "OK",
+    "unknown": "Unknown",
+    "waterLabel": "Water",
+    "feedLabel": "Feed"
+  },
+  "plantStatus": {
+    "active": "Active",
+    "harvested": "Harvested",
+    "removed": "Removed",
+    "dead": "Dead"
+  },
+  "location": {
+    "indoor": "Indoor",
+    "outdoor": "Outdoor",
+    "greenhouse": "Greenhouse"
+  },
+  "care": {
+    "action": {
+      "watered": "Water",
+      "fertilized": "Fertilize",
+      "pruned": "Prune",
+      "repotted": "Repot",
+      "treated": "Treat",
+      "observed": "Observe",
+      "harvested": "Harvest"
+    },
+    "past": {
+      "watered": "Watered",
+      "fertilized": "Fertilized",
+      "pruned": "Pruned",
+      "repotted": "Repotted",
+      "treated": "Treated",
+      "observed": "Observed",
+      "harvested": "Harvested"
+    },
+    "noun": {
+      "watered": "Watering",
+      "fertilized": "Fertilizing",
+      "pruned": "Pruning",
+      "repotted": "Repotting",
+      "treated": "Treatment",
+      "observed": "Observation",
+      "harvested": "Harvest"
+    },
+    "busy": {
+      "watered": "Watering…",
+      "fertilized": "Feeding…"
+    },
+    "logNow": "Log \"{{action}}\" now",
+    "logFailed": "Could not log \"{{action}}\"."
+  },
+  "plantCard": {
+    "open": "Open {{name}}",
+    "wateredAgo": "Watered {{distance}}",
+    "neverWatered": "Never watered"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "aria": "Notifications",
+    "ariaUnread": "Notifications, {{count}} unread",
+    "markAllRead": "Mark all read",
+    "empty": "You're all caught up. 🌿",
+    "goToDashboard": "Go to dashboard",
+    "types": {
+      "overdue_water": "overdue watering"
+    }
+  },
+  "photoUpload": {
+    "dropHint": "Drag a photo here, or click to choose",
+    "formats": "JPG, PNG or WebP · max 10 MB",
+    "typeError": "Only JPG, PNG or WebP images are allowed.",
+    "sizeError": "Image is too large — the maximum size is 10 MB.",
+    "uploadFailed": "Upload failed. Please try again.",
+    "previewAlt": "Upload preview",
+    "upload": "Upload",
+    "uploading": "Uploading…"
+  },
+  "companion": {
+    "titleConflicts": "Companion planting conflicts in this garden",
+    "titleWarnings": "Companion planting warnings in this garden",
+    "severity": {
+      "conflict": "conflict",
+      "warning": "warning"
+    }
+  },
+  "seasonalTip": {
+    "title": "Seasonal tip",
+    "m1": "Plan your beds and order seeds — browse the library for inspiration while the garden sleeps.",
+    "m2": "Start slow growers like peppers and celery indoors under lights.",
+    "m3": "Sow hardy crops indoors and prune fruit trees before buds break.",
+    "m4": "Harden off seedlings, but watch for late frosts — keep fleece handy.",
+    "m5": "After the last frost (mid-May in PL zone 6a), transplant frost-sensitive crops outside.",
+    "m6": "Mulch beds to hold moisture and water deeply in the morning during warm spells.",
+    "m7": "Succession-sow lettuce and radish, and keep harvesting to encourage more fruit.",
+    "m8": "Collect seeds, water consistently, and start sowing autumn greens.",
+    "m9": "Harvest and preserve; sow green manures on empty beds.",
+    "m10": "First frosts approach — bring tender plants inside and lift the last roots.",
+    "m11": "Clean tools, compost spent plants, and protect perennials with mulch.",
+    "m12": "Rest, review the season, and dream up next year's garden over a warm tea."
+  },
+  "monthChips": {
+    "monthTitle": "Month: {{month}}"
+  },
+  "dashboard": {
+    "title": "Today's overview",
+    "stats": {
+      "gardens": "Gardens",
+      "plants": "Plants",
+      "careWeek": "Care actions this week"
+    },
+    "overdueWater": "Overdue watering",
+    "overdueWaterEmpty": "Nothing is thirsty — great job!",
+    "overdueFertilize": "Overdue fertilizing",
+    "overdueFertilizeEmpty": "Everyone is well fed.",
+    "dueToday": "Due today",
+    "dueTodayEmpty": "No care tasks due today.",
+    "upcomingHarvests": "Upcoming harvests",
+    "upcomingHarvestsEmpty": "No harvests on the horizon yet.",
+    "sowThisMonth": "Sow this month",
+    "sowThisMonthEmpty": "Nothing to sow this month.",
+    "transplantThisMonth": "Transplant this month",
+    "transplantThisMonthEmpty": "Nothing to transplant this month.",
+    "recentCare": "Recent care",
+    "recentCareEmpty": "No care logged yet. Water a plant to get the journal going!",
+    "loadError": "Could not load your dashboard."
+  },
+  "gardens": {
+    "title": "My gardens",
+    "subtitle": "All the places where things grow.",
+    "new": "+ New garden",
+    "emptyTitle": "No gardens yet",
+    "emptyMessage": "Create your first garden to start tracking plants, watering and harvests.",
+    "createFirst": "Create your first garden",
+    "loadError": "Could not load your gardens.",
+    "create": {
+      "title": "Create a garden",
+      "name": "Name",
+      "namePlaceholder": "Balcony jungle",
+      "nameRequired": "Garden name is required.",
+      "description": "Description",
+      "descriptionPlaceholder": "South-facing, lots of pots…",
+      "locationType": "Location type",
+      "area": "Area (m²)",
+      "areaInvalid": "Area must be a positive number.",
+      "submit": "Create garden",
+      "submitting": "Creating…",
+      "failed": "Could not create the garden."
+    }
+  },
+  "gardenDetail": {
+    "backToGardens": "← Back to gardens",
+    "loadError": "Could not load this garden.",
+    "addPlant": "+ Add plant",
+    "health": {
+      "overdueWater": "overdue water",
+      "overdueFertilize": "overdue fertilize",
+      "dueToday": "due today",
+      "ok": "OK",
+      "total": "total"
+    },
+    "emptyTitle": "This garden is empty",
+    "emptyMessage": "Add your first plant from the library and start logging care.",
+    "emptyAction": "Add a plant"
+  },
+  "plantSearch": {
+    "title": "Add a plant",
+    "titleSelected": "Add {{name}}",
+    "searchPlaceholder": "Search the plant library…",
+    "searchAria": "Search plant library",
+    "searching": "Searching…",
+    "noResults": "No plants match \"{{query}}\". Try another name.",
+    "pickDifferent": "← Pick a different plant",
+    "quantity": "Quantity",
+    "quantityInvalid": "Quantity must be a whole number of at least 1.",
+    "plantedDate": "Planted date",
+    "customName": "Custom name",
+    "submit": "Add to garden",
+    "submitting": "Adding…",
+    "failed": "Could not add the plant."
+  },
+  "calendar": {
+    "title": "Garden calendar",
+    "subtitle": "What to sow, transplant and harvest.",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "today": "Today",
+    "loadError": "Could not load the calendar.",
+    "frostTitle": "Frost risk this month",
+    "sow": "Sow",
+    "sowEmpty": "Nothing in your gardens to sow this month.",
+    "transplant": "Transplant",
+    "transplantEmpty": "No transplanting tasks this month.",
+    "harvest": "Harvest",
+    "harvestEmpty": "No harvests expected this month.",
+    "recommended": "Recommended to sow — {{month}}",
+    "recommendedEmpty": "No sowing recommendations for this month — a good time to plan ahead."
+  },
+  "library": {
+    "title": "Plant library",
+    "subtitle": "Growing guides for every plant PlantDiary knows about.",
+    "searchPlaceholder": "Search by Polish, English or Latin name…",
+    "searchAria": "Search plants",
+    "filterCategory": "Filter by category",
+    "allCategories": "All categories",
+    "filterLifecycle": "Filter by lifecycle",
+    "allLifecycles": "All lifecycles",
+    "loadError": "Could not load the plant library.",
+    "emptyTitle": "No plants found",
+    "emptyMessage": "Try a different search term or clear the filters.",
+    "clearFilters": "Clear filters",
+    "found_one": "{{count}} plant found",
+    "found_other": "{{count}} plants found",
+    "frostSensitive": "frost-sensitive",
+    "category": {
+      "vegetable": "Vegetable",
+      "herb": "Herb",
+      "fruit": "Fruit",
+      "flower": "Flower",
+      "shrub_tree": "Shrub or tree",
+      "houseplant": "Houseplant"
+    },
+    "lifecycle": {
+      "annual": "Annual",
+      "biennial": "Biennial",
+      "perennial": "Perennial"
+    },
+    "difficulty": {
+      "easy": "easy",
+      "medium": "medium",
+      "hard": "hard"
+    },
+    "sun": {
+      "full_sun": "full sun",
+      "partial_shade": "partial shade",
+      "shade": "shade"
+    }
+  },
+  "libraryPlant": {
+    "backToLibrary": "← Back to library",
+    "loadError": "Could not load this plant.",
+    "difficultyChip": "difficulty: {{value}}",
+    "addToMyGarden": "+ Add to my garden",
+    "seasonCalendar": "Season calendar",
+    "sowLabel": "Sow",
+    "transplantLabel": "Transplant",
+    "harvestLabel": "Harvest",
+    "careParams": "Care parameters",
+    "sunRequirement": "Sun requirement",
+    "waterEvery": "Watering",
+    "fertilizeEvery": "Fertilizing",
+    "typicalHeight": "Typical height",
+    "spacing": "Spacing",
+    "commonPests": "Common pests",
+    "careNotes": "Care notes",
+    "goodCompanions": "🤝 Good companions",
+    "keepApart": "⚔️ Keep apart from",
+    "noneListed": "None listed.",
+    "addModal": {
+      "title": "Add {{name}} to a garden",
+      "success": "{{plant}} was added to \"{{garden}}\".",
+      "viewGarden": "View garden",
+      "loadingGardens": "Loading your gardens…",
+      "noGardens": "You don't have any gardens yet. Create one first.",
+      "goToGardens": "Go to gardens",
+      "pickGarden": "Pick a garden first.",
+      "garden": "Garden",
+      "submit": "Add plant",
+      "submitting": "Adding…"
+    }
+  },
+  "plantDetail": {
+    "breadcrumbGarden": "Garden",
+    "backToGarden": "← Back to garden",
+    "loadError": "Could not load this plant.",
+    "statusAria": "Plant status",
+    "statusError": "Could not update status.",
+    "deleteConfirm": "Remove this plant from the garden? This cannot be undone.",
+    "deleteError": "Could not delete this plant.",
+    "deletePhotoConfirm": "Delete this photo?",
+    "deletePhotoError": "Could not delete the photo.",
+    "deletePhotoAria": "Delete photo",
+    "planted": "Planted",
+    "lastWatered": "Last watered",
+    "lastFertilized": "Last fertilized",
+    "locationNotes": "Location notes",
+    "quickCare": "Quick care",
+    "careLog": "Care log",
+    "careLogLoading": "Loading care log…",
+    "careLogEmpty": "No care logged yet — tap a quick action above to start the journal.",
+    "newer": "← Newer",
+    "older": "Older →",
+    "photos": "Photos",
+    "photosLoading": "Loading photos…",
+    "photosEmpty": "No photos yet — document your plant's progress!",
+    "photoAlt": "Photo of {{name}}",
+    "growingGuide": "Growing guide",
+    "sun": "Sun",
+    "waterEvery": "Watering",
+    "fertilizeEvery": "Fertilizing",
+    "difficulty": "Difficulty",
+    "openInLibrary": "Open in library →",
+    "edit": {
+      "title": "Edit plant",
+      "customName": "Custom name",
+      "customNamePlaceholder": "My plant",
+      "locationNotes": "Location notes",
+      "locationNotesPlaceholder": "Bed 3, by the fence…",
+      "quantity": "Quantity",
+      "plantedDate": "Planted date",
+      "failed": "Could not save changes.",
+      "submit": "Save changes",
+      "submitting": "Saving…"
+    },
+    "log": {
+      "title": "New entry: {{action}}",
+      "note": "Note",
+      "notePlaceholder": "Anything worth remembering…",
+      "quantityHarvested": "Quantity harvested",
+      "quantityHarvestedPlaceholder": "e.g. 2.5",
+      "quantityInvalid": "Harvested quantity must be a non-negative number.",
+      "failed": "Could not log this care action.",
+      "submit": "Log it",
+      "submitting": "Logging…"
+    },
+    "quantityInvalid": "Quantity must be a whole number of at least 1."
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Your PlantDiary account.",
+    "profile": "Profile",
+    "profileError": "Could not load your profile.",
+    "name": "Name",
+    "email": "Email",
+    "memberSince": "Member since",
+    "profileReadOnly": "Profile details are read-only for now — editing your name or email isn't supported yet.",
+    "session": "Session",
+    "sessionInfo": "Signing out revokes this device's refresh token.",
+    "logout": "Log out",
+    "loggingOut": "Signing out…"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "This corner of the garden doesn't exist. Let's get you back to greener paths.",
+    "back": "Back to dashboard"
+  }
+}

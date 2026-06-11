@@ -1,0 +1,432 @@
+{
+  "common": {
+    "cancel": "Anuluj",
+    "close": "Zamknij",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "loading": "Ładowanie…",
+    "optional": "opcjonalnie",
+    "never": "nigdy",
+    "pageOf": "Strona {{page}} z {{total}}",
+    "previous": "← Poprzednia",
+    "next": "Następna →",
+    "plantCount_one": "{{count}} roślina",
+    "plantCount_few": "{{count}} rośliny",
+    "plantCount_many": "{{count}} roślin",
+    "plantCount_other": "{{count}} rośliny",
+    "everyDays_one": "co {{count}} dzień",
+    "everyDays_few": "co {{count}} dni",
+    "everyDays_many": "co {{count}} dni",
+    "everyDays_other": "co {{count}} dnia"
+  },
+  "errors": {
+    "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+    "network": "Brak połączenia z serwerem. Sprawdź połączenie z internetem."
+  },
+  "nav": {
+    "dashboard": "Pulpit",
+    "gardens": "Ogrody",
+    "library": "Biblioteka",
+    "calendar": "Kalendarz",
+    "settings": "Ustawienia"
+  },
+  "layout": {
+    "tagline": "PlantDiary · rośnij z nami 🌱",
+    "userMenu": "Menu użytkownika",
+    "logout": "Wyloguj się"
+  },
+  "language": {
+    "label": "Język",
+    "switch": "Zmień język",
+    "description": "Wybierz język interfejsu. Zmiana działa natychmiast.",
+    "pl": "Polski",
+    "en": "Angielski"
+  },
+  "auth": {
+    "login": {
+      "subtitle": "Witaj z powrotem — Twoje rośliny tęskniły.",
+      "email": "E-mail",
+      "emailPlaceholder": "ty@przyklad.pl",
+      "emailRequired": "Podaj adres e-mail.",
+      "password": "Hasło",
+      "passwordRequired": "Podaj hasło.",
+      "submit": "Zaloguj się",
+      "submitting": "Logowanie…",
+      "failed": "Logowanie nie powiodło się. Sprawdź dane logowania.",
+      "noAccount": "Pierwszy raz w PlantDiary?",
+      "createAccount": "Załóż konto"
+    },
+    "register": {
+      "title": "Dołącz do PlantDiary",
+      "subtitle": "Zacznij prowadzić dziennik ogrodu w kilka minut.",
+      "name": "Imię",
+      "namePlaceholder": "Janina Ogrodnik",
+      "nameRequired": "Podaj imię.",
+      "emailRequired": "Podaj adres e-mail.",
+      "emailInvalid": "Podaj poprawny adres e-mail.",
+      "passwordPlaceholder": "Min. 8 znaków, 1 wielka litera, 1 cyfra",
+      "passwordHint": "Co najmniej 8 znaków, jedna wielka litera i jedna cyfra.",
+      "passwordMinLength": "Hasło musi mieć co najmniej 8 znaków.",
+      "passwordUppercase": "Hasło musi zawierać co najmniej jedną wielką literę.",
+      "passwordNumber": "Hasło musi zawierać co najmniej jedną cyfrę.",
+      "confirm": "Powtórz hasło",
+      "confirmPlaceholder": "Wpisz hasło ponownie",
+      "confirmMismatch": "Hasła nie są takie same.",
+      "submit": "Załóż konto",
+      "submitting": "Zakładanie konta…",
+      "failed": "Rejestracja nie powiodła się. Spróbuj ponownie.",
+      "haveAccount": "Masz już konto?",
+      "signIn": "Zaloguj się"
+    }
+  },
+  "status": {
+    "overdue": "Zaległe",
+    "dueToday": "Na dziś",
+    "ok": "OK",
+    "unknown": "Brak danych",
+    "waterLabel": "Woda",
+    "feedLabel": "Nawóz"
+  },
+  "plantStatus": {
+    "active": "Aktywna",
+    "harvested": "Zebrana",
+    "removed": "Usunięta",
+    "dead": "Martwa"
+  },
+  "location": {
+    "indoor": "W domu",
+    "outdoor": "Na zewnątrz",
+    "greenhouse": "Szklarnia"
+  },
+  "care": {
+    "action": {
+      "watered": "Podlej",
+      "fertilized": "Nawoź",
+      "pruned": "Przytnij",
+      "repotted": "Przesadź",
+      "treated": "Wykonaj zabieg",
+      "observed": "Zanotuj obserwację",
+      "harvested": "Zbierz"
+    },
+    "past": {
+      "watered": "Podlano",
+      "fertilized": "Nawożono",
+      "pruned": "Przycięto",
+      "repotted": "Przesadzono",
+      "treated": "Wykonano zabieg",
+      "observed": "Zaobserwowano",
+      "harvested": "Zebrano"
+    },
+    "noun": {
+      "watered": "Podlewanie",
+      "fertilized": "Nawożenie",
+      "pruned": "Przycinanie",
+      "repotted": "Przesadzanie",
+      "treated": "Zabieg",
+      "observed": "Obserwacja",
+      "harvested": "Zbiór"
+    },
+    "busy": {
+      "watered": "Podlewanie…",
+      "fertilized": "Nawożenie…"
+    },
+    "logNow": "Zapisz teraz: {{action}}",
+    "logFailed": "Nie udało się zapisać akcji „{{action}}”."
+  },
+  "plantCard": {
+    "open": "Otwórz: {{name}}",
+    "wateredAgo": "Podlano {{distance}}",
+    "neverWatered": "Jeszcze nie podlewano"
+  },
+  "notifications": {
+    "title": "Powiadomienia",
+    "aria": "Powiadomienia",
+    "ariaUnread": "Powiadomienia, nieprzeczytane: {{count}}",
+    "markAllRead": "Oznacz wszystkie jako przeczytane",
+    "empty": "Wszystko ogarnięte. 🌿",
+    "goToDashboard": "Przejdź do pulpitu",
+    "types": {
+      "overdue_water": "zaległe podlewanie"
+    }
+  },
+  "photoUpload": {
+    "dropHint": "Przeciągnij zdjęcie tutaj lub kliknij, aby wybrać",
+    "formats": "JPG, PNG lub WebP · maks. 10 MB",
+    "typeError": "Dozwolone są tylko obrazy JPG, PNG i WebP.",
+    "sizeError": "Zdjęcie jest za duże — maksymalny rozmiar to 10 MB.",
+    "uploadFailed": "Przesyłanie nie powiodło się. Spróbuj ponownie.",
+    "previewAlt": "Podgląd przesyłanego zdjęcia",
+    "upload": "Prześlij",
+    "uploading": "Przesyłanie…"
+  },
+  "companion": {
+    "titleConflicts": "Konflikty sąsiedztwa roślin w tym ogrodzie",
+    "titleWarnings": "Ostrzeżenia o sąsiedztwie roślin w tym ogrodzie",
+    "severity": {
+      "conflict": "konflikt",
+      "warning": "ostrzeżenie"
+    }
+  },
+  "seasonalTip": {
+    "title": "Porada sezonowa",
+    "m1": "Zaplanuj grządki i zamów nasiona — przeglądaj bibliotekę w poszukiwaniu inspiracji, póki ogród śpi.",
+    "m2": "Wysiej w domu, pod lampami, rośliny o długim okresie wzrostu, np. paprykę i selera.",
+    "m3": "Wysiewaj odporne warzywa w domu i przytnij drzewa owocowe, zanim pąki ruszą.",
+    "m4": "Hartuj rozsadę, ale uważaj na późne przymrozki — trzymaj agrowłókninę pod ręką.",
+    "m5": "Po ostatnich przymrozkach (w Polsce ok. połowy maja) wysadź na zewnątrz rośliny wrażliwe na mróz.",
+    "m6": "Wyściółkuj grządki, by zatrzymać wilgoć, a w upały podlewaj obficie rano.",
+    "m7": "Dosiewaj partiami sałatę i rzodkiewkę oraz zbieraj na bieżąco, by zachęcić rośliny do owocowania.",
+    "m8": "Zbieraj nasiona, podlewaj regularnie i zacznij wysiewać jesienne warzywa liściowe.",
+    "m9": "Zbieraj i rób przetwory; na pustych grządkach wysiej nawozy zielone.",
+    "m10": "Zbliżają się pierwsze przymrozki — przenieś wrażliwe rośliny do środka i wykop ostatnie korzeniowe.",
+    "m11": "Wyczyść narzędzia, przekompostuj resztki roślin i okryj byliny ściółką.",
+    "m12": "Odpocznij, podsumuj sezon i przy ciepłej herbacie zaplanuj przyszłoroczny ogród."
+  },
+  "monthChips": {
+    "monthTitle": "Miesiąc: {{month}}"
+  },
+  "dashboard": {
+    "title": "Przegląd na dziś",
+    "stats": {
+      "gardens": "Ogrody",
+      "plants": "Rośliny",
+      "careWeek": "Zabiegi w tym tygodniu"
+    },
+    "overdueWater": "Zaległe podlewanie",
+    "overdueWaterEmpty": "Nic nie jest spragnione — świetna robota!",
+    "overdueFertilize": "Zaległe nawożenie",
+    "overdueFertilizeEmpty": "Wszystkie rośliny są nakarmione.",
+    "dueToday": "Na dziś",
+    "dueTodayEmpty": "Brak zadań pielęgnacyjnych na dziś.",
+    "upcomingHarvests": "Nadchodzące zbiory",
+    "upcomingHarvestsEmpty": "Na razie żadnych zbiorów na horyzoncie.",
+    "sowThisMonth": "Co wysiać w tym miesiącu",
+    "sowThisMonthEmpty": "W tym miesiącu nic nie wysiewamy.",
+    "transplantThisMonth": "Co przesadzić w tym miesiącu",
+    "transplantThisMonthEmpty": "W tym miesiącu nic nie przesadzamy.",
+    "recentCare": "Ostatnia pielęgnacja",
+    "recentCareEmpty": "Brak zapisanych zabiegów. Podlej roślinę, aby rozpocząć dziennik!",
+    "loadError": "Nie udało się załadować pulpitu."
+  },
+  "gardens": {
+    "title": "Moje ogrody",
+    "subtitle": "Wszystkie miejsca, w których coś rośnie.",
+    "new": "+ Nowy ogród",
+    "emptyTitle": "Nie masz jeszcze ogrodów",
+    "emptyMessage": "Utwórz pierwszy ogród, aby śledzić rośliny, podlewanie i zbiory.",
+    "createFirst": "Utwórz pierwszy ogród",
+    "loadError": "Nie udało się załadować Twoich ogrodów.",
+    "create": {
+      "title": "Utwórz ogród",
+      "name": "Nazwa",
+      "namePlaceholder": "Dżungla na balkonie",
+      "nameRequired": "Nazwa ogrodu jest wymagana.",
+      "description": "Opis",
+      "descriptionPlaceholder": "Południowa wystawa, dużo doniczek…",
+      "locationType": "Rodzaj lokalizacji",
+      "area": "Powierzchnia (m²)",
+      "areaInvalid": "Powierzchnia musi być liczbą dodatnią.",
+      "submit": "Utwórz ogród",
+      "submitting": "Tworzenie…",
+      "failed": "Nie udało się utworzyć ogrodu."
+    }
+  },
+  "gardenDetail": {
+    "backToGardens": "← Wróć do ogrodów",
+    "loadError": "Nie udało się załadować tego ogrodu.",
+    "addPlant": "+ Dodaj roślinę",
+    "health": {
+      "overdueWater": "zaległe podlewanie",
+      "overdueFertilize": "zaległe nawożenie",
+      "dueToday": "na dziś",
+      "ok": "OK",
+      "total": "łącznie"
+    },
+    "emptyTitle": "Ten ogród jest pusty",
+    "emptyMessage": "Dodaj pierwszą roślinę z biblioteki i zacznij notować pielęgnację.",
+    "emptyAction": "Dodaj roślinę"
+  },
+  "plantSearch": {
+    "title": "Dodaj roślinę",
+    "titleSelected": "Dodaj: {{name}}",
+    "searchPlaceholder": "Szukaj w bibliotece roślin…",
+    "searchAria": "Szukaj w bibliotece roślin",
+    "searching": "Szukanie…",
+    "noResults": "Brak roślin pasujących do „{{query}}”. Spróbuj innej nazwy.",
+    "pickDifferent": "← Wybierz inną roślinę",
+    "quantity": "Ilość",
+    "quantityInvalid": "Ilość musi być liczbą całkowitą, co najmniej 1.",
+    "plantedDate": "Data posadzenia",
+    "customName": "Własna nazwa",
+    "submit": "Dodaj do ogrodu",
+    "submitting": "Dodawanie…",
+    "failed": "Nie udało się dodać rośliny."
+  },
+  "calendar": {
+    "title": "Kalendarz ogrodnika",
+    "subtitle": "Co siać, przesadzać i zbierać.",
+    "prevMonth": "Poprzedni miesiąc",
+    "nextMonth": "Następny miesiąc",
+    "today": "Dziś",
+    "loadError": "Nie udało się załadować kalendarza.",
+    "frostTitle": "Ryzyko przymrozków w tym miesiącu",
+    "sow": "Siew",
+    "sowEmpty": "W Twoich ogrodach nie ma nic do wysiania w tym miesiącu.",
+    "transplant": "Przesadzanie",
+    "transplantEmpty": "Brak przesadzania w tym miesiącu.",
+    "harvest": "Zbiory",
+    "harvestEmpty": "W tym miesiącu nie zapowiadają się zbiory.",
+    "recommended": "Polecane do wysiewu — {{month}}",
+    "recommendedEmpty": "Brak rekomendacji siewu na ten miesiąc — dobry czas na planowanie."
+  },
+  "library": {
+    "title": "Biblioteka roślin",
+    "subtitle": "Przewodniki uprawy wszystkich roślin, które zna PlantDiary.",
+    "searchPlaceholder": "Szukaj po polskiej, angielskiej lub łacińskiej nazwie…",
+    "searchAria": "Szukaj roślin",
+    "filterCategory": "Filtruj według kategorii",
+    "allCategories": "Wszystkie kategorie",
+    "filterLifecycle": "Filtruj według cyklu życia",
+    "allLifecycles": "Wszystkie cykle życia",
+    "loadError": "Nie udało się załadować biblioteki roślin.",
+    "emptyTitle": "Nie znaleziono roślin",
+    "emptyMessage": "Spróbuj innego hasła albo wyczyść filtry.",
+    "clearFilters": "Wyczyść filtry",
+    "found_one": "Znaleziono {{count}} roślinę",
+    "found_few": "Znaleziono {{count}} rośliny",
+    "found_many": "Znaleziono {{count}} roślin",
+    "found_other": "Znaleziono {{count}} rośliny",
+    "frostSensitive": "wrażliwa na przymrozki",
+    "category": {
+      "vegetable": "Warzywo",
+      "herb": "Zioło",
+      "fruit": "Owoc",
+      "flower": "Kwiat",
+      "shrub_tree": "Krzew lub drzewo",
+      "houseplant": "Roślina doniczkowa"
+    },
+    "lifecycle": {
+      "annual": "Jednoroczna",
+      "biennial": "Dwuletnia",
+      "perennial": "Wieloletnia"
+    },
+    "difficulty": {
+      "easy": "łatwa",
+      "medium": "średnia",
+      "hard": "trudna"
+    },
+    "sun": {
+      "full_sun": "pełne słońce",
+      "partial_shade": "półcień",
+      "shade": "cień"
+    }
+  },
+  "libraryPlant": {
+    "backToLibrary": "← Wróć do biblioteki",
+    "loadError": "Nie udało się załadować tej rośliny.",
+    "difficultyChip": "trudność: {{value}}",
+    "addToMyGarden": "+ Dodaj do mojego ogrodu",
+    "seasonCalendar": "Kalendarz sezonowy",
+    "sowLabel": "Siew",
+    "transplantLabel": "Przesadzanie",
+    "harvestLabel": "Zbiór",
+    "careParams": "Parametry pielęgnacji",
+    "sunRequirement": "Stanowisko",
+    "waterEvery": "Podlewanie",
+    "fertilizeEvery": "Nawożenie",
+    "typicalHeight": "Typowa wysokość",
+    "spacing": "Rozstaw",
+    "commonPests": "Częste szkodniki",
+    "careNotes": "Wskazówki pielęgnacyjne",
+    "goodCompanions": "🤝 Dobre sąsiedztwo",
+    "keepApart": "⚔️ Trzymaj z dala od",
+    "noneListed": "Brak danych.",
+    "addModal": {
+      "title": "Dodaj {{name}} do ogrodu",
+      "success": "{{plant}} — dodano do ogrodu „{{garden}}”.",
+      "viewGarden": "Zobacz ogród",
+      "loadingGardens": "Ładowanie Twoich ogrodów…",
+      "noGardens": "Nie masz jeszcze żadnego ogrodu. Najpierw go utwórz.",
+      "goToGardens": "Przejdź do ogrodów",
+      "pickGarden": "Najpierw wybierz ogród.",
+      "garden": "Ogród",
+      "submit": "Dodaj roślinę",
+      "submitting": "Dodawanie…"
+    }
+  },
+  "plantDetail": {
+    "breadcrumbGarden": "Ogród",
+    "backToGarden": "← Wróć do ogrodu",
+    "loadError": "Nie udało się załadować tej rośliny.",
+    "statusAria": "Status rośliny",
+    "statusError": "Nie udało się zmienić statusu.",
+    "deleteConfirm": "Usunąć tę roślinę z ogrodu? Tej operacji nie można cofnąć.",
+    "deleteError": "Nie udało się usunąć tej rośliny.",
+    "deletePhotoConfirm": "Usunąć to zdjęcie?",
+    "deletePhotoError": "Nie udało się usunąć zdjęcia.",
+    "deletePhotoAria": "Usuń zdjęcie",
+    "planted": "Posadzono",
+    "lastWatered": "Ostatnie podlewanie",
+    "lastFertilized": "Ostatnie nawożenie",
+    "locationNotes": "Notatki o lokalizacji",
+    "quickCare": "Szybka pielęgnacja",
+    "careLog": "Dziennik pielęgnacji",
+    "careLogLoading": "Ładowanie dziennika…",
+    "careLogEmpty": "Brak wpisów — użyj szybkiej akcji powyżej, aby rozpocząć dziennik.",
+    "newer": "← Nowsze",
+    "older": "Starsze →",
+    "photos": "Zdjęcia",
+    "photosLoading": "Ładowanie zdjęć…",
+    "photosEmpty": "Brak zdjęć — dokumentuj postępy swojej rośliny!",
+    "photoAlt": "Zdjęcie: {{name}}",
+    "growingGuide": "Przewodnik uprawy",
+    "sun": "Słońce",
+    "waterEvery": "Podlewanie",
+    "fertilizeEvery": "Nawożenie",
+    "difficulty": "Poziom trudności",
+    "openInLibrary": "Otwórz w bibliotece →",
+    "edit": {
+      "title": "Edytuj roślinę",
+      "customName": "Własna nazwa",
+      "customNamePlaceholder": "Moja roślina",
+      "locationNotes": "Notatki o lokalizacji",
+      "locationNotesPlaceholder": "Grządka 3, przy płocie…",
+      "quantity": "Ilość",
+      "plantedDate": "Data posadzenia",
+      "failed": "Nie udało się zapisać zmian.",
+      "submit": "Zapisz zmiany",
+      "submitting": "Zapisywanie…"
+    },
+    "log": {
+      "title": "Nowy wpis: {{action}}",
+      "note": "Notatka",
+      "notePlaceholder": "Wszystko, co warto zapamiętać…",
+      "quantityHarvested": "Zebrana ilość",
+      "quantityHarvestedPlaceholder": "np. 2,5",
+      "quantityInvalid": "Zebrana ilość musi być liczbą nieujemną.",
+      "failed": "Nie udało się zapisać tego zabiegu.",
+      "submit": "Zapisz wpis",
+      "submitting": "Zapisywanie…"
+    },
+    "quantityInvalid": "Ilość musi być liczbą całkowitą, co najmniej 1."
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "subtitle": "Twoje konto PlantDiary.",
+    "profile": "Profil",
+    "profileError": "Nie udało się załadować profilu.",
+    "name": "Imię",
+    "email": "E-mail",
+    "memberSince": "W PlantDiary od",
+    "profileReadOnly": "Dane profilu są na razie tylko do odczytu — edycja imienia i adresu e-mail nie jest jeszcze dostępna.",
+    "session": "Sesja",
+    "sessionInfo": "Wylogowanie unieważnia token odświeżania na tym urządzeniu.",
+    "logout": "Wyloguj się",
+    "loggingOut": "Wylogowywanie…"
+  },
+  "notFound": {
+    "title": "Nie znaleziono strony",
+    "message": "Ten zakątek ogrodu nie istnieje. Wróćmy na zieloną ścieżkę.",
+    "back": "Wróć do pulpitu"
+  }
+}

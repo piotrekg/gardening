@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { getApiErrorMessage } from '../api/client';
 import { createGarden, listGardens } from '../api/gardens';
@@ -7,10 +8,10 @@ import { Modal } from '../components/Modal';
 import { GridSkeleton } from '../components/Skeleton';
 import type { Garden, LocationType } from '../types';
 
-const LOCATION_LABELS: Record<LocationType, string> = {
-  indoor: '🏠 Indoor',
-  outdoor: '🌤️ Outdoor',
-  greenhouse: '🏡 Greenhouse',
+const LOCATION_ICONS: Record<LocationType, string> = {
+  indoor: '🏠',
+  outdoor: '🌤️',
+  greenhouse: '🏡',
 };
 
 function CreateGardenModal({
@@ -20,6 +21,7 @@ function CreateGardenModal({
   onClose: () => void;
   onCreated: (garden: Garden) => void;
 }) {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [locationType, setLocationType] = useState<LocationType>('outdoor');
@@ -33,7 +35,7 @@ function CreateGardenModal({
     e.preventDefault();
     let valid = true;
     if (!name.trim()) {
-      setNameError('Garden name is required.');
+      setNameError(t('gardens.create.nameRequired'));
       valid = false;
     } else {
       setNameError(null);
@@ -42,7 +44,7 @@ function CreateGardenModal({
     if (areaSqm.trim() !== '') {
       area = Number(areaSqm);
       if (!Number.isFinite(area) || area <= 0) {
-        setAreaError('Area must be a positive number.');
+        setAreaError(t('gardens.create.areaInvalid'));
         valid = false;
       } else {
         setAreaError(null);
@@ -64,14 +66,14 @@ function CreateGardenModal({
       onCreated(garden);
       onClose();
     } catch (err) {
-      setApiError(getApiErrorMessage(err, 'Could not create the garden.'));
+      setApiError(getApiErrorMessage(err, t('gardens.create.failed')));
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Modal title="Create a garden" onClose={onClose}>
+    <Modal title={t('gardens.create.title')} onClose={onClose}>
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4" noValidate>
         {apiError && (
           <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
@@ -80,7 +82,7 @@ function CreateGardenModal({
         )}
         <div>
           <label htmlFor="g-name" className="mb-1 block text-sm font-medium text-gray-700">
-            Name
+            {t('gardens.create.name')}
           </label>
           <input
             id="g-name"
@@ -89,25 +91,26 @@ function CreateGardenModal({
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="input-field"
-            placeholder="Balcony jungle"
+            placeholder={t('gardens.create.namePlaceholder')}
           />
           {nameError && <p className="mt-1 text-xs text-red-600">{nameError}</p>}
         </div>
         <div>
           <label htmlFor="g-desc" className="mb-1 block text-sm font-medium text-gray-700">
-            Description <span className="font-normal text-gray-400">(optional)</span>
+            {t('gardens.create.description')}{' '}
+            <span className="font-normal text-gray-400">({t('common.optional')})</span>
           </label>
           <textarea
             id="g-desc"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="input-field min-h-20 resize-y"
-            placeholder="South-facing, lots of pots…"
+            placeholder={t('gardens.create.descriptionPlaceholder')}
           />
         </div>
         <div>
           <label htmlFor="g-loc" className="mb-1 block text-sm font-medium text-gray-700">
-            Location type
+            {t('gardens.create.locationType')}
           </label>
           <select
             id="g-loc"
@@ -115,14 +118,15 @@ function CreateGardenModal({
             onChange={(e) => setLocationType(e.target.value as LocationType)}
             className="input-field"
           >
-            <option value="indoor">Indoor</option>
-            <option value="outdoor">Outdoor</option>
-            <option value="greenhouse">Greenhouse</option>
+            <option value="indoor">{t('location.indoor')}</option>
+            <option value="outdoor">{t('location.outdoor')}</option>
+            <option value="greenhouse">{t('location.greenhouse')}</option>
           </select>
         </div>
         <div>
           <label htmlFor="g-area" className="mb-1 block text-sm font-medium text-gray-700">
-            Area (m²) <span className="font-normal text-gray-400">(optional)</span>
+            {t('gardens.create.area')}{' '}
+            <span className="font-normal text-gray-400">({t('common.optional')})</span>
           </label>
           <input
             id="g-area"
@@ -138,10 +142,10 @@ function CreateGardenModal({
         </div>
         <div className="flex justify-end gap-2 pt-1">
           <button type="button" onClick={onClose} className="btn-secondary">
-            Cancel
+            {t('common.cancel')}
           </button>
           <button type="submit" disabled={submitting} className="btn-primary">
-            {submitting ? 'Creating…' : 'Create garden'}
+            {submitting ? t('gardens.create.submitting') : t('gardens.create.submit')}
           </button>
         </div>
       </form>
@@ -150,6 +154,7 @@ function CreateGardenModal({
 }
 
 export function GardensPage() {
+  const { t } = useTranslation();
   const [gardens, setGardens] = useState<Garden[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
@@ -161,22 +166,22 @@ export function GardensPage() {
         if (!cancelled) setGardens(g);
       })
       .catch((err) => {
-        if (!cancelled) setError(getApiErrorMessage(err, 'Could not load your gardens.'));
+        if (!cancelled) setError(getApiErrorMessage(err, t('gardens.loadError')));
       });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [t]);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">My gardens</h1>
-          <p className="mt-0.5 text-sm text-gray-500">All the places where things grow.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('gardens.title')}</h1>
+          <p className="mt-0.5 text-sm text-gray-500">{t('gardens.subtitle')}</p>
         </div>
         <button type="button" onClick={() => setShowCreate(true)} className="btn-primary shrink-0">
-          + New garden
+          {t('gardens.new')}
         </button>
       </div>
 
@@ -187,11 +192,11 @@ export function GardensPage() {
       ) : gardens.length === 0 ? (
         <EmptyState
           icon="🌻"
-          title="No gardens yet"
-          message="Create your first garden to start tracking plants, watering and harvests."
+          title={t('gardens.emptyTitle')}
+          message={t('gardens.emptyMessage')}
           action={
             <button type="button" onClick={() => setShowCreate(true)} className="btn-primary">
-              Create your first garden
+              {t('gardens.createFirst')}
             </button>
           }
         />
@@ -206,16 +211,14 @@ export function GardensPage() {
               <div className="flex items-start justify-between gap-2">
                 <h2 className="font-semibold text-gray-800 group-hover:text-primary">{g.name}</h2>
                 <span className="shrink-0 rounded-full bg-primary-light/60 px-2 py-0.5 text-[11px] font-semibold text-primary-dark">
-                  {LOCATION_LABELS[g.location_type]}
+                  {LOCATION_ICONS[g.location_type]} {t(`location.${g.location_type}`)}
                 </span>
               </div>
               {g.description && (
                 <p className="line-clamp-2 text-sm text-gray-500">{g.description}</p>
               )}
               <div className="mt-auto flex items-center gap-4 pt-1 text-xs text-gray-400">
-                <span>
-                  🪴 {g.plant_count} {g.plant_count === 1 ? 'plant' : 'plants'}
-                </span>
+                <span>🪴 {t('common.plantCount', { count: g.plant_count })}</span>
                 {g.area_sqm !== null && <span>📐 {g.area_sqm} m²</span>}
               </div>
             </Link>

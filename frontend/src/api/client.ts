@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import type { InternalAxiosRequestConfig } from 'axios';
+import i18n from '../i18n';
 import { useAuthStore } from '../store/auth';
 import type { ApiErrorBody, RefreshResponse } from '../types';
 
@@ -67,16 +68,19 @@ api.interceptors.response.use(
   },
 );
 
-/** Extract the human-readable message from an API error response. */
-export function getApiErrorMessage(err: unknown, fallback = 'Something went wrong'): string {
+/**
+ * Extract the human-readable message from an API error response.
+ * Server-provided messages render as-is; generic fallbacks are localized.
+ */
+export function getApiErrorMessage(err: unknown, fallback?: string): string {
   if (axios.isAxiosError(err)) {
     const body = err.response?.data as ApiErrorBody | undefined;
     if (body && typeof body.error === 'string') {
       return body.error;
     }
     if (err.code === 'ERR_NETWORK') {
-      return 'Cannot reach the server. Please check your connection.';
+      return i18n.t('errors.network');
     }
   }
-  return fallback;
+  return fallback ?? i18n.t('errors.generic');
 }

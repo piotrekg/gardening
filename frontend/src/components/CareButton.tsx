@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { logCare } from '../api/care';
 import { getApiErrorMessage } from '../api/client';
 import type { CareAction, PlantInstance } from '../types';
@@ -11,14 +12,15 @@ interface CareButtonProps {
   onError?: (message: string) => void;
 }
 
-const CONFIG = {
-  watered: { icon: '💧', label: 'Water', busy: 'Watering…' },
-  fertilized: { icon: '🌾', label: 'Fertilize', busy: 'Feeding…' },
+const ICONS = {
+  watered: '💧',
+  fertilized: '🌾',
 } as const;
 
 export function CareButton({ plant, action, onUpdated, onError }: CareButtonProps) {
+  const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
-  const cfg = CONFIG[action];
+  const label = t(`care.action.${action}`);
 
   const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -44,7 +46,7 @@ export function CareButton({ plant, action, onUpdated, onError }: CareButtonProp
       await logCare(plant.garden_id, plant.id, { action });
     } catch (err) {
       onUpdated(previous); // rollback
-      onError?.(getApiErrorMessage(err, `Could not log "${cfg.label}".`));
+      onError?.(getApiErrorMessage(err, t('care.logFailed', { action: label })));
     } finally {
       setBusy(false);
     }
@@ -56,10 +58,10 @@ export function CareButton({ plant, action, onUpdated, onError }: CareButtonProp
       onClick={(e) => void handleClick(e)}
       disabled={busy}
       className="inline-flex items-center gap-1 rounded-lg bg-primary-light/60 px-2.5 py-1.5 text-xs font-semibold text-primary-dark transition hover:bg-accent-light disabled:opacity-60"
-      title={`Log "${action}" now`}
+      title={t('care.logNow', { action: label })}
     >
-      <span aria-hidden="true">{cfg.icon}</span>
-      {busy ? cfg.busy : cfg.label}
+      <span aria-hidden="true">{ICONS[action]}</span>
+      {busy ? t(`care.busy.${action}`) : label}
     </button>
   );
 }

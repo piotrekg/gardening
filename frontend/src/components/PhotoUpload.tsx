@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getApiErrorMessage } from '../api/client';
 import { uploadPhoto } from '../api/photos';
 import type { Photo } from '../types';
@@ -13,6 +14,7 @@ interface PhotoUploadProps {
 }
 
 export function PhotoUpload({ gardenId, plantId, onUploaded }: PhotoUploadProps) {
+  const { t } = useTranslation();
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
@@ -29,11 +31,11 @@ export function PhotoUpload({ gardenId, plantId, onUploaded }: PhotoUploadProps)
   const selectFile = (f: File) => {
     setError(null);
     if (!ALLOWED_TYPES.includes(f.type)) {
-      setError('Only JPG, PNG or WebP images are allowed.');
+      setError(t('photoUpload.typeError'));
       return;
     }
     if (f.size > MAX_SIZE_BYTES) {
-      setError('Image is too large — the maximum size is 10 MB.');
+      setError(t('photoUpload.sizeError'));
       return;
     }
     if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -58,7 +60,7 @@ export function PhotoUpload({ gardenId, plantId, onUploaded }: PhotoUploadProps)
       onUploaded(photo);
       reset();
     } catch (err) {
-      setError(getApiErrorMessage(err, 'Upload failed. Please try again.'));
+      setError(getApiErrorMessage(err, t('photoUpload.uploadFailed')));
     } finally {
       setUploading(false);
     }
@@ -94,10 +96,8 @@ export function PhotoUpload({ gardenId, plantId, onUploaded }: PhotoUploadProps)
           <span className="text-3xl" aria-hidden="true">
             📷
           </span>
-          <p className="text-sm font-medium text-gray-700">
-            Drag a photo here, or click to choose
-          </p>
-          <p className="text-xs text-gray-400">JPG, PNG or WebP · max 10 MB</p>
+          <p className="text-sm font-medium text-gray-700">{t('photoUpload.dropHint')}</p>
+          <p className="text-xs text-gray-400">{t('photoUpload.formats')}</p>
           <input
             ref={inputRef}
             type="file"
@@ -112,7 +112,11 @@ export function PhotoUpload({ gardenId, plantId, onUploaded }: PhotoUploadProps)
       ) : (
         <div className="card overflow-hidden">
           {previewUrl && (
-            <img src={previewUrl} alt="Upload preview" className="max-h-64 w-full object-contain bg-gray-50" />
+            <img
+              src={previewUrl}
+              alt={t('photoUpload.previewAlt')}
+              className="max-h-64 w-full object-contain bg-gray-50"
+            />
           )}
           <div className="flex items-center justify-between gap-3 px-4 py-3">
             <p className="truncate text-xs text-gray-500">
@@ -120,7 +124,7 @@ export function PhotoUpload({ gardenId, plantId, onUploaded }: PhotoUploadProps)
             </p>
             <div className="flex shrink-0 gap-2">
               <button type="button" onClick={reset} className="btn-secondary !px-3 !py-1.5 text-xs">
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 type="button"
@@ -128,7 +132,7 @@ export function PhotoUpload({ gardenId, plantId, onUploaded }: PhotoUploadProps)
                 disabled={uploading}
                 className="btn-primary !px-3 !py-1.5 text-xs"
               >
-                {uploading ? 'Uploading…' : 'Upload'}
+                {uploading ? t('photoUpload.uploading') : t('photoUpload.upload')}
               </button>
             </div>
           </div>

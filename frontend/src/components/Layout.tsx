@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { logout as apiLogout } from '../api/auth';
 import { useAuthStore } from '../store/auth';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { NotificationBell } from './NotificationBell';
 
 const NAV_ITEMS = [
-  { to: '/dashboard', label: 'Dashboard', icon: '🏡' },
-  { to: '/gardens', label: 'Gardens', icon: '🌻' },
-  { to: '/library', label: 'Library', icon: '📚' },
-  { to: '/calendar', label: 'Calendar', icon: '📅' },
-  { to: '/settings', label: 'Settings', icon: '⚙️' },
+  { to: '/dashboard', labelKey: 'nav.dashboard', icon: '🏡' },
+  { to: '/gardens', labelKey: 'nav.gardens', icon: '🌻' },
+  { to: '/library', labelKey: 'nav.library', icon: '📚' },
+  { to: '/calendar', labelKey: 'nav.calendar', icon: '📅' },
+  { to: '/settings', labelKey: 'nav.settings', icon: '⚙️' },
 ];
 
 function navClasses(isActive: boolean): string {
@@ -22,6 +24,7 @@ function navClasses(isActive: boolean): string {
 }
 
 export function Layout() {
+  const { t } = useTranslation();
   const user = useAuthStore((s) => s.user);
   const refreshToken = useAuthStore((s) => s.refreshToken);
   const clearAuth = useAuthStore((s) => s.clearAuth);
@@ -72,12 +75,12 @@ export function Layout() {
           {NAV_ITEMS.map((item) => (
             <NavLink key={item.to} to={item.to} className={({ isActive }) => navClasses(isActive)}>
               <span aria-hidden="true">{item.icon}</span>
-              {item.label}
+              {t(item.labelKey)}
             </NavLink>
           ))}
         </nav>
         <div className="border-t border-gray-100 px-5 py-4 text-xs text-gray-400">
-          PlantDiary · grow happy 🌱
+          {t('layout.tagline')}
         </div>
       </aside>
 
@@ -91,13 +94,14 @@ export function Layout() {
         </Link>
         <div className="hidden md:block" />
         <div className="flex items-center gap-1.5">
+          <LanguageSwitcher className="mr-1" />
           <NotificationBell />
           <div className="relative" ref={menuRef}>
             <button
               type="button"
               onClick={() => setMenuOpen((o) => !o)}
               className="flex h-8.5 w-8.5 items-center justify-center rounded-full bg-accent-light text-sm font-bold text-primary-dark transition hover:ring-2 hover:ring-accent"
-              aria-label="User menu"
+              aria-label={t('layout.userMenu')}
             >
               {initials}
             </button>
@@ -112,14 +116,14 @@ export function Layout() {
                   onClick={() => setMenuOpen(false)}
                   className="block px-4 py-2.5 text-sm text-gray-600 transition hover:bg-gray-50"
                 >
-                  Settings
+                  {t('nav.settings')}
                 </Link>
                 <button
                   type="button"
                   onClick={() => void handleLogout()}
                   className="block w-full px-4 py-2.5 text-left text-sm text-red-600 transition hover:bg-red-50"
                 >
-                  Log out
+                  {t('layout.logout')}
                 </button>
               </div>
             )}
@@ -150,7 +154,7 @@ export function Layout() {
             <span className="text-lg" aria-hidden="true">
               {item.icon}
             </span>
-            {item.label}
+            {t(item.labelKey)}
           </NavLink>
         ))}
       </nav>

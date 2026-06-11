@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { getApiErrorMessage } from '../api/client';
 import { getGarden, getGardenCompatibility } from '../api/gardens';
@@ -23,6 +24,7 @@ function HealthPill({ label, value, className }: { label: string; value: number;
 }
 
 export function GardenDetailPage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const gardenId = id ?? '';
 
@@ -46,9 +48,9 @@ export function GardenDetailPage() {
       setConflicts(c.conflicts);
       setError(null);
     } catch (err) {
-      setError(getApiErrorMessage(err, 'Could not load this garden.'));
+      setError(getApiErrorMessage(err, t('gardenDetail.loadError')));
     }
-  }, [gardenId]);
+  }, [gardenId, t]);
 
   useEffect(() => {
     void load();
@@ -63,7 +65,7 @@ export function GardenDetailPage() {
       <div className="card p-6 text-center">
         <p className="text-sm text-red-600">{error}</p>
         <Link to="/gardens" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
-          ← Back to gardens
+          {t('gardenDetail.backToGardens')}
         </Link>
       </div>
     );
@@ -85,7 +87,7 @@ export function GardenDetailPage() {
     <div className="space-y-6">
       <nav className="text-xs text-gray-400">
         <Link to="/gardens" className="hover:text-primary hover:underline">
-          Gardens
+          {t('nav.gardens')}
         </Link>{' '}
         / <span className="text-gray-600">{garden.name}</span>
       </nav>
@@ -96,25 +98,41 @@ export function GardenDetailPage() {
             <h1 className="text-2xl font-bold tracking-tight text-gray-900">{garden.name}</h1>
             {garden.description && <p className="mt-1 text-sm text-gray-500">{garden.description}</p>}
             <p className="mt-1 text-xs text-gray-400">
-              {garden.location_type}
-              {garden.area_sqm !== null ? ` · ${garden.area_sqm} m²` : ''} · {garden.plant_count}{' '}
-              {garden.plant_count === 1 ? 'plant' : 'plants'}
+              {t(`location.${garden.location_type}`)}
+              {garden.area_sqm !== null ? ` · ${garden.area_sqm} m²` : ''} ·{' '}
+              {t('common.plantCount', { count: garden.plant_count })}
             </p>
           </div>
           <button type="button" onClick={() => setShowAdd(true)} className="btn-primary shrink-0">
-            + Add plant
+            {t('gardenDetail.addPlant')}
           </button>
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
-          <HealthPill label="overdue water" value={health_summary.overdue_water} className="bg-red-100 text-red-700" />
           <HealthPill
-            label="overdue fertilize"
+            label={t('gardenDetail.health.overdueWater')}
+            value={health_summary.overdue_water}
+            className="bg-red-100 text-red-700"
+          />
+          <HealthPill
+            label={t('gardenDetail.health.overdueFertilize')}
             value={health_summary.overdue_fertilize}
             className="bg-red-100 text-red-700"
           />
-          <HealthPill label="due today" value={health_summary.due_today} className="bg-yellow-100 text-yellow-800" />
-          <HealthPill label="ok" value={health_summary.ok} className="bg-green-100 text-green-700" />
-          <HealthPill label="total" value={health_summary.total} className="bg-gray-100 text-gray-600" />
+          <HealthPill
+            label={t('gardenDetail.health.dueToday')}
+            value={health_summary.due_today}
+            className="bg-yellow-100 text-yellow-800"
+          />
+          <HealthPill
+            label={t('gardenDetail.health.ok')}
+            value={health_summary.ok}
+            className="bg-green-100 text-green-700"
+          />
+          <HealthPill
+            label={t('gardenDetail.health.total')}
+            value={health_summary.total}
+            className="bg-gray-100 text-gray-600"
+          />
         </div>
       </div>
 
@@ -131,11 +149,11 @@ export function GardenDetailPage() {
       ) : plants.length === 0 ? (
         <EmptyState
           icon="🪴"
-          title="This garden is empty"
-          message="Add your first plant from the library and start logging care."
+          title={t('gardenDetail.emptyTitle')}
+          message={t('gardenDetail.emptyMessage')}
           action={
             <button type="button" onClick={() => setShowAdd(true)} className="btn-primary">
-              Add a plant
+              {t('gardenDetail.emptyAction')}
             </button>
           }
         />

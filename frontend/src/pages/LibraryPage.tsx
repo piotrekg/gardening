@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getApiErrorMessage } from '../api/client';
 import { getLibraryCategories, searchLibrary } from '../api/library';
 import { EmptyState } from '../components/EmptyState';
 import { GridSkeleton } from '../components/Skeleton';
+import { useLibraryPlantName } from '../i18n/libraryName';
 import type { LibraryListResponse } from '../types';
 
 const LIFECYCLES = ['annual', 'biennial', 'perennial'];
 const PAGE_SIZE = 18;
 
 export function LibraryPage() {
+  const { t } = useTranslation();
+  const { name: libName, altName: libAltName } = useLibraryPlantName();
   const [searchParams, setSearchParams] = useSearchParams();
   const search = searchParams.get('search') ?? '';
   const category = searchParams.get('category') ?? '';
@@ -30,7 +34,7 @@ export function LibraryPage() {
 
   // Debounce search input → URL params.
   useEffect(() => {
-    const t = window.setTimeout(() => {
+    const timer = window.setTimeout(() => {
       if (searchInput !== search) {
         setSearchParams((prev) => {
           const next = new URLSearchParams(prev);
@@ -41,7 +45,7 @@ export function LibraryPage() {
         });
       }
     }, 300);
-    return () => window.clearTimeout(t);
+    return () => window.clearTimeout(timer);
   }, [searchInput, search, setSearchParams]);
 
   useEffect(() => {
@@ -61,7 +65,7 @@ export function LibraryPage() {
         }
       })
       .catch((err) => {
-        if (!cancelled) setError(getApiErrorMessage(err, 'Could not load the plant library.'));
+        if (!cancelled) setError(getApiErrorMessage(err, t('library.loadError')));
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -69,7 +73,7 @@ export function LibraryPage() {
     return () => {
       cancelled = true;
     };
-  }, [search, category, lifecycle, page]);
+  }, [search, category, lifecycle, page, t]);
 
   const setFilter = (key: string, value: string) => {
     setSearchParams((prev) => {
@@ -95,10 +99,8 @@ export function LibraryPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">Plant library</h1>
-        <p className="mt-0.5 text-sm text-gray-500">
-          Growing guides for every plant PlantDiary knows about.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('library.title')}</h1>
+        <p className="mt-0.5 text-sm text-gray-500">{t('library.subtitle')}</p>
       </div>
 
       <div className="card flex flex-col gap-3 p-4 sm:flex-row">
@@ -106,20 +108,20 @@ export function LibraryPage() {
           type="search"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          placeholder="Search by Polish, English or Latin name…"
+          placeholder={t('library.searchPlaceholder')}
           className="input-field flex-1"
-          aria-label="Search plants"
+          aria-label={t('library.searchAria')}
         />
         <select
           value={category}
           onChange={(e) => setFilter('category', e.target.value)}
           className="input-field sm:w-44"
-          aria-label="Filter by category"
+          aria-label={t('library.filterCategory')}
         >
-          <option value="">All categories</option>
+          <option value="">{t('library.allCategories')}</option>
           {categories.map((c) => (
             <option key={c} value={c}>
-              {c}
+              {t(`library.category.${c}`, { defaultValue: c })}
             </option>
           ))}
         </select>
@@ -127,12 +129,12 @@ export function LibraryPage() {
           value={lifecycle}
           onChange={(e) => setFilter('lifecycle', e.target.value)}
           className="input-field sm:w-40"
-          aria-label="Filter by lifecycle"
+          aria-label={t('library.filterLifecycle')}
         >
-          <option value="">All lifecycles</option>
+          <option value="">{t('library.allLifecycles')}</option>
           {LIFECYCLES.map((l) => (
             <option key={l} value={l}>
-              {l}
+              {t(`library.lifecycle.${l}`, { defaultValue: l })}
             </option>
           ))}
         </select>
@@ -145,8 +147,8 @@ export function LibraryPage() {
       ) : data && data.plants.length === 0 ? (
         <EmptyState
           icon="🔍"
-          title="No plants found"
-          message="Try a different search term or clear the filters."
+          title={t('library.emptyTitle')}
+          message={t('library.emptyMessage')}
           action={
             <button
               type="button"
@@ -156,15 +158,13 @@ export function LibraryPage() {
               }}
               className="btn-secondary"
             >
-              Clear filters
+              {t('library.clearFilters')}
             </button>
           }
         />
       ) : data ? (
         <>
-          <p className="text-xs text-gray-400">
-            {data.total} {data.total === 1 ? 'plant' : 'plants'} found
-          </p>
+          <p className="text-xs text-gray-400">{t('library.found', { count: data.total })}</p>
           <div
             className={`grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 ${loading ? 'opacity-60' : ''}`}
           >
@@ -176,22 +176,28 @@ export function LibraryPage() {
               >
                 <div className="flex items-start justify-between gap-2">
                   <h2 className="font-semibold text-gray-800 group-hover:text-primary">
-                    {p.common_name_pl}
+                    {libName(p)}
                   </h2>
                   <span className="shrink-0 rounded-full bg-primary-light/60 px-2 py-0.5 text-[11px] font-semibold text-primary-dark">
-                    {p.category}
+                    {t(`library.category.${p.category}`, { defaultValue: p.category })}
                   </span>
                 </div>
                 <p className="text-xs text-gray-400">
-                  {p.common_name_en} · <span className="italic">{p.latin_name}</span>
+                  {libAltName(p)} · <span className="italic">{p.latin_name}</span>
                 </p>
                 <div className="mt-auto flex flex-wrap gap-2 pt-1 text-[11px] text-gray-500">
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5">{p.lifecycle}</span>
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5">{p.difficulty}</span>
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5">☀️ {p.sun_requirement}</span>
+                  <span className="rounded-full bg-gray-100 px-2 py-0.5">
+                    {t(`library.lifecycle.${p.lifecycle}`, { defaultValue: p.lifecycle })}
+                  </span>
+                  <span className="rounded-full bg-gray-100 px-2 py-0.5">
+                    {t(`library.difficulty.${p.difficulty}`, { defaultValue: p.difficulty })}
+                  </span>
+                  <span className="rounded-full bg-gray-100 px-2 py-0.5">
+                    ☀️ {t(`library.sun.${p.sun_requirement}`, { defaultValue: p.sun_requirement })}
+                  </span>
                   {p.frost_sensitive && (
                     <span className="rounded-full bg-blue-50 px-2 py-0.5 text-blue-600">
-                      ❄️ frost-sensitive
+                      ❄️ {t('library.frostSensitive')}
                     </span>
                   )}
                 </div>
@@ -206,10 +212,10 @@ export function LibraryPage() {
                 onClick={() => setPage(page - 1)}
                 className="btn-secondary"
               >
-                ← Previous
+                {t('common.previous')}
               </button>
               <span className="text-sm text-gray-500">
-                Page {data.page} of {totalPages}
+                {t('common.pageOf', { page: data.page, total: totalPages })}
               </span>
               <button
                 type="button"
@@ -217,7 +223,7 @@ export function LibraryPage() {
                 onClick={() => setPage(page + 1)}
                 className="btn-secondary"
               >
-                Next →
+                {t('common.next')}
               </button>
             </div>
           )}
