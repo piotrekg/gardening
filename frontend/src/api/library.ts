@@ -3,7 +3,7 @@ import type {
   CompanionsResponse,
   LibraryCategoriesResponse,
   LibraryListResponse,
-  LibraryPlant,
+  LibraryPlantDetail,
   LibraryPlantResponse,
   LibrarySearchParams,
 } from '../types';
@@ -18,7 +18,7 @@ export async function getLibraryCategories(): Promise<string[]> {
   return res.data.categories;
 }
 
-export async function getLibraryPlant(id: string): Promise<LibraryPlant> {
+export async function getLibraryPlant(id: string): Promise<LibraryPlantDetail> {
   const res = await api.get<LibraryPlantResponse>(`/plants/library/${id}`);
   return res.data.plant;
 }

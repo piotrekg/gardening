@@ -18,6 +18,8 @@ export function PlantCard({ plant, thumbUrl, onUpdated, onError }: PlantCardProp
   const { t } = useTranslation();
   const dateLocale = useDateFnsLocale();
 
+  const image = thumbUrl ?? plant.library?.image_thumb_url ?? plant.library?.image_url ?? null;
+
   const lastWatered = plant.last_watered_at
     ? t('plantCard.wateredAgo', {
         distance: formatDistanceToNow(new Date(plant.last_watered_at), {
@@ -35,9 +37,9 @@ export function PlantCard({ plant, thumbUrl, onUpdated, onError }: PlantCardProp
         aria-label={t('plantCard.open', { name: plant.display_name })}
       />
       <div className="pointer-events-none relative flex h-28 items-center justify-center bg-primary-light/40">
-        {thumbUrl ? (
+        {image ? (
           <img
-            src={thumbUrl}
+            src={image}
             alt={plant.display_name}
             className="h-full w-full object-cover"
             loading="lazy"

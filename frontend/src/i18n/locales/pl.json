@@ -370,6 +370,37 @@
       "submitting": "Dodawanie…"
     }
   },
+  "plantProfile": {
+    "description": "Opis",
+    "careGuide": "Przewodnik pielęgnacji",
+    "light": "Światło",
+    "soil": "Gleba",
+    "watering": "Podlewanie",
+    "fertilizing": "Nawożenie",
+    "pruning": "Przycinanie",
+    "propagation": "Rozmnażanie",
+    "harvest": "Zbiór",
+    "overwintering": "Zimowanie",
+    "quickFacts": "W skrócie",
+    "hardiness": "Strefa mrozoodporności",
+    "toxicity": "Toksyczność",
+    "toxic": "Roślina toksyczna",
+    "tips": "Wskazówki",
+    "diseases": "Choroby i problemy",
+    "symptoms": "Objawy",
+    "treatment": "Leczenie",
+    "prevention": "Zapobieganie",
+    "photoCredit": "Zdjęcie: {{attribution}} · {{license}}",
+    "photoCreditSimple": "Zdjęcie: {{attribution}}",
+    "noImage": "Brak zdjęcia",
+    "comingSoon": "Szczegółowe informacje o pielęgnacji tej rośliny są w przygotowaniu."
+  },
+  "diseaseKind": {
+    "disease": "Choroba",
+    "pest": "Szkodnik",
+    "disorder": "Zaburzenie",
+    "behavior": "Zachowanie"
+  },
   "plantDetail": {
     "breadcrumbGarden": "Ogród",
     "backToGarden": "← Wróć do ogrodu",

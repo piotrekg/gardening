@@ -32,12 +32,12 @@ func (h *LibraryHandler) Categories(c *gin.Context) {
 }
 
 func (h *LibraryHandler) Get(c *gin.Context) {
-	plant, ok := h.lib.Get(c.Param("id"))
+	detail, ok := h.lib.GetDetail(c.Param("id"))
 	if !ok {
 		c.JSON(http.StatusNotFound, gin.H{"error": "plant not found in library"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"plant": plant})
+	c.JSON(http.StatusOK, gin.H{"plant": detail})
 }
 
 func (h *LibraryHandler) Companions(c *gin.Context) {

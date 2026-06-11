@@ -31,7 +31,8 @@ Catalog (`gbif`) plants have no care schedule: numeric care fields are `0` and m
 - `GET /api/plants/library?search=&category=&lifecycle=&page=1&page_size=20` → `{plants: [...], total, page, page_size}`
   - search matches common_name_pl / common_name_en / latin_name, case-insensitive substring.
 - `GET /api/plants/library/categories` → `{categories: ["vegetable", ...]}`
-- `GET /api/plants/library/:id` → `{plant}`
+- `GET /api/plants/library/:id` → `{plant}` where `plant` is the full enriched detail: all base fields PLUS bilingual enrichment and an image. Enrichment fields (all present, may be empty string/array): `description_pl/en`, `watering_detail_pl/en`, `fertilizing_pl/en`, `light_pl/en`, `soil_pl/en`, `pruning_pl/en`, `propagation_pl/en`, `harvest_detail_pl/en`, `overwintering_pl/en`, `toxicity_pl/en`, `hardiness_zone`, `tips_pl[]`, `tips_en[]`, `enriched` (bool). Image fields: `image_url`, `image_thumb_url`, `image_source_url`, `image_license`, `image_attribution`. Diseases: `diseases: [{kind: "disease"|"pest"|"disorder"|"behavior", name_pl, name_en, symptoms_pl, symptoms_en, treatment_pl, treatment_en, prevention_pl, prevention_en}]`.
+  - List/search results and embedded instance `library` objects carry the lightweight subset: `image_thumb_url`, `image_url`, `enriched` (plus base fields), not the long-form text/diseases.
 - `GET /api/plants/library/:id/companions` → `{companions: [plant...], antagonists: [plant...]}` (full library objects; unresolvable slugs omitted)
 
 ## Plant instances

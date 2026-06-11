@@ -41,6 +41,12 @@ type Plant struct {
 	CareNotes              string   `json:"care_notes"`
 	CommonPests            []string `json:"common_pests"`
 	Tags                   []string `json:"tags"`
+
+	// Lightweight enrichment surfaced on list/card responses; full enrichment
+	// (long-form bilingual fields + diseases) is fetched via GetDetail.
+	ImageURL      string `json:"image_url,omitempty"`
+	ImageThumbURL string `json:"image_thumb_url,omitempty"`
+	Enriched      bool   `json:"enriched"`
 }
 
 type Library struct {

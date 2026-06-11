@@ -62,10 +62,12 @@ func run() error {
 	}
 	log.Println("database migrations up to date")
 
-	lib, err := plantlib.Open(db,
-		[][]byte{plantdata.PlantsJSON, plantdata.PlantsExtraJSON, plantdata.PlantsExtra2JSON},
-		plantdata.CatalogJSON,
-	)
+	lib, err := plantlib.Open(db, plantlib.Sources{
+		Curated:    [][]byte{plantdata.PlantsJSON, plantdata.PlantsExtraJSON, plantdata.PlantsExtra2JSON},
+		Catalog:    plantdata.CatalogJSON,
+		Enrichment: plantdata.EnrichmentJSON,
+		Images:     plantdata.ImagesJSON,
+	})
 	if err != nil {
 		return err
 	}

@@ -174,13 +174,30 @@ export function LibraryPage() {
                 to={`/library/${p.id}`}
                 className="card group flex flex-col gap-2 p-5 transition hover:shadow-card-hover"
               >
-                <div className="flex items-start justify-between gap-2">
-                  <h2 className="font-semibold text-gray-800 group-hover:text-primary">
-                    {libName(p)}
-                  </h2>
-                  <span className="shrink-0 rounded-full bg-primary-light/60 px-2 py-0.5 text-[11px] font-semibold text-primary-dark">
-                    {t(`library.category.${p.category}`, { defaultValue: p.category })}
-                  </span>
+                <div className="flex items-start gap-3">
+                  {p.image_thumb_url ? (
+                    <img
+                      src={p.image_thumb_url}
+                      alt=""
+                      className="h-12 w-12 shrink-0 rounded-lg object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary-light/40 text-2xl"
+                      aria-hidden="true"
+                    >
+                      🪴
+                    </span>
+                  )}
+                  <div className="flex flex-1 items-start justify-between gap-2">
+                    <h2 className="font-semibold text-gray-800 group-hover:text-primary">
+                      {libName(p)}
+                    </h2>
+                    <span className="shrink-0 rounded-full bg-primary-light/60 px-2 py-0.5 text-[11px] font-semibold text-primary-dark">
+                      {t(`library.category.${p.category}`, { defaultValue: p.category })}
+                    </span>
+                  </div>
                 </div>
                 <p className="text-xs text-gray-400">
                   {libAltName(p)} · <span className="italic">{p.latin_name}</span>

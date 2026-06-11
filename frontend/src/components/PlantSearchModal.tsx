@@ -133,11 +133,26 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
                   <button
                     type="button"
                     onClick={() => setSelected(p)}
-                    className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-primary-light/40"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-primary-light/40"
                   >
-                    <div>
-                      <p className="text-sm font-semibold text-gray-800">{libName(p)}</p>
-                      <p className="text-xs text-gray-400">
+                    {p.image_thumb_url ? (
+                      <img
+                        src={p.image_thumb_url}
+                        alt=""
+                        className="h-10 w-10 shrink-0 rounded-lg object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-light/40 text-xl"
+                        aria-hidden="true"
+                      >
+                        🪴
+                      </span>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold text-gray-800">{libName(p)}</p>
+                      <p className="truncate text-xs text-gray-400">
                         {libAltName(p)} · <span className="italic">{p.latin_name}</span>
                       </p>
                     </div>

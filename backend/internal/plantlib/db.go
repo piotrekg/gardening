@@ -39,6 +39,9 @@ type libraryRow struct {
 	Tags                   string `gorm:"column:tags"`
 	SearchText             string `gorm:"column:search_text"`
 	SortKey                string `gorm:"column:sort_key"`
+	ImageURL               string `gorm:"column:image_url"`
+	ImageThumbURL          string `gorm:"column:image_thumb_url"`
+	Enriched               bool   `gorm:"column:enriched"`
 }
 
 func (libraryRow) TableName() string { return "library_plants" }
@@ -139,13 +142,29 @@ func fromRow(r libraryRow) Plant {
 		CareNotes:              r.CareNotes,
 		CommonPests:            unmarshalStrs(r.CommonPests),
 		Tags:                   unmarshalStrs(r.Tags),
+		ImageURL:               r.ImageURL,
+		ImageThumbURL:          r.ImageThumbURL,
+		Enriched:               r.Enriched,
 	}
 }
 
-// Open seeds the library_plants table from the given sources (idempotently) and
-// returns a database-backed Library with its in-memory cache hydrated.
-func Open(db *gorm.DB, curatedRaws [][]byte, catalogRaw []byte) (*Library, error) {
-	if err := Seed(db, curatedRaws, catalogRaw); err != nil {
+// Sources bundles every input the library is seeded from.
+type Sources struct {
+	Curated    [][]byte // curated JSON files (full care data)
+	Catalog    []byte   // GBIF European catalog
+	Enrichment []byte   // map id → rich bilingual care data + diseases
+	Images     []byte   // map id → open-source image
+}
+
+// Open seeds library_plants from the given sources (idempotently), applies the
+// enrichment/image overlay, and returns a database-backed Library with its
+// in-memory cache hydrated.
+func Open(db *gorm.DB, src Sources) (*Library, error) {
+	reseeded, err := seedBase(db, src.Curated, src.Catalog)
+	if err != nil {
+		return nil, err
+	}
+	if err := applyEnrichment(db, src.Enrichment, src.Images, reseeded); err != nil {
 		return nil, err
 	}
 	var rows []libraryRow
@@ -163,13 +182,13 @@ func Open(db *gorm.DB, curatedRaws [][]byte, catalogRaw []byte) (*Library, error
 	return lib, nil
 }
 
-// Seed writes the merged plant set into library_plants when the content has
-// changed. The content version (a hash of the raw sources) is recorded in
-// app_meta so an unchanged restart is a no-op.
-func Seed(db *gorm.DB, curatedRaws [][]byte, catalogRaw []byte) error {
+// seedBase writes the merged base plant set into library_plants when the content
+// changed (tracked by a hash in app_meta). Returns whether it reseeded so the
+// caller knows the enrichment overlay must be re-applied.
+func seedBase(db *gorm.DB, curatedRaws [][]byte, catalogRaw []byte) (bool, error) {
 	plants, err := mergePlants(curatedRaws, catalogRaw)
 	if err != nil {
-		return err
+		return false, err
 	}
 	version := hashInputs(curatedRaws, catalogRaw)
 
@@ -178,15 +197,15 @@ func Seed(db *gorm.DB, curatedRaws [][]byte, catalogRaw []byte) error {
 	var count int64
 	db.Table("library_plants").Count(&count)
 	if stored == version && count > 0 {
-		return nil // already up to date
+		return false, nil // already up to date
 	}
 
 	rows := make([]libraryRow, len(plants))
 	for i, p := range plants {
 		rows[i] = toRow(p)
 	}
-	return db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Exec("TRUNCATE library_plants").Error; err != nil {
+	err = db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Exec("TRUNCATE library_plants CASCADE").Error; err != nil {
 			return fmt.Errorf("truncate library: %w", err)
 		}
 		if err := tx.CreateInBatches(rows, 500).Error; err != nil {
@@ -196,6 +215,7 @@ func Seed(db *gorm.DB, curatedRaws [][]byte, catalogRaw []byte) error {
 			`INSERT INTO app_meta (key, value) VALUES ('library_version', ?)
 			 ON CONFLICT (key) DO UPDATE SET value = excluded.value`, version).Error
 	})
+	return err == nil, err
 }
 
 func hashInputs(curatedRaws [][]byte, catalogRaw []byte) string {

@@ -130,6 +130,63 @@ export interface LibraryPlant {
   care_notes: string;
   common_pests: string[];
   tags: string[];
+  /** Lightweight enrichment carried by list/search results and embedded instance libraries. */
+  image_thumb_url?: string;
+  image_url?: string;
+  enriched?: boolean;
+}
+
+/** Kind of plant problem described in a disease record. */
+export type DiseaseKind = 'disease' | 'pest' | 'disorder' | 'behavior';
+
+/** A plant problem with bilingual symptoms/treatment/prevention. */
+export interface PlantDisease {
+  kind: DiseaseKind;
+  name_pl: string;
+  name_en: string;
+  symptoms_pl: string;
+  symptoms_en: string;
+  treatment_pl: string;
+  treatment_en: string;
+  prevention_pl: string;
+  prevention_en: string;
+}
+
+/**
+ * Full enriched library plant returned by GET /api/plants/library/:id.
+ * Bilingual long-form fields are always present but may be empty strings/arrays.
+ */
+export interface LibraryPlantDetail extends LibraryPlant {
+  description_pl: string;
+  description_en: string;
+  watering_detail_pl: string;
+  watering_detail_en: string;
+  fertilizing_pl: string;
+  fertilizing_en: string;
+  light_pl: string;
+  light_en: string;
+  soil_pl: string;
+  soil_en: string;
+  pruning_pl: string;
+  pruning_en: string;
+  propagation_pl: string;
+  propagation_en: string;
+  harvest_detail_pl: string;
+  harvest_detail_en: string;
+  overwintering_pl: string;
+  overwintering_en: string;
+  toxicity_pl: string;
+  toxicity_en: string;
+  hardiness_zone: string;
+  tips_pl: string[];
+  tips_en: string[];
+  enriched: boolean;
+  image_url: string;
+  image_thumb_url: string;
+  image_source_url: string;
+  image_license: string;
+  image_attribution: string;
+  diseases: PlantDisease[];
 }
 
 export interface LibrarySearchParams {
@@ -152,7 +209,7 @@ export interface LibraryCategoriesResponse {
 }
 
 export interface LibraryPlantResponse {
-  plant: LibraryPlant;
+  plant: LibraryPlantDetail;
 }
 
 export interface CompanionsResponse {

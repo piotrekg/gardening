@@ -364,6 +364,37 @@
       "submitting": "Adding…"
     }
   },
+  "plantProfile": {
+    "description": "Description",
+    "careGuide": "Care guide",
+    "light": "Light",
+    "soil": "Soil",
+    "watering": "Watering",
+    "fertilizing": "Fertilizing",
+    "pruning": "Pruning",
+    "propagation": "Propagation",
+    "harvest": "Harvest",
+    "overwintering": "Overwintering",
+    "quickFacts": "Quick facts",
+    "hardiness": "Hardiness zone",
+    "toxicity": "Toxicity",
+    "toxic": "Toxic plant",
+    "tips": "Tips",
+    "diseases": "Diseases & problems",
+    "symptoms": "Symptoms",
+    "treatment": "Treatment",
+    "prevention": "Prevention",
+    "photoCredit": "Photo: {{attribution}} · {{license}}",
+    "photoCreditSimple": "Photo: {{attribution}}",
+    "noImage": "No image",
+    "comingSoon": "Detailed care information for this plant is coming soon."
+  },
+  "diseaseKind": {
+    "disease": "Disease",
+    "pest": "Pest",
+    "disorder": "Disorder",
+    "behavior": "Behavior"
+  },
   "plantDetail": {
     "breadcrumbGarden": "Garden",
     "backToGarden": "← Back to garden",

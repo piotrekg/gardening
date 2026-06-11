@@ -8,8 +8,15 @@ import { addPlantToGarden } from '../api/plants';
 import { Modal } from '../components/Modal';
 import { MonthChips } from '../components/MonthChips';
 import { Skeleton } from '../components/Skeleton';
+import { useBilingual } from '../i18n/bilingual';
 import { useLibraryPlantName } from '../i18n/libraryName';
-import type { CompanionsResponse, Garden, LibraryPlant } from '../types';
+import type {
+  CompanionsResponse,
+  Garden,
+  LibraryPlant,
+  LibraryPlantDetail,
+  PlantDisease,
+} from '../types';
 
 function AddToGardenModal({
   plant,
@@ -186,13 +193,98 @@ function PlantChips({ plants, tone }: { plants: LibraryPlant[]; tone: 'good' | '
   );
 }
 
+/** A labeled care-guide block; renders nothing when its content is empty. */
+function CareBlock({
+  icon,
+  label,
+  body,
+  emphasize = false,
+}: {
+  icon: string;
+  label: string;
+  body: string;
+  emphasize?: boolean;
+}) {
+  if (!body) return null;
+  return (
+    <div
+      className={`rounded-lg p-4 ${
+        emphasize ? 'bg-accent-light/60 ring-1 ring-accent' : 'bg-gray-50'
+      }`}
+    >
+      <p className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">
+        <span aria-hidden="true">{icon}</span>
+        {label}
+      </p>
+      <p className="whitespace-pre-line text-sm leading-relaxed text-gray-700">{body}</p>
+    </div>
+  );
+}
+
+const DISEASE_KIND_STYLES: Record<PlantDisease['kind'], { badge: string; icon: string }> = {
+  disease: { badge: 'bg-red-100 text-red-700', icon: '🦠' },
+  pest: { badge: 'bg-orange-100 text-orange-700', icon: '🐛' },
+  disorder: { badge: 'bg-amber-100 text-amber-700', icon: '⚠️' },
+  behavior: { badge: 'bg-blue-100 text-blue-700', icon: '🌀' },
+};
+
+function DiseaseCard({ disease }: { disease: PlantDisease }) {
+  const { t } = useTranslation();
+  const { pick } = useBilingual();
+  const style = DISEASE_KIND_STYLES[disease.kind];
+  const name = pick(disease.name_pl, disease.name_en);
+  const symptoms = pick(disease.symptoms_pl, disease.symptoms_en);
+  const treatment = pick(disease.treatment_pl, disease.treatment_en);
+  const prevention = pick(disease.prevention_pl, disease.prevention_en);
+
+  return (
+    <div className="rounded-lg border border-gray-100 p-4">
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <span
+          className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${style.badge}`}
+        >
+          <span aria-hidden="true">{style.icon}</span> {t(`diseaseKind.${disease.kind}`)}
+        </span>
+        <h3 className="text-sm font-semibold text-gray-800">{name}</h3>
+      </div>
+      <div className="space-y-2 text-sm">
+        {symptoms && (
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+              {t('plantProfile.symptoms')}
+            </p>
+            <p className="text-gray-700">{symptoms}</p>
+          </div>
+        )}
+        {treatment && (
+          <div className="rounded-lg bg-primary-light/50 px-3 py-2">
+            <p className="text-xs font-semibold uppercase tracking-wide text-primary-dark/70">
+              💊 {t('plantProfile.treatment')}
+            </p>
+            <p className="font-medium text-primary-dark">{treatment}</p>
+          </div>
+        )}
+        {prevention && (
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+              {t('plantProfile.prevention')}
+            </p>
+            <p className="text-gray-700">{prevention}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function LibraryPlantPage() {
   const { t } = useTranslation();
   const { name: libName, altName: libAltName } = useLibraryPlantName();
+  const { pick, pickField } = useBilingual();
   const { id } = useParams<{ id: string }>();
   const plantId = id ?? '';
 
-  const [plant, setPlant] = useState<LibraryPlant | null>(null);
+  const [plant, setPlant] = useState<LibraryPlantDetail | null>(null);
   const [companions, setCompanions] = useState<CompanionsResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAdd, setShowAdd] = useState(false);
@@ -242,6 +334,21 @@ export function LibraryPlantPage() {
     );
   }
 
+  const description = pickField(plant, 'description');
+  const light = pickField(plant, 'light');
+  const soil = pickField(plant, 'soil');
+  const wateringDetail = pickField(plant, 'watering_detail');
+  const fertilizing = pickField(plant, 'fertilizing');
+  const pruning = pickField(plant, 'pruning');
+  const propagation = pickField(plant, 'propagation');
+  const harvestDetail = pickField(plant, 'harvest_detail');
+  const overwintering = pickField(plant, 'overwintering');
+  const toxicity = pickField(plant, 'toxicity');
+  const tips = pick(plant.tips_pl, plant.tips_en);
+  const hasCareGuide = Boolean(
+    light || soil || wateringDetail || fertilizing || pruning || propagation || harvestDetail || overwintering,
+  );
+
   return (
     <div className="space-y-6">
       <nav className="text-xs text-gray-400">
@@ -251,8 +358,53 @@ export function LibraryPlantPage() {
         / <span className="text-gray-600">{libName(plant)}</span>
       </nav>
 
-      <div className="card p-5">
-        <div className="flex flex-wrap items-start justify-between gap-4">
+      <div className="card overflow-hidden">
+        <figure className="relative">
+          {plant.image_url ? (
+            <img
+              src={plant.image_url}
+              alt={libName(plant)}
+              className="h-56 w-full object-cover sm:h-72"
+              loading="lazy"
+            />
+          ) : (
+            <div
+              className="flex h-40 w-full items-center justify-center bg-primary-light/40 text-6xl"
+              aria-label={t('plantProfile.noImage')}
+            >
+              <span aria-hidden="true">🪴</span>
+            </div>
+          )}
+          {plant.image_url && plant.image_attribution && (
+            <figcaption className="absolute bottom-0 right-0 max-w-full truncate bg-black/50 px-2 py-1 text-[11px] text-white/90">
+              {plant.image_source_url ? (
+                <a
+                  href={plant.image_source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline"
+                >
+                  {plant.image_license
+                    ? t('plantProfile.photoCredit', {
+                        attribution: plant.image_attribution,
+                        license: plant.image_license,
+                      })
+                    : t('plantProfile.photoCreditSimple', {
+                        attribution: plant.image_attribution,
+                      })}
+                </a>
+              ) : plant.image_license ? (
+                t('plantProfile.photoCredit', {
+                  attribution: plant.image_attribution,
+                  license: plant.image_license,
+                })
+              ) : (
+                t('plantProfile.photoCreditSimple', { attribution: plant.image_attribution })
+              )}
+            </figcaption>
+          )}
+        </figure>
+        <div className="flex flex-wrap items-start justify-between gap-4 p-5">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-gray-900">{libName(plant)}</h1>
             <p className="text-sm text-gray-500">
@@ -289,6 +441,60 @@ export function LibraryPlantPage() {
           </button>
         </div>
       </div>
+
+      {!plant.enriched && (
+        <div className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          ✨ {t('plantProfile.comingSoon')}
+        </div>
+      )}
+
+      {description && (
+        <section className="card p-5">
+          <h2 className="mb-2 text-sm font-semibold text-gray-800">
+            {t('plantProfile.description')}
+          </h2>
+          <p className="whitespace-pre-line text-sm leading-relaxed text-gray-700">{description}</p>
+        </section>
+      )}
+
+      {hasCareGuide && (
+        <section className="card p-5">
+          <h2 className="mb-4 text-sm font-semibold text-gray-800">
+            {t('plantProfile.careGuide')}
+          </h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <CareBlock icon="🔆" label={t('plantProfile.light')} body={light} />
+            <CareBlock icon="🪨" label={t('plantProfile.soil')} body={soil} />
+            <CareBlock icon="💧" label={t('plantProfile.watering')} body={wateringDetail} />
+            <CareBlock
+              icon="🌾"
+              label={t('plantProfile.fertilizing')}
+              body={fertilizing}
+              emphasize
+            />
+            <CareBlock icon="✂️" label={t('plantProfile.pruning')} body={pruning} />
+            <CareBlock icon="🌱" label={t('plantProfile.propagation')} body={propagation} />
+            <CareBlock icon="🧺" label={t('plantProfile.harvest')} body={harvestDetail} />
+            <CareBlock icon="❄️" label={t('plantProfile.overwintering')} body={overwintering} />
+          </div>
+        </section>
+      )}
+
+      {tips.length > 0 && (
+        <section className="card p-5">
+          <h2 className="mb-3 text-sm font-semibold text-gray-800">{t('plantProfile.tips')}</h2>
+          <ul className="space-y-2">
+            {tips.map((tip, i) => (
+              <li key={i} className="flex gap-2 text-sm text-gray-700">
+                <span aria-hidden="true" className="text-primary">
+                  •
+                </span>
+                <span>{tip}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="card p-5">
         <h2 className="mb-4 text-sm font-semibold text-gray-800">
@@ -364,7 +570,21 @@ export function LibraryPlantPage() {
               {plant.common_pests.length > 0 ? plant.common_pests.join(', ') : '—'}
             </dd>
           </div>
+          {plant.hardiness_zone && (
+            <div>
+              <dt className="text-xs text-gray-400">{t('plantProfile.hardiness')}</dt>
+              <dd className="text-gray-700">🌡️ {plant.hardiness_zone}</dd>
+            </div>
+          )}
         </dl>
+        {toxicity && (
+          <div className="mt-4 rounded-lg bg-red-50 px-4 py-3 ring-1 ring-red-100">
+            <p className="text-xs font-semibold uppercase tracking-wide text-red-700">
+              ⚠️ {t('plantProfile.toxicity')}
+            </p>
+            <p className="mt-1 text-sm text-red-800">{toxicity}</p>
+          </div>
+        )}
         {plant.care_notes && (
           <div className="mt-4 rounded-lg bg-primary-light/40 px-4 py-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-primary-dark/70">
@@ -374,6 +594,19 @@ export function LibraryPlantPage() {
           </div>
         )}
       </section>
+
+      {plant.diseases.length > 0 && (
+        <section className="card p-5">
+          <h2 className="mb-4 text-sm font-semibold text-gray-800">
+            {t('plantProfile.diseases')}
+          </h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {plant.diseases.map((disease, i) => (
+              <DiseaseCard key={i} disease={disease} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <section className="card p-5">
