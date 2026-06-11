@@ -12,7 +12,7 @@ gardens (climate zone 6a).
 | Backend | Go · Gin · GORM · SQLite (pure-Go, PostgreSQL-ready schema) |
 | Frontend | React 18 · TypeScript · Vite · TailwindCSS v4 · Zustand · Axios |
 | Auth | JWT (15 min access / 7 day refresh with rotation) · bcrypt |
-| Plant data | Bundled `plants.json` (86 species), embedded in the binary, in-memory cache |
+| Plant data | Curated `plants.json` (86 species, full care data) + GBIF `catalog.json` (~5.9k European species), both embedded & cached in memory |
 | Migrations | Embedded sequential SQL runner (golang-migrate file/table convention) |
 | Deployment | Docker Compose behind the host's Traefik · systemd/nginx configs included |
 
@@ -20,8 +20,13 @@ gardens (climate zone 6a).
 
 - **Auth** — register/login/refresh/logout with refresh-token rotation and revocation.
 - **Gardens** — multiple gardens per user (indoor/outdoor/greenhouse), soft delete.
-- **Plant library** — 86 plants with Polish names, sowing/transplant/harvest months,
-  watering & fertilizing frequencies, companions and antagonists.
+- **Plant library** — 86 curated plants with Polish names, sowing/transplant/harvest
+  months, watering & fertilizing frequencies, companions and antagonists, **plus a
+  ~5.9k-species European catalog** imported from GBIF (latin + PL/EN names) so almost
+  any European plant can be found and added; catalog plants have no care schedule.
+- **Catalog importer** — `cmd/plantimport` fetches Europe-recorded vascular plants
+  from the public GBIF API (occurrence-ranked, with vernacular names) and writes the
+  committed `catalog.json`; the running server makes no external API calls.
 - **Plant instances** — add library or custom plants to gardens; computed care
   status (`overdue` / `due_today` / `ok`) from care history and library frequency.
 - **Care log** — watered, fertilized, pruned, repotted, treated, observed, harvested.

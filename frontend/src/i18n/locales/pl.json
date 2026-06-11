@@ -303,7 +303,8 @@
       "fruit": "Owoc",
       "flower": "Kwiat",
       "shrub_tree": "Krzew lub drzewo",
-      "houseplant": "Roślina doniczkowa"
+      "houseplant": "Roślina doniczkowa",
+      "wild": "Dziko rosnąca"
     },
     "lifecycle": {
       "annual": "Jednoroczna",
@@ -331,6 +332,7 @@
     "transplantLabel": "Przesadzanie",
     "harvestLabel": "Zbiór",
     "careParams": "Parametry pielęgnacji",
+    "catalogNote": "Z katalogu roślin Europy — harmonogram pielęgnacji nie jest dostępny, ale i tak możesz dodać tę roślinę do ogrodu i samodzielnie notować pielęgnację.",
     "sunRequirement": "Stanowisko",
     "waterEvery": "Podlewanie",
     "fertilizeEvery": "Nawożenie",

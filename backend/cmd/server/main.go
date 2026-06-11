@@ -60,11 +60,11 @@ func run() error {
 	}
 	log.Println("database migrations up to date")
 
-	lib, err := plantlib.Load(cfg.PlantsPath, plantdata.PlantsJSON)
+	lib, err := plantlib.LoadMerged(plantdata.PlantsJSON, plantdata.CatalogJSON)
 	if err != nil {
 		return err
 	}
-	log.Printf("plant library loaded: %d plants", lib.Count())
+	log.Printf("plant library loaded: %d plants (curated + European catalog)", lib.Count())
 
 	repo := repository.New(db)
 	tm := auth.NewTokenManager(cfg.JWTSecret)

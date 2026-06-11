@@ -318,6 +318,11 @@ export function LibraryPlantPage() {
 
       <section className="card p-5">
         <h2 className="mb-4 text-sm font-semibold text-gray-800">{t('libraryPlant.careParams')}</h2>
+        {plant.source === 'gbif' && (
+          <div className="mb-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            🌍 {t('libraryPlant.catalogNote')}
+          </div>
+        )}
         <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-3">
           <div>
             <dt className="text-xs text-gray-400">{t('libraryPlant.sunRequirement')}</dt>
@@ -328,7 +333,7 @@ export function LibraryPlantPage() {
           <div>
             <dt className="text-xs text-gray-400">{t('libraryPlant.waterEvery')}</dt>
             <dd className="text-gray-700">
-              {plant.water_frequency_days !== null
+              {plant.water_frequency_days
                 ? `💧 ${t('common.everyDays', { count: plant.water_frequency_days })}`
                 : '—'}
             </dd>
@@ -336,7 +341,7 @@ export function LibraryPlantPage() {
           <div>
             <dt className="text-xs text-gray-400">{t('libraryPlant.fertilizeEvery')}</dt>
             <dd className="text-gray-700">
-              {plant.fertilize_frequency_days !== null
+              {plant.fertilize_frequency_days
                 ? `🌾 ${t('common.everyDays', { count: plant.fertilize_frequency_days })}`
                 : '—'}
             </dd>
@@ -344,13 +349,13 @@ export function LibraryPlantPage() {
           <div>
             <dt className="text-xs text-gray-400">{t('libraryPlant.typicalHeight')}</dt>
             <dd className="text-gray-700">
-              {plant.typical_height_cm !== null ? `📏 ${plant.typical_height_cm} cm` : '—'}
+              {plant.typical_height_cm ? `📏 ${plant.typical_height_cm} cm` : '—'}
             </dd>
           </div>
           <div>
             <dt className="text-xs text-gray-400">{t('libraryPlant.spacing')}</dt>
             <dd className="text-gray-700">
-              {plant.spacing_cm !== null ? `↔️ ${plant.spacing_cm} cm` : '—'}
+              {plant.spacing_cm ? `↔️ ${plant.spacing_cm} cm` : '—'}
             </dd>
           </div>
           <div>

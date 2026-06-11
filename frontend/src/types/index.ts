@@ -108,6 +108,8 @@ export interface GardenDetailResponse {
 
 export interface LibraryPlant {
   id: string;
+  source?: string;
+  family?: string;
   common_name_pl: string;
   common_name_en: string;
   latin_name: string;

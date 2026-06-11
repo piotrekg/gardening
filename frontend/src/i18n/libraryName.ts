@@ -4,11 +4,22 @@ import { useTranslation } from 'react-i18next';
 export interface LibraryNames {
   common_name_pl: string;
   common_name_en: string;
+  latin_name?: string;
 }
 
-/** Display name of a library plant for the given UI language. */
+/**
+ * Display name of a library plant for the given UI language. Catalog plants may
+ * lack a name in the chosen language, so this falls back: preferred language →
+ * other language → latin name (never empty for catalog entries).
+ */
 export function getLibraryPlantName(plant: LibraryNames, language: string): string {
-  return language.startsWith('en') ? plant.common_name_en : plant.common_name_pl;
+  const en = language.startsWith('en');
+  return (
+    (en ? plant.common_name_en : plant.common_name_pl) ||
+    (en ? plant.common_name_pl : plant.common_name_en) ||
+    plant.latin_name ||
+    ''
+  );
 }
 
 /** The "other language" name, useful as a secondary line under the display name. */

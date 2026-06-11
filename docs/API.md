@@ -23,7 +23,11 @@ Garden object: `{id, user_id, name, description, location_type, area_sqm, plant_
 - `DELETE /api/gardens/:id` → 204 (soft delete)
 
 ## Plant library
-Library plant object: exactly the plants.json schema (id, common_name_pl, common_name_en, latin_name, category, lifecycle, difficulty, sun_requirement, water_frequency_days, fertilize_frequency_days, sow_months, transplant_months, harvest_months, frost_sensitive, companion_plants, antagonist_plants, typical_height_cm, spacing_cm, care_notes, common_pests, tags).
+Library plant object: the plants.json schema (id, common_name_pl, common_name_en, latin_name, category, lifecycle, difficulty, sun_requirement, water_frequency_days, fertilize_frequency_days, sow_months, transplant_months, harvest_months, frost_sensitive, companion_plants, antagonist_plants, typical_height_cm, spacing_cm, care_notes, common_pests, tags) plus two optional catalog fields:
+- `source`: `"curated"` (≈86 plants with full care data) or `"gbif"` (broad European catalog, ~5.9k species). Omitted/empty treated as curated.
+- `family`: botanical family (catalog plants only).
+
+Catalog (`gbif`) plants have no care schedule: numeric care fields are `0` and month arrays empty (UI shows "Brak danych"). Their `category` may be `wild`. They are searchable (name/latin/family) and can be added to gardens like any other plant. Curated plants always win on a latin-name collision and sort first in unfiltered listings.
 - `GET /api/plants/library?search=&category=&lifecycle=&page=1&page_size=20` → `{plants: [...], total, page, page_size}`
   - search matches common_name_pl / common_name_en / latin_name, case-insensitive substring.
 - `GET /api/plants/library/categories` → `{categories: ["vegetable", ...]}`

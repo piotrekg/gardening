@@ -297,7 +297,8 @@
       "fruit": "Fruit",
       "flower": "Flower",
       "shrub_tree": "Shrub or tree",
-      "houseplant": "Houseplant"
+      "houseplant": "Houseplant",
+      "wild": "Wild plant"
     },
     "lifecycle": {
       "annual": "Annual",
@@ -325,6 +326,7 @@
     "transplantLabel": "Transplant",
     "harvestLabel": "Harvest",
     "careParams": "Care parameters",
+    "catalogNote": "From the European plant catalog — care schedules aren't available, but you can still add it to a garden and log care yourself.",
     "sunRequirement": "Sun requirement",
     "waterEvery": "Watering",
     "fertilizeEvery": "Fertilizing",

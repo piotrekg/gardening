@@ -13,6 +13,8 @@ import (
 
 type Plant struct {
 	ID                     string   `json:"id"`
+	Source                 string   `json:"source,omitempty"` // "curated" (rich care data) or "gbif" (catalog)
+	Family                 string   `json:"family,omitempty"`
 	CommonNamePL           string   `json:"common_name_pl"`
 	CommonNameEN           string   `json:"common_name_en"`
 	LatinName              string   `json:"latin_name"`
@@ -41,7 +43,7 @@ type Library struct {
 	count int
 }
 
-// Load reads the library from path if non-empty, otherwise from the embedded bytes.
+// Load parses the curated library, optionally overriding it with a file at path.
 func Load(path string, embedded []byte) (*Library, error) {
 	raw := embedded
 	if path != "" {
@@ -51,22 +53,81 @@ func Load(path string, embedded []byte) (*Library, error) {
 		}
 		raw = b
 	}
-	var plants []Plant
-	if err := json.Unmarshal(raw, &plants); err != nil {
-		return nil, fmt.Errorf("parse plant library: %w", err)
+	return LoadMerged(raw, nil)
+}
+
+// LoadMerged builds the library from the curated source plus an optional GBIF
+// catalog. Curated entries always win: a catalog plant sharing a latin name with
+// a curated one is dropped, so the rich care data is never shadowed by a bare
+// catalog stub. Listing order puts curated plants first, then alphabetical.
+func LoadMerged(curatedRaw, catalogRaw []byte) (*Library, error) {
+	var curated []Plant
+	if err := json.Unmarshal(curatedRaw, &curated); err != nil {
+		return nil, fmt.Errorf("parse curated library: %w", err)
 	}
-	if len(plants) == 0 {
-		return nil, fmt.Errorf("plant library is empty")
+	if len(curated) == 0 {
+		return nil, fmt.Errorf("curated plant library is empty")
 	}
+
 	lib := &Library{}
-	sort.Slice(plants, func(i, j int) bool { return plants[i].CommonNamePL < plants[j].CommonNamePL })
-	for i := range plants {
-		p := plants[i]
+	seenLatin := map[string]bool{}
+	seenID := map[string]bool{}
+	var all []Plant
+
+	add := func(p Plant, defaultSource string) {
+		if p.Source == "" {
+			p.Source = defaultSource
+		}
+		key := strings.ToLower(strings.TrimSpace(p.LatinName))
+		if key != "" && seenLatin[key] {
+			return
+		}
+		if seenID[p.ID] {
+			return
+		}
+		seenLatin[key] = true
+		seenID[p.ID] = true
+		all = append(all, p)
+	}
+
+	for _, p := range curated {
+		add(p, "curated")
+	}
+	if len(catalogRaw) > 0 {
+		var catalog []Plant
+		if err := json.Unmarshal(catalogRaw, &catalog); err != nil {
+			return nil, fmt.Errorf("parse catalog: %w", err)
+		}
+		for _, p := range catalog {
+			add(p, "gbif")
+		}
+	}
+
+	sort.SliceStable(all, func(i, j int) bool {
+		ci, cj := all[i].Source == "curated", all[j].Source == "curated"
+		if ci != cj {
+			return ci // curated first
+		}
+		return displayName(all[i]) < displayName(all[j])
+	})
+	for i := range all {
+		p := all[i]
 		lib.cache.Store(p.ID, &p)
 		lib.ids = append(lib.ids, p.ID)
 	}
-	lib.count = len(plants)
+	lib.count = len(all)
 	return lib, nil
+}
+
+// displayName picks the best label for ordering: Polish name, else English, else latin.
+func displayName(p Plant) string {
+	if p.CommonNamePL != "" {
+		return strings.ToLower(p.CommonNamePL)
+	}
+	if p.CommonNameEN != "" {
+		return strings.ToLower(p.CommonNameEN)
+	}
+	return strings.ToLower(p.LatinName)
 }
 
 func (l *Library) Count() int { return l.count }
@@ -96,7 +157,7 @@ func (l *Library) Search(query, category, lifecycle string, page, pageSize int) 
 			continue
 		}
 		if query != "" {
-			hay := strings.ToLower(p.CommonNamePL + " " + p.CommonNameEN + " " + p.LatinName)
+			hay := strings.ToLower(p.CommonNamePL + " " + p.CommonNameEN + " " + p.LatinName + " " + p.Family)
 			if !strings.Contains(hay, query) {
 				continue
 			}
