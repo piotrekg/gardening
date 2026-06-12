@@ -7,3 +7,6 @@ backend/bin/
 .loki/
 /data/
 backend/data/uploads/
+
+# enrichment workflow intermediates
+backend/data/plants/enrichment_parts/

@@ -160,17 +160,21 @@ func applyEnrichment(db *gorm.DB, enrichmentRaw, imagesRaw []byte, force bool) e
 }
 
 // PlantDetail is the full "single source of truth" view of a library plant:
-// the base fields, the bilingual enrichment (including diseases), and the image,
-// flattened into one JSON object.
+// the base fields (which already carry image_url/image_thumb_url) plus the
+// bilingual enrichment (including diseases) and the image's source/license/
+// attribution, flattened into one JSON object.
 type PlantDetail struct {
 	Plant
 	Enrichment
-	Image
+	ImageSourceURL   string `json:"image_source_url"`
+	ImageLicense     string `json:"image_license"`
+	ImageAttribution string `json:"image_attribution"`
 }
 
-// detailRow reads every enrichment column for a single plant.
+// detailRow reads the enrichment-only columns for a single plant. The base
+// fields (name, image_url/thumb, enriched, ...) come from the in-memory cache,
+// so they are intentionally not repeated here.
 type detailRow struct {
-	libraryRow
 	DescriptionPL    string `gorm:"column:description_pl"`
 	DescriptionEN    string `gorm:"column:description_en"`
 	WateringDetailPL string `gorm:"column:watering_detail_pl"`
@@ -208,8 +212,18 @@ func (l *Library) GetDetail(id string) (*PlantDetail, bool) {
 		}
 		return nil, false
 	}
+	base, ok := l.Get(id)
+	if !ok {
+		return nil, false
+	}
 	var r detailRow
-	if err := l.db.Table("library_plants").Where("id = ?", id).First(&r).Error; err != nil {
+	if err := l.db.Table("library_plants").
+		Select(`description_pl, description_en, watering_detail_pl, watering_detail_en,
+			fertilizing_pl, fertilizing_en, light_pl, light_en, soil_pl, soil_en,
+			pruning_pl, pruning_en, propagation_pl, propagation_en, harvest_detail_pl,
+			harvest_detail_en, overwintering_pl, overwintering_en, toxicity_pl, toxicity_en,
+			hardiness_zone, tips_pl, tips_en, image_source_url, image_license, image_attribution`).
+		Where("id = ?", id).First(&r).Error; err != nil {
 		return nil, false
 	}
 	var diseases []Disease
@@ -220,7 +234,7 @@ func (l *Library) GetDetail(id string) (*PlantDetail, bool) {
 		diseases = []Disease{}
 	}
 	return &PlantDetail{
-		Plant: fromRow(r.libraryRow),
+		Plant: *base,
 		Enrichment: Enrichment{
 			DescriptionPL: r.DescriptionPL, DescriptionEN: r.DescriptionEN,
 			WateringDetailPL: r.WateringDetailPL, WateringDetailEN: r.WateringDetailEN,
@@ -237,10 +251,8 @@ func (l *Library) GetDetail(id string) (*PlantDetail, bool) {
 			TipsEN:        unmarshalStrs(r.TipsEN),
 			Diseases:      diseases,
 		},
-		Image: Image{
-			ImageURL: r.ImageURL, ImageThumbURL: r.ImageThumbURL,
-			ImageSourceURL: r.ImageSourceURL, ImageLicense: r.ImageLicense,
-			ImageAttribution: r.ImageAttribution,
-		},
+		ImageSourceURL:   r.ImageSourceURL,
+		ImageLicense:     r.ImageLicense,
+		ImageAttribution: r.ImageAttribution,
 	}, true
 }
