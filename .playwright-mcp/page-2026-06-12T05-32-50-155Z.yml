@@ -1,0 +1,28 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - generic [ref=e6]: 🌿
+    - heading "Dołącz do PlantDiary" [level=1] [ref=e7]
+    - paragraph [ref=e8]: Zacznij prowadzić dziennik ogrodu w kilka minut.
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]: Imię
+      - textbox "Imię" [ref=e12]:
+        - /placeholder: Janina Ogrodnik
+    - generic [ref=e13]:
+      - generic [ref=e14]: E-mail
+      - textbox "E-mail" [ref=e15]:
+        - /placeholder: ty@przyklad.pl
+    - generic [ref=e16]:
+      - generic [ref=e17]: Hasło
+      - textbox "Hasło" [ref=e18]:
+        - /placeholder: Min. 8 znaków, 1 wielka litera, 1 cyfra
+      - paragraph [ref=e19]: Co najmniej 8 znaków, jedna wielka litera i jedna cyfra.
+    - generic [ref=e20]:
+      - generic [ref=e21]: Powtórz hasło
+      - textbox "Powtórz hasło" [ref=e22]:
+        - /placeholder: Wpisz hasło ponownie
+    - button "Załóż konto" [ref=e23]
+  - paragraph [ref=e24]:
+    - text: Masz już konto?
+    - link "Zaloguj się" [ref=e25] [cursor=pointer]:
+      - /url: /login

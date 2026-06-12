@@ -1,25 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { BookOpen, CalendarDays, Home, Leaf, Settings, Sprout } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { logout as apiLogout } from '../api/auth';
 import { useAuthStore } from '../store/auth';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { NotificationBell } from './NotificationBell';
 
-const NAV_ITEMS = [
-  { to: '/dashboard', labelKey: 'nav.dashboard', icon: '🏡' },
-  { to: '/gardens', labelKey: 'nav.gardens', icon: '🌻' },
-  { to: '/library', labelKey: 'nav.library', icon: '📚' },
-  { to: '/calendar', labelKey: 'nav.calendar', icon: '📅' },
-  { to: '/settings', labelKey: 'nav.settings', icon: '⚙️' },
+const NAV_ITEMS: { to: string; labelKey: string; icon: LucideIcon }[] = [
+  { to: '/dashboard', labelKey: 'nav.dashboard', icon: Home },
+  { to: '/gardens', labelKey: 'nav.gardens', icon: Sprout },
+  { to: '/library', labelKey: 'nav.library', icon: BookOpen },
+  { to: '/calendar', labelKey: 'nav.calendar', icon: CalendarDays },
+  { to: '/settings', labelKey: 'nav.settings', icon: Settings },
 ];
 
 function navClasses(isActive: boolean): string {
   return [
-    'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition',
+    'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200',
     isActive
-      ? 'bg-primary-light/70 text-primary-dark'
-      : 'text-gray-600 hover:bg-primary-light/40 hover:text-primary-dark',
+      ? 'bg-primary-light text-primary-dark'
+      : 'text-ink-soft hover:bg-surface-2 hover:text-primary-dark',
   ].join(' ');
 }
 
@@ -62,35 +64,37 @@ export function Layout() {
     : '?';
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen bg-paper">
       {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-gray-100 bg-white md:flex">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-line bg-surface md:flex">
         <Link to="/dashboard" className="flex items-center gap-2.5 px-5 py-5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-lg text-white">
-            🌿
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-paper">
+            <Leaf className="h-[18px] w-[18px]" strokeWidth={1.75} />
           </span>
-          <span className="text-lg font-bold tracking-tight text-primary-dark">PlantDiary</span>
+          <span className="font-display text-lg font-semibold tracking-tight text-primary-dark">
+            PlantDiary
+          </span>
         </Link>
         <nav className="flex-1 space-y-1 px-3 py-2">
-          {NAV_ITEMS.map((item) => (
-            <NavLink key={item.to} to={item.to} className={({ isActive }) => navClasses(isActive)}>
-              <span aria-hidden="true">{item.icon}</span>
-              {t(item.labelKey)}
+          {NAV_ITEMS.map(({ to, labelKey, icon: Icon }) => (
+            <NavLink key={to} to={to} className={({ isActive }) => navClasses(isActive)}>
+              <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
+              {t(labelKey)}
             </NavLink>
           ))}
         </nav>
-        <div className="border-t border-gray-100 px-5 py-4 text-xs text-gray-400">
+        <div className="border-t border-line px-5 py-4 text-xs text-ink-faint">
           {t('layout.tagline')}
         </div>
       </aside>
 
       {/* Header */}
-      <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-gray-100 bg-white/90 px-4 backdrop-blur md:ml-60 md:px-6">
+      <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-line bg-paper/85 px-4 backdrop-blur md:ml-60 md:px-6">
         <Link to="/dashboard" className="flex items-center gap-2 md:hidden">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-base text-white">
-            🌿
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-paper">
+            <Leaf className="h-4 w-4" strokeWidth={1.75} />
           </span>
-          <span className="text-base font-bold text-primary-dark">PlantDiary</span>
+          <span className="font-display text-base font-semibold text-primary-dark">PlantDiary</span>
         </Link>
         <div className="hidden md:block" />
         <div className="flex items-center gap-1.5">
@@ -100,28 +104,28 @@ export function Layout() {
             <button
               type="button"
               onClick={() => setMenuOpen((o) => !o)}
-              className="flex h-8.5 w-8.5 items-center justify-center rounded-full bg-accent-light text-sm font-bold text-primary-dark transition hover:ring-2 hover:ring-accent"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-light text-sm font-semibold text-primary-dark transition hover:ring-2 hover:ring-accent"
               aria-label={t('layout.userMenu')}
             >
               {initials}
             </button>
             {menuOpen && (
-              <div className="absolute right-0 z-40 mt-2 w-52 overflow-hidden rounded-xl bg-white shadow-card-hover ring-1 ring-gray-100">
-                <div className="border-b border-gray-100 px-4 py-3">
-                  <p className="truncate text-sm font-semibold text-gray-800">{user?.name}</p>
-                  <p className="truncate text-xs text-gray-400">{user?.email}</p>
+              <div className="reveal absolute right-0 z-40 mt-2 w-52 overflow-hidden rounded-xl border border-line bg-surface shadow-lift">
+                <div className="border-b border-line px-4 py-3">
+                  <p className="truncate text-sm font-semibold text-ink">{user?.name}</p>
+                  <p className="truncate text-xs text-ink-faint">{user?.email}</p>
                 </div>
                 <Link
                   to="/settings"
                   onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2.5 text-sm text-gray-600 transition hover:bg-gray-50"
+                  className="block px-4 py-2.5 text-sm text-ink-soft transition hover:bg-surface-2"
                 >
                   {t('nav.settings')}
                 </Link>
                 <button
                   type="button"
                   onClick={() => void handleLogout()}
-                  className="block w-full px-4 py-2.5 text-left text-sm text-red-600 transition hover:bg-red-50"
+                  className="block w-full px-4 py-2.5 text-left text-sm text-danger transition hover:bg-danger-bg"
                 >
                   {t('layout.logout')}
                 </button>
@@ -132,29 +136,27 @@ export function Layout() {
       </header>
 
       {/* Main content */}
-      <main className="px-4 pb-24 pt-6 md:ml-60 md:px-8 md:pb-10">
+      <main className="px-4 pb-24 pt-6 md:ml-60 md:px-8 md:pb-10 md:pt-8">
         <div className="mx-auto max-w-6xl">
           <Outlet />
         </div>
       </main>
 
       {/* Mobile bottom nav */}
-      <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-gray-100 bg-white/95 backdrop-blur md:hidden">
-        {NAV_ITEMS.map((item) => (
+      <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-line bg-paper/95 backdrop-blur md:hidden">
+        {NAV_ITEMS.map(({ to, labelKey, icon: Icon }) => (
           <NavLink
-            key={item.to}
-            to={item.to}
+            key={to}
+            to={to}
             className={({ isActive }) =>
               [
-                'flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition',
-                isActive ? 'text-primary' : 'text-gray-400',
+                'flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors',
+                isActive ? 'text-primary' : 'text-ink-faint',
               ].join(' ')
             }
           >
-            <span className="text-lg" aria-hidden="true">
-              {item.icon}
-            </span>
-            {t(item.labelKey)}
+            <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+            {t(labelKey)}
           </NavLink>
         ))}
       </nav>

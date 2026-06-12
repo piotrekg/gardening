@@ -8,7 +8,7 @@ interface MonthChipsProps {
 }
 
 /** Row of 12 month chips with the given months (1-12) highlighted. */
-export function MonthChips({ months, activeClass = 'bg-primary text-white' }: MonthChipsProps) {
+export function MonthChips({ months, activeClass = 'bg-primary text-paper' }: MonthChipsProps) {
   const { t } = useTranslation();
   const locale = useDateFnsLocale();
   const set = new Set(months);
@@ -22,8 +22,8 @@ export function MonthChips({ months, activeClass = 'bg-primary text-white' }: Mo
           <span
             key={monthNo}
             title={t('monthChips.monthTitle', { month: format(date, 'LLLL', { locale }) })}
-            className={`flex h-6 w-6 items-center justify-center rounded-md text-[11px] font-semibold ${
-              active ? activeClass : 'bg-gray-100 text-gray-300'
+            className={`flex h-6 w-6 items-center justify-center rounded-md text-[11px] font-semibold transition-colors ${
+              active ? activeClass : 'bg-surface-2 text-ink-faint/60'
             }`}
           >
             {format(date, 'LLLLL', { locale })}

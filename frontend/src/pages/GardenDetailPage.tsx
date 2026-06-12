@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
+import { Leaf, Plus } from 'lucide-react';
 import { getApiErrorMessage } from '../api/client';
 import { getGarden, getGardenCompatibility } from '../api/gardens';
 import { listGardenPlants } from '../api/plants';
@@ -17,8 +18,8 @@ import type {
 
 function HealthPill({ label, value, className }: { label: string; value: number; className: string }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${className}`}>
-      <span className="font-bold">{value}</span> {label}
+    <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${className}`}>
+      <span className="font-semibold">{value}</span> {label}
     </span>
   );
 }
@@ -63,7 +64,7 @@ export function GardenDetailPage() {
   if (error) {
     return (
       <div className="card p-6 text-center">
-        <p className="text-sm text-red-600">{error}</p>
+        <p className="text-sm text-danger">{error}</p>
         <Link to="/gardens" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
           {t('gardenDetail.backToGardens')}
         </Link>
@@ -85,25 +86,26 @@ export function GardenDetailPage() {
 
   return (
     <div className="space-y-6">
-      <nav className="text-xs text-gray-400">
+      <nav className="text-xs text-ink-faint">
         <Link to="/gardens" className="hover:text-primary hover:underline">
           {t('nav.gardens')}
         </Link>{' '}
-        / <span className="text-gray-600">{garden.name}</span>
+        / <span className="text-ink-soft">{garden.name}</span>
       </nav>
 
       <div className="card p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900">{garden.name}</h1>
-            {garden.description && <p className="mt-1 text-sm text-gray-500">{garden.description}</p>}
-            <p className="mt-1 text-xs text-gray-400">
+            <h1 className="text-h1 font-semibold tracking-tight text-ink">{garden.name}</h1>
+            {garden.description && <p className="mt-1 text-sm text-ink-soft">{garden.description}</p>}
+            <p className="mt-1 text-xs text-ink-faint">
               {t(`location.${garden.location_type}`)}
               {garden.area_sqm !== null ? ` · ${garden.area_sqm} m²` : ''} ·{' '}
               {t('common.plantCount', { count: garden.plant_count })}
             </p>
           </div>
           <button type="button" onClick={() => setShowAdd(true)} className="btn-primary shrink-0">
+            <Plus className="h-4 w-4" aria-hidden="true" />
             {t('gardenDetail.addPlant')}
           </button>
         </div>
@@ -111,27 +113,27 @@ export function GardenDetailPage() {
           <HealthPill
             label={t('gardenDetail.health.overdueWater')}
             value={health_summary.overdue_water}
-            className="bg-red-100 text-red-700"
+            className="border-danger-line bg-danger-bg text-danger"
           />
           <HealthPill
             label={t('gardenDetail.health.overdueFertilize')}
             value={health_summary.overdue_fertilize}
-            className="bg-red-100 text-red-700"
+            className="border-danger-line bg-danger-bg text-danger"
           />
           <HealthPill
             label={t('gardenDetail.health.dueToday')}
             value={health_summary.due_today}
-            className="bg-yellow-100 text-yellow-800"
+            className="border-warn-line bg-warn-bg text-clay-dark"
           />
           <HealthPill
             label={t('gardenDetail.health.ok')}
             value={health_summary.ok}
-            className="bg-green-100 text-green-700"
+            className="border-accent-light bg-primary-light text-primary-dark"
           />
           <HealthPill
             label={t('gardenDetail.health.total')}
             value={health_summary.total}
-            className="bg-gray-100 text-gray-600"
+            className="border-line bg-surface-2 text-ink-soft"
           />
         </div>
       </div>
@@ -139,7 +141,7 @@ export function GardenDetailPage() {
       <CompanionAlert conflicts={conflicts} />
 
       {careError && (
-        <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+        <div className="rounded-lg border border-danger-line bg-danger-bg px-3 py-2 text-sm text-danger" role="alert">
           {careError}
         </div>
       )}
@@ -148,11 +150,12 @@ export function GardenDetailPage() {
         <GridSkeleton />
       ) : plants.length === 0 ? (
         <EmptyState
-          icon="🪴"
+          icon={Leaf}
           title={t('gardenDetail.emptyTitle')}
           message={t('gardenDetail.emptyMessage')}
           action={
             <button type="button" onClick={() => setShowAdd(true)} className="btn-primary">
+              <Plus className="h-4 w-4" aria-hidden="true" />
               {t('gardenDetail.emptyAction')}
             </button>
           }

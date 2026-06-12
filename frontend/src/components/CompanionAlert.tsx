@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { AlertTriangle, ArrowLeftRight } from 'lucide-react';
 import type { CompatibilityConflict } from '../types';
 
 export function CompanionAlert({ conflicts }: { conflicts: CompatibilityConflict[] }) {
@@ -10,13 +11,17 @@ export function CompanionAlert({ conflicts }: { conflicts: CompatibilityConflict
   return (
     <div
       className={`rounded-xl border p-4 ${
-        hasHard ? 'border-red-200 bg-red-50' : 'border-yellow-200 bg-yellow-50'
+        hasHard ? 'border-danger-line bg-danger-bg' : 'border-warn-line bg-warn-bg'
       }`}
       role="alert"
     >
       <div className="flex items-center gap-2">
-        <span aria-hidden="true">⚠️</span>
-        <h3 className={`text-sm font-semibold ${hasHard ? 'text-red-800' : 'text-yellow-800'}`}>
+        <AlertTriangle
+          className={`h-4 w-4 ${hasHard ? 'text-danger' : 'text-clay-dark'}`}
+          strokeWidth={2}
+          aria-hidden="true"
+        />
+        <h3 className={`text-sm font-semibold ${hasHard ? 'text-danger' : 'text-clay-dark'}`}>
           {hasHard ? t('companion.titleConflicts') : t('companion.titleWarnings')}
         </h3>
       </div>
@@ -29,16 +34,18 @@ export function CompanionAlert({ conflicts }: { conflicts: CompatibilityConflict
             <span
               className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
                 c.severity === 'conflict'
-                  ? 'bg-red-200 text-red-800'
-                  : 'bg-yellow-200 text-yellow-800'
+                  ? 'bg-danger-line text-danger'
+                  : 'bg-warn-line text-clay-dark'
               }`}
             >
               {t(`companion.severity.${c.severity}`)}
             </span>
-            <span className="font-medium text-gray-800">
-              {c.plant_a.display_name} ↔ {c.plant_b.display_name}
+            <span className="inline-flex items-center gap-1.5 font-medium text-ink">
+              {c.plant_a.display_name}
+              <ArrowLeftRight className="h-3.5 w-3.5 text-ink-faint" aria-hidden="true" />
+              {c.plant_b.display_name}
             </span>
-            <span className="text-gray-600">— {c.reason}</span>
+            <span className="text-ink-soft">— {c.reason}</span>
           </li>
         ))}
       </ul>

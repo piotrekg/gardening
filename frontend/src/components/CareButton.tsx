@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Droplet, Sprout } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { logCare } from '../api/care';
 import { getApiErrorMessage } from '../api/client';
 import type { CareAction, PlantInstance } from '../types';
@@ -12,15 +14,16 @@ interface CareButtonProps {
   onError?: (message: string) => void;
 }
 
-const ICONS = {
-  watered: '💧',
-  fertilized: '🌾',
-} as const;
+const ICONS: Record<CareButtonProps['action'], LucideIcon> = {
+  watered: Droplet,
+  fertilized: Sprout,
+};
 
 export function CareButton({ plant, action, onUpdated, onError }: CareButtonProps) {
   const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
   const label = t(`care.action.${action}`);
+  const Icon = ICONS[action];
 
   const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -57,10 +60,10 @@ export function CareButton({ plant, action, onUpdated, onError }: CareButtonProp
       type="button"
       onClick={(e) => void handleClick(e)}
       disabled={busy}
-      className="inline-flex items-center gap-1 rounded-lg bg-primary-light/60 px-2.5 py-1.5 text-xs font-semibold text-primary-dark transition hover:bg-accent-light disabled:opacity-60"
+      className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-paper px-2.5 py-1.5 text-xs font-semibold text-primary-dark transition hover:border-accent hover:bg-primary-light disabled:opacity-60"
       title={t('care.logNow', { action: label })}
     >
-      <span aria-hidden="true">{ICONS[action]}</span>
+      <Icon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
       {busy ? t(`care.busy.${action}`) : label}
     </button>
   );

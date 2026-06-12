@@ -1,0 +1,329 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - link "PlantDiary" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img [ref=e7]
+      - generic [ref=e10]: PlantDiary
+    - navigation [ref=e11]:
+      - link "Pulpit" [ref=e12] [cursor=pointer]:
+        - /url: /dashboard
+        - img [ref=e13]
+        - text: Pulpit
+      - link "Ogrody" [ref=e16] [cursor=pointer]:
+        - /url: /gardens
+        - img [ref=e17]
+        - text: Ogrody
+      - link "Biblioteka" [ref=e20] [cursor=pointer]:
+        - /url: /library
+        - img [ref=e21]
+        - text: Biblioteka
+      - link "Kalendarz" [ref=e23] [cursor=pointer]:
+        - /url: /calendar
+        - img [ref=e24]
+        - text: Kalendarz
+      - link "Ustawienia" [ref=e26] [cursor=pointer]:
+        - /url: /settings
+        - img [ref=e27]
+        - text: Ustawienia
+    - generic [ref=e30]: PlantDiary · rośnij z nami
+  - banner [ref=e31]:
+    - generic [ref=e32]:
+      - group "Zmień język" [ref=e33]:
+        - button "Polski" [pressed] [ref=e34]: pl
+        - button "Angielski" [ref=e35]: en
+      - button "Powiadomienia" [ref=e37]:
+        - img [ref=e38]
+      - button "Menu użytkownika" [ref=e42]: T
+  - main [ref=e43]:
+    - generic [ref=e45]:
+      - navigation [ref=e46]:
+        - link "Biblioteka" [ref=e47] [cursor=pointer]:
+          - /url: /library
+        - text: / Pomidor wielkoowocowy
+      - generic [ref=e48]:
+        - 'figure "Zdjęcie: fir0002 flagstaffotos [at] gmail.com Canon 20D + Sigma 150mm f/2.8 · GFDL 1.2" [ref=e49]':
+          - img "Pomidor wielkoowocowy" [ref=e50]
+          - 'link "Zdjęcie: fir0002 flagstaffotos [at] gmail.com Canon 20D + Sigma 150mm f/2.8 · GFDL 1.2" [ref=e52] [cursor=pointer]':
+            - /url: https://commons.wikimedia.org/wiki/File:Bright_red_tomato_and_cross_section02.jpg
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - heading "Pomidor wielkoowocowy" [level=1] [ref=e55]
+            - paragraph [ref=e56]: Beefsteak Tomato · Solanum lycopersicum
+            - generic [ref=e57]:
+              - generic [ref=e58]: Warzywo
+              - generic [ref=e59]: Jednoroczna
+              - generic [ref=e60]: "trudność: średnia"
+              - generic [ref=e61]:
+                - img [ref=e62]
+                - text: wrażliwa na przymrozki
+              - generic [ref=e75]: "#vegetable"
+              - generic [ref=e76]: "#summer"
+              - generic [ref=e77]: "#greenhouse-friendly"
+              - generic [ref=e78]: "#staking-required"
+          - button "Dodaj do mojego ogrodu" [ref=e79]:
+            - img [ref=e80]
+            - text: Dodaj do mojego ogrodu
+      - generic [ref=e81]:
+        - heading "Opis" [level=2] [ref=e82]
+        - paragraph [ref=e83]: Pomidor wielkoowocowy (typu 'beefsteak') to ciepłolubna roślina psiankowata o ogromnych, mięsistych owocach ważących nawet 300-600 g. Większość odmian to typy wysokie (indeterminate), które rosną w nieskończoność i wymagają palikowania oraz usuwania bocznych pędów. Uprawiany dla niezrównanego smaku świeżych owoców do sałatek i kanapek; w Polsce najlepiej udaje się pod osłonami lub w ciepłych, osłoniętych miejscach.
+      - generic [ref=e84]:
+        - heading "Przewodnik pielęgnacji" [level=2] [ref=e85]
+        - generic [ref=e86]:
+          - generic [ref=e87]:
+            - paragraph [ref=e88]:
+              - img [ref=e89]
+              - text: Światło
+            - paragraph [ref=e95]: Pełne słońce, minimum 6-8 godzin dziennie. Najlepsze stanowisko to ciepłe, osłonięte od wiatru miejsce przy południowej ścianie lub w tunelu/szklarni.
+          - generic [ref=e96]:
+            - paragraph [ref=e97]:
+              - img [ref=e98]
+              - text: Gleba
+            - paragraph [ref=e100]: Żyzna, próchniczna, głęboka gleba o pH 6,0-6,8, dobrze przepuszczalna lecz zatrzymująca wilgoć. Nie uprawiaj po innych psiankowatych (ziemniak, papryka) przez 3-4 lata.
+          - generic [ref=e101]:
+            - paragraph [ref=e102]:
+              - img [ref=e103]
+              - text: Podlewanie
+            - paragraph [ref=e105]: Podlewaj regularnie i głęboko, najlepiej co 2-3 dni, zawsze pod korzeń, nigdy na liście (mokre liście sprzyjają zarazie). W upały i pod osłonami nawet codziennie. Nierównomierne podlewanie powoduje pękanie owoców i suchą zgniliznę wierzchołkową; więdnące liście w dzień przy suchej glebie to objaw niedoboru wody.
+          - generic [ref=e106]:
+            - paragraph [ref=e107]:
+              - img [ref=e108]
+              - text: Nawożenie
+            - paragraph [ref=e117]: Przed sadzeniem wzbogać glebę kompostem lub obornikiem. Od zawiązania pierwszych owoców (czerwiec) podawaj co 10-14 dni nawóz bogaty w potas, np. specjalistyczny nawóz do pomidorów NPK ok. 4-6-8 lub gnojówkę z żywokostu. Unikaj nadmiaru azotu, który daje bujne liście kosztem owoców.
+          - generic [ref=e118]:
+            - paragraph [ref=e119]:
+              - img [ref=e120]
+              - text: Przycinanie
+            - paragraph [ref=e126]: Odmiany wysokie prowadź na 1-2 pędy, regularnie wyłamując wszystkie wilki (pędy boczne) wyrastające w kątach liści. Na początku sierpnia uszczypnij wierzchołek nad ostatnim gronem, aby owoce zdążyły dojrzeć.
+          - generic [ref=e127]:
+            - paragraph [ref=e128]:
+              - img [ref=e129]
+              - text: Rozmnażanie
+            - paragraph [ref=e132]: Z nasion wysiewanych w marcu-kwietniu do skrzynek w temperaturze 22-25°C; pikuj i hartuj przed wysadzeniem po 15 maja. Można też ukorzeniać wyłamane wilki w wodzie.
+          - generic [ref=e133]:
+            - paragraph [ref=e134]:
+              - img [ref=e135]
+              - text: Zbiór
+            - paragraph [ref=e144]: Zbieraj od lipca do października, gdy owoce w pełni się wybarwią, lecz są jeszcze jędrne. Najlepszy smak mają zerwane dojrzałe; pod koniec sezonu zielone owoce dojrzewają w domu w cieple obok jabłka.
+          - generic [ref=e145]:
+            - paragraph [ref=e146]:
+              - img [ref=e147]
+              - text: Zimowanie
+            - paragraph [ref=e160]: Roślina jednoroczna, nie zimuje. Po pierwszych przymrozkach usuń rośliny; nie kompostuj liści porażonych zarazą.
+      - generic [ref=e161]:
+        - heading "Wskazówki" [level=2] [ref=e162]
+        - list [ref=e163]:
+          - listitem [ref=e164]:
+            - img [ref=e165]
+            - generic [ref=e168]: Sadź głęboko, zakopując część łodygi - wypuści dodatkowe korzenie.
+          - listitem [ref=e169]:
+            - img [ref=e170]
+            - generic [ref=e173]: Ściółkuj słomą, aby utrzymać równą wilgotność i ograniczyć zarazę.
+          - listitem [ref=e174]:
+            - img [ref=e175]
+            - generic [ref=e178]: Podlewaj wyłącznie pod korzeń, rano.
+          - listitem [ref=e179]:
+            - img [ref=e180]
+            - generic [ref=e183]: Usuwaj dolne liście stykające się z ziemią.
+          - listitem [ref=e184]:
+            - img [ref=e185]
+            - generic [ref=e188]: Stosuj płodozmian - nie sadź po ziemniakach.
+      - generic [ref=e189]:
+        - heading "Kalendarz sezonowy" [level=2] [ref=e190]
+        - generic [ref=e191]:
+          - generic [ref=e192]:
+            - generic [ref=e193]:
+              - img [ref=e194]
+              - text: Siew
+            - generic [ref=e197]:
+              - 'generic "Miesiąc: styczeń" [ref=e198]': S
+              - 'generic "Miesiąc: luty" [ref=e199]': L
+              - 'generic "Miesiąc: marzec" [ref=e200]': M
+              - 'generic "Miesiąc: kwiecień" [ref=e201]': K
+              - 'generic "Miesiąc: maj" [ref=e202]': M
+              - 'generic "Miesiąc: czerwiec" [ref=e203]': C
+              - 'generic "Miesiąc: lipiec" [ref=e204]': L
+              - 'generic "Miesiąc: sierpień" [ref=e205]': S
+              - 'generic "Miesiąc: wrzesień" [ref=e206]': W
+              - 'generic "Miesiąc: październik" [ref=e207]': P
+              - 'generic "Miesiąc: listopad" [ref=e208]': L
+              - 'generic "Miesiąc: grudzień" [ref=e209]': G
+          - generic [ref=e210]:
+            - generic [ref=e211]:
+              - img [ref=e212]
+              - text: Przesadzanie
+            - generic [ref=e215]:
+              - 'generic "Miesiąc: styczeń" [ref=e216]': S
+              - 'generic "Miesiąc: luty" [ref=e217]': L
+              - 'generic "Miesiąc: marzec" [ref=e218]': M
+              - 'generic "Miesiąc: kwiecień" [ref=e219]': K
+              - 'generic "Miesiąc: maj" [ref=e220]': M
+              - 'generic "Miesiąc: czerwiec" [ref=e221]': C
+              - 'generic "Miesiąc: lipiec" [ref=e222]': L
+              - 'generic "Miesiąc: sierpień" [ref=e223]': S
+              - 'generic "Miesiąc: wrzesień" [ref=e224]': W
+              - 'generic "Miesiąc: październik" [ref=e225]': P
+              - 'generic "Miesiąc: listopad" [ref=e226]': L
+              - 'generic "Miesiąc: grudzień" [ref=e227]': G
+          - generic [ref=e228]:
+            - generic [ref=e229]:
+              - img [ref=e230]
+              - text: Zbiór
+            - generic [ref=e239]:
+              - 'generic "Miesiąc: styczeń" [ref=e240]': S
+              - 'generic "Miesiąc: luty" [ref=e241]': L
+              - 'generic "Miesiąc: marzec" [ref=e242]': M
+              - 'generic "Miesiąc: kwiecień" [ref=e243]': K
+              - 'generic "Miesiąc: maj" [ref=e244]': M
+              - 'generic "Miesiąc: czerwiec" [ref=e245]': C
+              - 'generic "Miesiąc: lipiec" [ref=e246]': L
+              - 'generic "Miesiąc: sierpień" [ref=e247]': S
+              - 'generic "Miesiąc: wrzesień" [ref=e248]': W
+              - 'generic "Miesiąc: październik" [ref=e249]': P
+              - 'generic "Miesiąc: listopad" [ref=e250]': L
+              - 'generic "Miesiąc: grudzień" [ref=e251]': G
+      - generic [ref=e252]:
+        - heading "Parametry pielęgnacji" [level=2] [ref=e253]
+        - generic [ref=e254]:
+          - generic [ref=e255]:
+            - term [ref=e256]: Stanowisko
+            - definition [ref=e257]:
+              - img [ref=e258]
+              - text: pełne słońce
+          - generic [ref=e264]:
+            - term [ref=e265]: Podlewanie
+            - definition [ref=e266]:
+              - img [ref=e267]
+              - text: co 2 dni
+          - generic [ref=e269]:
+            - term [ref=e270]: Nawożenie
+            - definition [ref=e271]:
+              - img [ref=e272]
+              - text: co 14 dni
+          - generic [ref=e281]:
+            - term [ref=e282]: Typowa wysokość
+            - definition [ref=e283]:
+              - img [ref=e284]
+              - text: 180 cm
+          - generic [ref=e290]:
+            - term [ref=e291]: Rozstaw
+            - definition [ref=e292]:
+              - img [ref=e293]
+              - text: 60 cm
+          - generic [ref=e296]:
+            - term [ref=e297]: Częste szkodniki
+            - definition [ref=e298]: aphids, whiteflies, late-blight
+          - generic [ref=e299]:
+            - term [ref=e300]: Strefa mrozoodporności
+            - definition [ref=e301]:
+              - img [ref=e302]
+              - text: 10-11 (uprawiany jako roślina jednoroczna)
+        - generic [ref=e304]:
+          - paragraph [ref=e305]:
+            - img [ref=e306]
+            - text: Toksyczność
+          - paragraph [ref=e308]: Owoce jadalne i bezpieczne; liście, łodygi i niedojrzałe zielone owoce zawierają solaninę i tomatynę - lekko toksyczne dla ludzi i zwierząt domowych.
+        - generic [ref=e309]:
+          - paragraph [ref=e310]: Wskazówki pielęgnacyjne
+          - paragraph [ref=e311]: Stake or cage plants and remove side shoots weekly. Water at the base to prevent blight.
+      - generic [ref=e312]:
+        - heading "Choroby i problemy" [level=2] [ref=e313]
+        - generic [ref=e314]:
+          - generic [ref=e315]:
+            - generic [ref=e316]:
+              - generic [ref=e317]:
+                - img [ref=e318]
+                - text: Choroba
+              - heading "Zaraza ziemniaka (zaraza pomidora)" [level=3] [ref=e327]
+            - generic [ref=e328]:
+              - generic [ref=e329]:
+                - paragraph [ref=e330]: Objawy
+                - paragraph [ref=e331]: Brązowo-czarne, rozlewające się plamy na liściach i łodygach, często z białym nalotem od spodu; owoce pokrywają się twardymi brunatnymi plamami i gniją.
+              - generic [ref=e332]:
+                - paragraph [ref=e333]:
+                  - img [ref=e334]
+                  - text: Leczenie
+                - paragraph [ref=e337]: Usuń i zniszcz porażone części; przy nasileniu opryskaj preparatem miedziowym lub fungicydem (np. z mandipropamidem). Mocno porażone rośliny usuń całkowicie.
+              - generic [ref=e338]:
+                - paragraph [ref=e339]: Zapobieganie
+                - paragraph [ref=e340]: Uprawa pod osłonami, szeroka rozstawa, podlewanie pod korzeń, odmiany odporne, płodozmian i unikanie sąsiedztwa ziemniaków.
+          - generic [ref=e341]:
+            - generic [ref=e342]:
+              - generic [ref=e343]:
+                - img [ref=e344]
+                - text: Zaburzenie
+              - heading "Sucha zgnilizna wierzchołkowa" [level=3] [ref=e346]
+            - generic [ref=e347]:
+              - generic [ref=e348]:
+                - paragraph [ref=e349]: Objawy
+                - paragraph [ref=e350]: Ciemna, zapadnięta, skórzasta plama na spodzie (wierzchołku kwiatowym) owocu.
+              - generic [ref=e351]:
+                - paragraph [ref=e352]:
+                  - img [ref=e353]
+                  - text: Leczenie
+                - paragraph [ref=e356]: Usuń uszkodzone owoce i ustabilizuj podlewanie; doraźnie dolistny oprysk wapniowy. Sama plama nie cofnie się na danym owocu.
+              - generic [ref=e357]:
+                - paragraph [ref=e358]: Zapobieganie
+                - paragraph [ref=e359]: Równomierne podlewanie, ściółkowanie i odpowiedni poziom wapnia w glebie (pH ~6,5); unikaj przenawożenia azotem.
+          - generic [ref=e360]:
+            - generic [ref=e361]:
+              - generic [ref=e362]:
+                - img [ref=e363]
+                - text: Szkodnik
+              - heading "Mączlik szklarniowy" [level=3] [ref=e372]
+            - generic [ref=e373]:
+              - generic [ref=e374]:
+                - paragraph [ref=e375]: Objawy
+                - paragraph [ref=e376]: Drobne białe muszki zrywające się z liści po potrząśnięciu; lepka rosa miodowa i czerniejący nalot sadzaka, żółknące liście.
+              - generic [ref=e377]:
+                - paragraph [ref=e378]:
+                  - img [ref=e379]
+                  - text: Leczenie
+                - paragraph [ref=e382]: Żółte tablice lepowe, oprysk mydłem potasowym lub olejem rzepakowym; pod osłonami introdukcja oklejnika (Encarsia formosa).
+              - generic [ref=e383]:
+                - paragraph [ref=e384]: Zapobieganie
+                - paragraph [ref=e385]: Kontroluj sadzonki przy zakupie, wietrz szklarnię, unikaj zagęszczenia roślin.
+          - generic [ref=e386]:
+            - generic [ref=e387]:
+              - generic [ref=e388]:
+                - img [ref=e389]
+                - text: Zaburzenie
+              - heading "Pękanie owoców" [level=3] [ref=e391]
+            - generic [ref=e392]:
+              - generic [ref=e393]:
+                - paragraph [ref=e394]: Objawy
+                - paragraph [ref=e395]: Koncentryczne lub promieniste pęknięcia skórki dojrzewających owoców.
+              - generic [ref=e396]:
+                - paragraph [ref=e397]:
+                  - img [ref=e398]
+                  - text: Leczenie
+                - paragraph [ref=e401]: Zbieraj owoce wcześniej, gdy zaczynają dojrzewać; pękniętych nie przechowuj, zużyj od razu.
+              - generic [ref=e402]:
+                - paragraph [ref=e403]: Zapobieganie
+                - paragraph [ref=e404]: Utrzymuj równą wilgotność gleby przez ściółkowanie i regularne podlewanie, zwłaszcza po suszy.
+      - generic [ref=e405]:
+        - generic [ref=e406]:
+          - heading "Dobre sąsiedztwo" [level=2] [ref=e407]:
+            - img [ref=e408]
+            - text: Dobre sąsiedztwo
+          - generic [ref=e413]:
+            - link "Bazylia pospolita" [ref=e414] [cursor=pointer]:
+              - /url: /library/basil
+            - link "Aksamitka rozpierzchła" [ref=e415] [cursor=pointer]:
+              - /url: /library/marigold
+            - link "Marchew zwyczajna" [ref=e416] [cursor=pointer]:
+              - /url: /library/carrot
+            - link "Cebula zwyczajna" [ref=e417] [cursor=pointer]:
+              - /url: /library/onion
+            - link "Pietruszka naciowa" [ref=e418] [cursor=pointer]:
+              - /url: /library/parsley
+        - generic [ref=e419]:
+          - heading "Trzymaj z dala od" [level=2] [ref=e420]:
+            - img [ref=e421]
+            - text: Trzymaj z dala od
+          - generic [ref=e430]:
+            - link "Ziemniak" [ref=e431] [cursor=pointer]:
+              - /url: /library/potato
+            - link "Kukurydza cukrowa" [ref=e432] [cursor=pointer]:
+              - /url: /library/corn-sweet
+            - link "Kapusta głowiasta biała" [ref=e433] [cursor=pointer]:
+              - /url: /library/cabbage-white

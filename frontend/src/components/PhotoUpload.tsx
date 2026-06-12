@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ImagePlus } from 'lucide-react';
 import { getApiErrorMessage } from '../api/client';
 import { uploadPhoto } from '../api/photos';
 import type { Photo } from '../types';
@@ -87,17 +88,15 @@ export function PhotoUpload({ gardenId, plantId, onUploaded }: PhotoUploadProps)
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') inputRef.current?.click();
           }}
-          className={`flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed px-6 py-8 text-center transition ${
+          className={`flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-dashed px-6 py-8 text-center transition ${
             dragging
-              ? 'border-primary bg-primary-light/50'
-              : 'border-gray-200 bg-white hover:border-accent hover:bg-primary-light/20'
+              ? 'border-accent bg-primary-light'
+              : 'border-line-strong bg-paper hover:border-accent hover:bg-surface-2'
           }`}
         >
-          <span className="text-3xl" aria-hidden="true">
-            📷
-          </span>
-          <p className="text-sm font-medium text-gray-700">{t('photoUpload.dropHint')}</p>
-          <p className="text-xs text-gray-400">{t('photoUpload.formats')}</p>
+          <ImagePlus className="h-7 w-7 text-accent" strokeWidth={1.5} aria-hidden="true" />
+          <p className="text-sm font-medium text-ink">{t('photoUpload.dropHint')}</p>
+          <p className="text-xs text-ink-faint">{t('photoUpload.formats')}</p>
           <input
             ref={inputRef}
             type="file"
@@ -115,11 +114,11 @@ export function PhotoUpload({ gardenId, plantId, onUploaded }: PhotoUploadProps)
             <img
               src={previewUrl}
               alt={t('photoUpload.previewAlt')}
-              className="max-h-64 w-full object-contain bg-gray-50"
+              className="max-h-64 w-full bg-surface-2 object-contain"
             />
           )}
           <div className="flex items-center justify-between gap-3 px-4 py-3">
-            <p className="truncate text-xs text-gray-500">
+            <p className="truncate text-xs text-ink-soft">
               {file.name} · {(file.size / (1024 * 1024)).toFixed(1)} MB
             </p>
             <div className="flex shrink-0 gap-2">
@@ -138,7 +137,7 @@ export function PhotoUpload({ gardenId, plantId, onUploaded }: PhotoUploadProps)
           </div>
         </div>
       )}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
     </div>
   );
 }

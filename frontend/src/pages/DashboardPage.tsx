@@ -2,6 +2,17 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
+import {
+  CalendarClock,
+  ClipboardList,
+  Droplet,
+  HandHeart,
+  Leaf,
+  ScissorsLineDashed,
+  Sprout,
+  Wheat,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { getApiErrorMessage } from '../api/client';
 import { getDashboard } from '../api/dashboard';
 import { SeasonalTip } from '../components/SeasonalTip';
@@ -11,63 +22,61 @@ import { useDateFnsLocale } from '../i18n/dateLocale';
 import { useLibraryPlantName } from '../i18n/libraryName';
 import type { DashboardPlantInstance, DashboardResponse, LibraryPlant } from '../types';
 
-function StatCard({ label, value, icon }: { label: string; value: number; icon: string }) {
+function StatCard({ label, value, icon: Icon }: { label: string; value: number; icon: LucideIcon }) {
   return (
-    <div className="card flex items-center gap-3 p-4">
-      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-light/60 text-lg">
-        {icon}
-      </span>
+    <div className="card flex items-baseline justify-between gap-3 p-5">
       <div>
-        <p className="text-2xl font-bold leading-tight text-primary-dark">{value}</p>
-        <p className="text-xs text-gray-500">{label}</p>
+        <p className="font-display text-3xl font-semibold leading-none text-primary-dark">{value}</p>
+        <p className="mt-1.5 text-xs uppercase tracking-wide text-ink-faint">{label}</p>
       </div>
+      <Icon className="h-5 w-5 shrink-0 text-accent" strokeWidth={1.5} aria-hidden="true" />
     </div>
   );
 }
 
 function InstanceList({
   title,
-  icon,
+  icon: Icon,
   items,
   tone,
   emptyText,
   badge,
 }: {
   title: string;
-  icon: string;
+  icon: LucideIcon;
   items: DashboardPlantInstance[];
   tone: 'red' | 'yellow' | 'green';
   emptyText: string;
   badge?: (p: DashboardPlantInstance) => React.ReactNode;
 }) {
-  const toneClasses = {
-    red: 'border-l-red-400',
-    yellow: 'border-l-yellow-400',
-    green: 'border-l-accent',
+  const accent = {
+    red: 'text-danger',
+    yellow: 'text-clay-dark',
+    green: 'text-accent',
   }[tone];
 
   return (
-    <section className={`card border-l-4 p-5 ${toneClasses}`}>
-      <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-800">
-        <span aria-hidden="true">{icon}</span>
+    <section className="card p-5">
+      <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink">
+        <Icon className={`h-4 w-4 ${accent}`} strokeWidth={1.75} aria-hidden="true" />
         {title}
-        <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-500">
+        <span className="ml-auto rounded-full bg-surface-2 px-2 py-0.5 text-xs font-semibold text-ink-soft">
           {items.length}
         </span>
       </h2>
       {items.length === 0 ? (
-        <p className="text-sm text-gray-400">{emptyText}</p>
+        <p className="text-sm text-ink-faint">{emptyText}</p>
       ) : (
-        <ul className="space-y-2">
+        <ul className="space-y-1">
           {items.map((p) => (
             <li key={p.id}>
               <Link
                 to={`/gardens/${p.garden_id}/plants/${p.id}`}
-                className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 transition hover:bg-primary-light/30"
+                className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 transition hover:bg-surface-2"
               >
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-gray-800">{p.display_name}</p>
-                  <p className="truncate text-xs text-gray-400">{p.garden_name}</p>
+                  <p className="truncate text-sm font-medium text-ink">{p.display_name}</p>
+                  <p className="truncate text-xs text-ink-faint">{p.garden_name}</p>
                 </div>
                 {badge?.(p)}
               </Link>
@@ -81,31 +90,31 @@ function InstanceList({
 
 function LibraryChipList({
   title,
-  icon,
+  icon: Icon,
   plants,
   emptyText,
 }: {
   title: string;
-  icon: string;
+  icon: LucideIcon;
   plants: LibraryPlant[];
   emptyText: string;
 }) {
   const { name: libName } = useLibraryPlantName();
   return (
     <section className="card p-5">
-      <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-800">
-        <span aria-hidden="true">{icon}</span>
+      <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink">
+        <Icon className="h-4 w-4 text-accent" strokeWidth={1.75} aria-hidden="true" />
         {title}
       </h2>
       {plants.length === 0 ? (
-        <p className="text-sm text-gray-400">{emptyText}</p>
+        <p className="text-sm text-ink-faint">{emptyText}</p>
       ) : (
         <div className="flex flex-wrap gap-2">
           {plants.map((p) => (
             <Link
               key={p.id}
               to={`/library/${p.id}`}
-              className="rounded-full bg-primary-light/60 px-3 py-1 text-xs font-semibold text-primary-dark transition hover:bg-accent-light"
+              className="rounded-full border border-line bg-primary-light px-3 py-1 text-xs font-semibold text-primary-dark transition hover:border-accent hover:bg-accent-light"
             >
               {libName(p)}
             </Link>
@@ -139,7 +148,7 @@ export function DashboardPage() {
   if (error) {
     return (
       <div className="card p-6 text-center">
-        <p className="text-sm text-red-600">{error}</p>
+        <p className="text-sm text-danger">{error}</p>
       </div>
     );
   }
@@ -164,30 +173,32 @@ export function DashboardPage() {
   const month = new Date().getMonth() + 1;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('dashboard.title')}</h1>
-        <p className="mt-0.5 text-sm text-gray-500">
+    <div className="space-y-8">
+      <div className="reveal" style={{ animationDelay: '0ms' }}>
+        <h1 className="text-h1 font-semibold tracking-tight text-ink">{t('dashboard.title')}</h1>
+        <p className="mt-1 text-sm text-ink-soft">
           {format(new Date(), 'EEEE, d MMMM yyyy', { locale: dateLocale })}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard label={t('dashboard.stats.gardens')} value={data.stats.garden_count} icon="🌻" />
-        <StatCard label={t('dashboard.stats.plants')} value={data.stats.plant_count} icon="🪴" />
+      <div className="reveal grid grid-cols-1 gap-4 sm:grid-cols-3" style={{ animationDelay: '60ms' }}>
+        <StatCard label={t('dashboard.stats.gardens')} value={data.stats.garden_count} icon={Sprout} />
+        <StatCard label={t('dashboard.stats.plants')} value={data.stats.plant_count} icon={Leaf} />
         <StatCard
           label={t('dashboard.stats.careWeek')}
           value={data.stats.care_actions_this_week}
-          icon="🧤"
+          icon={HandHeart}
         />
       </div>
 
-      <SeasonalTip month={month} />
+      <div className="reveal" style={{ animationDelay: '120ms' }}>
+        <SeasonalTip month={month} />
+      </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="reveal grid grid-cols-1 gap-4 lg:grid-cols-2" style={{ animationDelay: '180ms' }}>
         <InstanceList
           title={t('dashboard.overdueWater')}
-          icon="💧"
+          icon={Droplet}
           items={data.overdue_water}
           tone="red"
           emptyText={t('dashboard.overdueWaterEmpty')}
@@ -195,7 +206,7 @@ export function DashboardPage() {
         />
         <InstanceList
           title={t('dashboard.overdueFertilize')}
-          icon="🌾"
+          icon={Wheat}
           items={data.overdue_fertilize}
           tone="red"
           emptyText={t('dashboard.overdueFertilizeEmpty')}
@@ -203,56 +214,56 @@ export function DashboardPage() {
         />
         <InstanceList
           title={t('dashboard.dueToday')}
-          icon="⏰"
+          icon={CalendarClock}
           items={data.due_today}
           tone="yellow"
           emptyText={t('dashboard.dueTodayEmpty')}
         />
         <InstanceList
           title={t('dashboard.upcomingHarvests')}
-          icon="🧺"
+          icon={Wheat}
           items={data.upcoming_harvests}
           tone="green"
           emptyText={t('dashboard.upcomingHarvestsEmpty')}
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="reveal grid grid-cols-1 gap-4 lg:grid-cols-2" style={{ animationDelay: '240ms' }}>
         <LibraryChipList
           title={t('dashboard.sowThisMonth')}
-          icon="🌱"
+          icon={Sprout}
           plants={data.sow_this_month}
           emptyText={t('dashboard.sowThisMonthEmpty')}
         />
         <LibraryChipList
           title={t('dashboard.transplantThisMonth')}
-          icon="🌿"
+          icon={ScissorsLineDashed}
           plants={data.transplant_this_month}
           emptyText={t('dashboard.transplantThisMonthEmpty')}
         />
       </div>
 
-      <section className="card p-5">
-        <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-800">
-          <span aria-hidden="true">📋</span>
+      <section className="reveal card p-5" style={{ animationDelay: '300ms' }}>
+        <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink">
+          <ClipboardList className="h-4 w-4 text-accent" strokeWidth={1.75} aria-hidden="true" />
           {t('dashboard.recentCare')}
         </h2>
         {data.recent_care.length === 0 ? (
-          <p className="text-sm text-gray-400">{t('dashboard.recentCareEmpty')}</p>
+          <p className="text-sm text-ink-faint">{t('dashboard.recentCareEmpty')}</p>
         ) : (
-          <ul className="divide-y divide-gray-50">
+          <ul className="divide-y divide-line">
             {data.recent_care.map((entry) => (
               <li key={entry.id} className="flex items-center justify-between gap-3 py-2.5">
                 <div className="min-w-0">
-                  <p className="truncate text-sm text-gray-700">
+                  <p className="truncate text-sm text-ink">
                     <span className="font-semibold">{t(`care.past.${entry.action}`)}</span>
                     {' · '}
                     {entry.plant_name}
-                    {entry.note && <span className="text-gray-400"> — {entry.note}</span>}
+                    {entry.note && <span className="text-ink-faint"> — {entry.note}</span>}
                   </p>
-                  <p className="text-xs text-gray-400">{entry.garden_name}</p>
+                  <p className="text-xs text-ink-faint">{entry.garden_name}</p>
                 </div>
-                <span className="shrink-0 text-xs text-gray-400">
+                <span className="shrink-0 text-xs text-ink-faint">
                   {formatDistanceToNow(new Date(entry.timestamp), {
                     addSuffix: true,
                     locale: dateLocale,

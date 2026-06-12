@@ -9,8 +9,8 @@ export interface LibraryNames {
 
 /**
  * Display name of a library plant for the given UI language. Catalog plants may
- * lack a name in the chosen language, so this falls back: preferred language →
- * other language → latin name (never empty for catalog entries).
+ * lack a name in the chosen language, so this falls back: preferred language ->
+ * other language -> latin name (never empty for catalog entries).
  */
 export function getLibraryPlantName(plant: LibraryNames, language: string): string {
   const en = language.startsWith('en');

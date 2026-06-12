@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ArrowLeft, Leaf, Plus } from 'lucide-react';
 import { getApiErrorMessage } from '../api/client';
 import { searchLibrary } from '../api/library';
 import { addPlantToGarden } from '../api/plants';
@@ -65,7 +66,7 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
       setError(t('plantSearch.quantityInvalid'));
       return;
     }
-    // Empty → omit (no override at creation). Positive 1–365 → set. Anything else → invalid.
+    // Empty -> omit (no override at creation). Positive 1-365 -> set. Anything else -> invalid.
     const parseFrequency = (value: string): number | 'empty' | 'invalid' => {
       const trimmed = value.trim();
       if (trimmed === '') return 'empty';
@@ -121,13 +122,13 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
             aria-label={t('plantSearch.searchAria')}
           />
           {searching ? (
-            <p className="py-6 text-center text-sm text-gray-400">{t('plantSearch.searching')}</p>
+            <p className="py-6 text-center text-sm text-ink-faint">{t('plantSearch.searching')}</p>
           ) : results.length === 0 ? (
-            <p className="py-6 text-center text-sm text-gray-400">
+            <p className="py-6 text-center text-sm text-ink-faint">
               {t('plantSearch.noResults', { query })}
             </p>
           ) : (
-            <ul className="max-h-72 divide-y divide-gray-50 overflow-y-auto rounded-lg border border-gray-100">
+            <ul className="max-h-72 divide-y divide-line overflow-y-auto rounded-lg border border-line">
               {results.map((p) => (
                 <li key={p.id}>
                   <button
@@ -143,16 +144,13 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
                         loading="lazy"
                       />
                     ) : (
-                      <span
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-light/40 text-xl"
-                        aria-hidden="true"
-                      >
-                        🪴
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-light">
+                        <Leaf className="h-5 w-5 text-accent" strokeWidth={1.5} aria-hidden="true" />
                       </span>
                     )}
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold text-gray-800">{libName(p)}</p>
-                      <p className="truncate text-xs text-gray-400">
+                      <p className="truncate text-sm font-semibold text-ink">{libName(p)}</p>
+                      <p className="truncate text-xs text-ink-faint">
                         {libAltName(p)} · <span className="italic">{p.latin_name}</span>
                       </p>
                     </div>
@@ -170,16 +168,17 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
           <button
             type="button"
             onClick={() => setSelected(null)}
-            className="text-xs font-medium text-primary hover:underline"
+            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
           >
+            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             {t('plantSearch.pickDifferent')}
           </button>
           <div className="rounded-lg bg-primary-light/40 px-4 py-3">
-            <p className="text-sm font-semibold text-gray-800">{libName(selected)}</p>
-            <p className="text-xs italic text-gray-500">{selected.latin_name}</p>
+            <p className="text-sm font-semibold text-ink">{libName(selected)}</p>
+            <p className="text-xs italic text-ink-soft">{selected.latin_name}</p>
           </div>
           <div>
-            <label htmlFor="psm-quantity" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="psm-quantity" className="mb-1 block text-sm font-medium text-ink-soft">
               {t('plantSearch.quantity')}
             </label>
             <input
@@ -192,9 +191,9 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
             />
           </div>
           <div>
-            <label htmlFor="psm-date" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="psm-date" className="mb-1 block text-sm font-medium text-ink-soft">
               {t('plantSearch.plantedDate')}{' '}
-              <span className="font-normal text-gray-400">({t('common.optional')})</span>
+              <span className="font-normal text-ink-faint">({t('common.optional')})</span>
             </label>
             <input
               id="psm-date"
@@ -205,9 +204,9 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
             />
           </div>
           <div>
-            <label htmlFor="psm-name" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="psm-name" className="mb-1 block text-sm font-medium text-ink-soft">
               {t('plantSearch.customName')}{' '}
-              <span className="font-normal text-gray-400">({t('common.optional')})</span>
+              <span className="font-normal text-ink-faint">({t('common.optional')})</span>
             </label>
             <input
               id="psm-name"
@@ -218,22 +217,23 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
               className="input-field"
             />
           </div>
-          <div className="rounded-lg border border-gray-100 p-3">
+          <div className="rounded-lg border border-line p-3">
             {hasSchedule && !scheduleOpen ? (
               <button
                 type="button"
                 onClick={() => setScheduleOpen(true)}
-                className="text-sm font-medium text-primary hover:underline"
+                className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
               >
-                + {t('plant.customSchedule.sectionTitle')}
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                {t('plant.customSchedule.sectionTitle')}
               </button>
             ) : (
               <>
-                <p className="mb-2 text-sm font-medium text-gray-700">
+                <p className="mb-2 text-sm font-medium text-ink-soft">
                   {t('plant.customSchedule.sectionTitle')}
                 </p>
                 {!hasSchedule && (
-                  <p className="mb-3 text-xs text-gray-400">
+                  <p className="mb-3 text-xs text-ink-faint">
                     {t('plant.customSchedule.sectionHint')}
                   </p>
                 )}
@@ -241,10 +241,10 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
                   <div>
                     <label
                       htmlFor="psm-water"
-                      className="mb-1 block text-sm font-medium text-gray-700"
+                      className="mb-1 block text-sm font-medium text-ink-soft"
                     >
                       {t('plant.customSchedule.waterLabel')}{' '}
-                      <span className="font-normal text-gray-400">({t('common.optional')})</span>
+                      <span className="font-normal text-ink-faint">({t('common.optional')})</span>
                     </label>
                     <input
                       id="psm-water"
@@ -259,10 +259,10 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
                   <div>
                     <label
                       htmlFor="psm-fertilize"
-                      className="mb-1 block text-sm font-medium text-gray-700"
+                      className="mb-1 block text-sm font-medium text-ink-soft"
                     >
                       {t('plant.customSchedule.fertilizeLabel')}{' '}
-                      <span className="font-normal text-gray-400">({t('common.optional')})</span>
+                      <span className="font-normal text-ink-faint">({t('common.optional')})</span>
                     </label>
                     <input
                       id="psm-fertilize"
@@ -278,7 +278,7 @@ export function PlantSearchModal({ gardenId, onClose, onAdded }: PlantSearchModa
               </>
             )}
           </div>
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-danger">{error}</p>}
           <div className="flex justify-end gap-2 pt-1">
             <button type="button" onClick={onClose} className="btn-secondary">
               {t('common.cancel')}

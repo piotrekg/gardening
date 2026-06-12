@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
+import { Leaf, Search, Snowflake, Sun } from 'lucide-react';
 import { getApiErrorMessage } from '../api/client';
 import { getLibraryCategories, searchLibrary } from '../api/library';
 import { EmptyState } from '../components/EmptyState';
@@ -32,7 +33,7 @@ export function LibraryPage() {
       .catch(() => setCategories([]));
   }, []);
 
-  // Debounce search input → URL params.
+  // Debounce search input -> URL params.
   useEffect(() => {
     const timer = window.setTimeout(() => {
       if (searchInput !== search) {
@@ -99,8 +100,8 @@ export function LibraryPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('library.title')}</h1>
-        <p className="mt-0.5 text-sm text-gray-500">{t('library.subtitle')}</p>
+        <h1 className="text-h1 font-semibold tracking-tight text-ink">{t('library.title')}</h1>
+        <p className="mt-1 text-sm text-ink-soft">{t('library.subtitle')}</p>
       </div>
 
       <div className="card flex flex-col gap-3 p-4 sm:flex-row">
@@ -141,12 +142,12 @@ export function LibraryPage() {
       </div>
 
       {error ? (
-        <div className="card p-6 text-center text-sm text-red-600">{error}</div>
+        <div className="card p-6 text-center text-sm text-danger">{error}</div>
       ) : loading && !data ? (
         <GridSkeleton count={6} />
       ) : data && data.plants.length === 0 ? (
         <EmptyState
-          icon="🔍"
+          icon={Search}
           title={t('library.emptyTitle')}
           message={t('library.emptyMessage')}
           action={
@@ -164,7 +165,7 @@ export function LibraryPage() {
         />
       ) : data ? (
         <>
-          <p className="text-xs text-gray-400">{t('library.found', { count: data.total })}</p>
+          <p className="text-xs text-ink-faint">{t('library.found', { count: data.total })}</p>
           <div
             className={`grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 ${loading ? 'opacity-60' : ''}`}
           >
@@ -172,7 +173,7 @@ export function LibraryPage() {
               <Link
                 key={p.id}
                 to={`/library/${p.id}`}
-                className="card group flex flex-col gap-2 p-5 transition hover:shadow-card-hover"
+                className="card group flex flex-col gap-2 p-5 transition duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] hover:-translate-y-0.5 hover:border-accent hover:shadow-lift"
               >
                 <div className="flex items-start gap-3">
                   {p.image_thumb_url ? (
@@ -183,38 +184,37 @@ export function LibraryPage() {
                       loading="lazy"
                     />
                   ) : (
-                    <span
-                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary-light/40 text-2xl"
-                      aria-hidden="true"
-                    >
-                      🪴
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary-light">
+                      <Leaf className="h-6 w-6 text-accent" strokeWidth={1.5} aria-hidden="true" />
                     </span>
                   )}
                   <div className="flex flex-1 items-start justify-between gap-2">
-                    <h2 className="font-semibold text-gray-800 group-hover:text-primary">
+                    <h2 className="font-display font-semibold text-ink group-hover:text-primary">
                       {libName(p)}
                     </h2>
-                    <span className="shrink-0 rounded-full bg-primary-light/60 px-2 py-0.5 text-[11px] font-semibold text-primary-dark">
+                    <span className="shrink-0 rounded-full bg-primary-light px-2 py-0.5 text-[11px] font-semibold text-primary-dark">
                       {t(`library.category.${p.category}`, { defaultValue: p.category })}
                     </span>
                   </div>
                 </div>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-ink-faint">
                   {libAltName(p)} · <span className="italic">{p.latin_name}</span>
                 </p>
-                <div className="mt-auto flex flex-wrap gap-2 pt-1 text-[11px] text-gray-500">
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5">
+                <div className="mt-auto flex flex-wrap items-center gap-2 pt-1 text-[11px] text-ink-soft">
+                  <span className="rounded-full border border-line px-2 py-0.5">
                     {t(`library.lifecycle.${p.lifecycle}`, { defaultValue: p.lifecycle })}
                   </span>
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5">
+                  <span className="rounded-full border border-line px-2 py-0.5">
                     {t(`library.difficulty.${p.difficulty}`, { defaultValue: p.difficulty })}
                   </span>
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5">
-                    ☀️ {t(`library.sun.${p.sun_requirement}`, { defaultValue: p.sun_requirement })}
+                  <span className="inline-flex items-center gap-1 rounded-full border border-line px-2 py-0.5">
+                    <Sun className="h-3 w-3 text-accent" strokeWidth={2} aria-hidden="true" />
+                    {t(`library.sun.${p.sun_requirement}`, { defaultValue: p.sun_requirement })}
                   </span>
                   {p.frost_sensitive && (
-                    <span className="rounded-full bg-blue-50 px-2 py-0.5 text-blue-600">
-                      ❄️ {t('library.frostSensitive')}
+                    <span className="inline-flex items-center gap-1 rounded-full bg-frost-bg px-2 py-0.5 text-frost">
+                      <Snowflake className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
+                      {t('library.frostSensitive')}
                     </span>
                   )}
                 </div>
@@ -231,7 +231,7 @@ export function LibraryPage() {
               >
                 {t('common.previous')}
               </button>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-ink-soft">
                 {t('common.pageOf', { page: data.page, total: totalPages })}
               </span>
               <button

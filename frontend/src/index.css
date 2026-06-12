@@ -1,38 +1,224 @@
 @import 'tailwindcss';
 
+/*
+  PlantDiary design system — botanical-modern, editorial calm.
+  Tinted neutrals in OKLCH (no pure black/white), forest-green primary,
+  warm clay accent, hairline borders over heavy shadows.
+*/
 @theme {
-  --color-primary: #2d6a4f;
-  --color-primary-dark: #1b4332;
-  --color-primary-light: #d8f3dc;
-  --color-accent: #74c69d;
-  --color-accent-light: #b7e4c7;
-  --color-surface: #f8f9fa;
+  /* Warm paper background, tinted toward green — not grey, not white. */
+  --color-paper: oklch(0.985 0.012 120);
+  --color-surface: oklch(0.972 0.014 122);
+  --color-surface-2: oklch(0.955 0.016 124);
+
+  /* Hairline borders: low-contrast, tinted toward the brand hue. */
+  --color-line: oklch(0.9 0.018 130);
+  --color-line-strong: oklch(0.85 0.022 132);
+
+  /* Primary — refined, slightly desaturated deep forest green. */
+  --color-primary: oklch(0.5 0.09 155);
+  --color-primary-dark: oklch(0.4 0.085 157);
+  --color-primary-light: oklch(0.93 0.04 145);
+  --color-accent: oklch(0.7 0.09 152);
+  --color-accent-light: oklch(0.9 0.05 148);
+
+  /* Warm secondary accent — clay/terracotta, used sparingly. */
+  --color-clay: oklch(0.66 0.12 55);
+  --color-clay-light: oklch(0.93 0.045 60);
+  --color-clay-dark: oklch(0.5 0.1 50);
+
+  /* Text tinted toward green-black, not pure grey. */
+  --color-ink: oklch(0.28 0.02 155);
+  --color-ink-soft: oklch(0.46 0.02 150);
+  --color-ink-faint: oklch(0.62 0.018 145);
+
+  /* Functional status — calm, not neon, fitted to the palette. */
+  --color-danger: oklch(0.56 0.13 28);
+  --color-danger-bg: oklch(0.95 0.03 30);
+  --color-danger-line: oklch(0.88 0.05 30);
+  --color-warn: oklch(0.74 0.1 75);
+  --color-warn-bg: oklch(0.95 0.04 80);
+  --color-warn-line: oklch(0.88 0.06 80);
+  --color-frost: oklch(0.62 0.07 240);
+  --color-frost-bg: oklch(0.95 0.025 240);
+  --color-frost-line: oklch(0.88 0.04 240);
 
   --font-sans:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    sans-serif;
+    'Hanken Grotesk Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
 
-  --shadow-card: 0 1px 3px 0 rgb(27 67 50 / 0.08), 0 1px 2px -1px rgb(27 67 50 / 0.06);
-  --shadow-card-hover: 0 6px 16px -4px rgb(27 67 50 / 0.14), 0 2px 4px -2px rgb(27 67 50 / 0.08);
+  /* Soft, brand-tinted shadows — used very sparingly. */
+  --shadow-card: 0 1px 2px 0 oklch(0.4 0.06 155 / 0.05);
+  --shadow-lift: 0 8px 28px -10px oklch(0.4 0.06 155 / 0.18), 0 2px 6px -3px oklch(0.4 0.06 155 / 0.08);
+
+  /* Fluid display scale. */
+  --text-display: clamp(1.75rem, 1.3rem + 2vw, 2.6rem);
+  --text-h1: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
+  --text-h2: clamp(1.05rem, 0.95rem + 0.5vw, 1.25rem);
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-body {
-  @apply bg-surface text-gray-800 antialiased;
+@layer base {
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+  }
+
+  ::selection {
+    background-color: var(--color-accent-light);
+    color: var(--color-primary-dark);
+  }
+
+  /* Refined, tinted focus ring everywhere. */
+  *:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
 }
 
-/* Reusable composites */
+/* Reusable composites — same names, new system. */
 @utility card {
-  @apply rounded-xl bg-white shadow-card;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
 }
 
 @utility input-field {
-  @apply w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 placeholder-gray-400 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20;
+  width: 100%;
+  border-radius: 0.625rem;
+  border: 1px solid var(--color-line-strong);
+  background-color: var(--color-paper);
+  padding: 0.55rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-ink);
+  outline: none;
+  transition:
+    border-color 0.2s var(--ease-out-quart),
+    box-shadow 0.2s var(--ease-out-quart);
+}
+@utility input-field {
+  &::placeholder {
+    color: var(--color-ink-faint);
+  }
+  &:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px oklch(0.7 0.09 152 / 0.18);
+  }
 }
 
 @utility btn-primary {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-60;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.625rem;
+  background-color: var(--color-primary);
+  padding: 0.55rem 1.05rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-paper);
+  border: 1px solid transparent;
+  transition:
+    background-color 0.2s var(--ease-out-quart),
+    transform 0.2s var(--ease-out-quart);
+}
+@utility btn-primary {
+  &:hover {
+    background-color: var(--color-primary-dark);
+  }
+  &:active {
+    transform: translateY(0.5px);
+  }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
 }
 
 @utility btn-secondary {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-60;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--color-line-strong);
+  background-color: var(--color-paper);
+  padding: 0.55rem 1.05rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink-soft);
+  transition:
+    background-color 0.2s var(--ease-out-quart),
+    border-color 0.2s var(--ease-out-quart);
+}
+@utility btn-secondary {
+  &:hover {
+    background-color: var(--color-surface-2);
+    border-color: var(--color-line-strong);
+  }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+/* Ghost button — lowest emphasis in the hierarchy. */
+@utility btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 0.625rem;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink-soft);
+  background-color: transparent;
+  border: 1px solid transparent;
+  transition: background-color 0.2s var(--ease-out-quart);
+}
+@utility btn-ghost {
+  &:hover {
+    background-color: var(--color-surface-2);
+    color: var(--color-primary-dark);
+  }
+}
+
+/* Restrained staggered reveal for a key page load. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility reveal {
+  animation: rise 0.6s var(--ease-out-expo) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

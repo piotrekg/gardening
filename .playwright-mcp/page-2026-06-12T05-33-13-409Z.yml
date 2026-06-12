@@ -1,0 +1,275 @@
+- generic [ref=e26]:
+  - complementary [ref=e27]:
+    - link "🌿 PlantDiary" [ref=e28] [cursor=pointer]:
+      - /url: /dashboard
+      - generic [ref=e29]: 🌿
+      - generic [ref=e30]: PlantDiary
+    - navigation [ref=e31]:
+      - link "Pulpit" [ref=e32] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e33]: 🏡
+        - text: Pulpit
+      - link "Ogrody" [ref=e34] [cursor=pointer]:
+        - /url: /gardens
+        - generic [ref=e35]: 🌻
+        - text: Ogrody
+      - link "Biblioteka" [ref=e36] [cursor=pointer]:
+        - /url: /library
+        - generic [ref=e37]: 📚
+        - text: Biblioteka
+      - link "Kalendarz" [ref=e38] [cursor=pointer]:
+        - /url: /calendar
+        - generic [ref=e39]: 📅
+        - text: Kalendarz
+      - link "Ustawienia" [ref=e40] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e41]: ⚙️
+        - text: Ustawienia
+    - generic [ref=e42]: PlantDiary · rośnij z nami 🌱
+  - banner [ref=e43]:
+    - generic [ref=e44]:
+      - group "Zmień język" [ref=e45]:
+        - button "Polski" [pressed] [ref=e46]: pl
+        - button "Angielski" [ref=e47]: en
+      - button "Powiadomienia" [ref=e49]:
+        - img [ref=e50]
+      - button "Menu użytkownika" [ref=e53]: T
+  - main [ref=e54]:
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - heading "Przegląd na dziś" [level=1] [ref=e58]
+        - paragraph [ref=e59]: piątek, 12 czerwca 2026
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]: 🌻
+          - generic [ref=e63]:
+            - paragraph [ref=e64]: "0"
+            - paragraph [ref=e65]: Ogrody
+        - generic [ref=e66]:
+          - generic [ref=e67]: 🪴
+          - generic [ref=e68]:
+            - paragraph [ref=e69]: "0"
+            - paragraph [ref=e70]: Rośliny
+        - generic [ref=e71]:
+          - generic [ref=e72]: 🧤
+          - generic [ref=e73]:
+            - paragraph [ref=e74]: "0"
+            - paragraph [ref=e75]: Zabiegi w tym tygodniu
+      - generic [ref=e76]:
+        - generic [ref=e77]: 🌤️
+        - generic [ref=e78]:
+          - paragraph [ref=e79]: Porada sezonowa
+          - paragraph [ref=e80]: Wyściółkuj grządki, by zatrzymać wilgoć, a w upały podlewaj obficie rano.
+      - generic [ref=e81]:
+        - generic [ref=e82]:
+          - heading "Zaległe podlewanie 0" [level=2] [ref=e83]:
+            - generic [ref=e84]: 💧
+            - text: Zaległe podlewanie
+            - generic [ref=e85]: "0"
+          - paragraph [ref=e86]: Nic nie jest spragnione — świetna robota!
+        - generic [ref=e87]:
+          - heading "Zaległe nawożenie 0" [level=2] [ref=e88]:
+            - generic [ref=e89]: 🌾
+            - text: Zaległe nawożenie
+            - generic [ref=e90]: "0"
+          - paragraph [ref=e91]: Wszystkie rośliny są nakarmione.
+        - generic [ref=e92]:
+          - heading "Na dziś 0" [level=2] [ref=e93]:
+            - generic [ref=e94]: ⏰
+            - text: Na dziś
+            - generic [ref=e95]: "0"
+          - paragraph [ref=e96]: Brak zadań pielęgnacyjnych na dziś.
+        - generic [ref=e97]:
+          - heading "Nadchodzące zbiory 0" [level=2] [ref=e98]:
+            - generic [ref=e99]: 🧺
+            - text: Nadchodzące zbiory
+            - generic [ref=e100]: "0"
+          - paragraph [ref=e101]: Na razie żadnych zbiorów na horyzoncie.
+      - generic [ref=e102]:
+        - generic [ref=e103]:
+          - heading "Co wysiać w tym miesiącu" [level=2] [ref=e104]:
+            - generic [ref=e105]: 🌱
+            - text: Co wysiać w tym miesiącu
+          - generic [ref=e106]:
+            - link "Boćwina (burak liściowy)" [ref=e107] [cursor=pointer]:
+              - /url: /library/swiss-chard
+            - link "Bratek ogrodowy" [ref=e108] [cursor=pointer]:
+              - /url: /library/pansy
+            - link "Brukiew" [ref=e109] [cursor=pointer]:
+              - /url: /library/swede-rutabaga
+            - link "Burak 'Chioggia'" [ref=e110] [cursor=pointer]:
+              - /url: /library/beetroot-chioggia
+            - link "Burak ćwikłowy" [ref=e111] [cursor=pointer]:
+              - /url: /library/beetroot
+            - link "Burak 'Cylindra'" [ref=e112] [cursor=pointer]:
+              - /url: /library/beetroot-cylindra
+            - link "Burak liściowy 'Rainbow'" [ref=e113] [cursor=pointer]:
+              - /url: /library/chard-rainbow
+            - link "Fasola 'Borlotto'" [ref=e114] [cursor=pointer]:
+              - /url: /library/bean-borlotti
+            - link "Fasola 'Borlotto Lingua di Fuoco'" [ref=e115] [cursor=pointer]:
+              - /url: /library/bean-bush-borlotto
+            - link "Fasola szparagowa" [ref=e116] [cursor=pointer]:
+              - /url: /library/bean-bush
+            - link "Fasola szparagowa 'Maxi'" [ref=e117] [cursor=pointer]:
+              - /url: /library/bean-bush-maxi
+            - link "Fasola szparagowa żółta 'Goldmarie'" [ref=e118] [cursor=pointer]:
+              - /url: /library/bean-yellow-wax
+            - link "Fasola wielokwiatowa (tyczna)" [ref=e119] [cursor=pointer]:
+              - /url: /library/bean-runner-scarlet
+            - link "Fiołek rogaty (bratek drobny)" [ref=e120] [cursor=pointer]:
+              - /url: /library/pansy-viola
+            - link "Kalarepa" [ref=e121] [cursor=pointer]:
+              - /url: /library/kohlrabi
+            - link "Kalarepa 'Purpurowa'" [ref=e122] [cursor=pointer]:
+              - /url: /library/kohlrabi-purple
+            - link "Kapusta pekińska" [ref=e123] [cursor=pointer]:
+              - /url: /library/chinese-cabbage
+            - link "Kolendra siewna" [ref=e124] [cursor=pointer]:
+              - /url: /library/coriander
+            - link "Koper ogrodowy" [ref=e125] [cursor=pointer]:
+              - /url: /library/dill
+            - link "Koper włoski (fenkuł)" [ref=e126] [cursor=pointer]:
+              - /url: /library/fennel-florence
+            - link "Malwa ogrodowa (ślaz różowy)" [ref=e127] [cursor=pointer]:
+              - /url: /library/hollyhock
+            - link "Marchew 'Nantejska'" [ref=e128] [cursor=pointer]:
+              - /url: /library/carrot-nantes
+            - link "Marchew zwyczajna" [ref=e129] [cursor=pointer]:
+              - /url: /library/carrot
+            - link "Naparstnica purpurowa" [ref=e130] [cursor=pointer]:
+              - /url: /library/foxglove
+            - link "Orlik 'McKana'" [ref=e131] [cursor=pointer]:
+              - /url: /library/aquilegia-mckana
+            - link "Rzodkiewka" [ref=e132] [cursor=pointer]:
+              - /url: /library/radish
+            - link "Rzodkiewka 'French Breakfast'" [ref=e133] [cursor=pointer]:
+              - /url: /library/radish-french-breakfast
+            - link "Sałata dębolistna 'Salad Bowl'" [ref=e134] [cursor=pointer]:
+              - /url: /library/lettuce-oak-leaf
+            - link "Sałata 'Lodowa'" [ref=e135] [cursor=pointer]:
+              - /url: /library/lettuce-iceberg
+            - link "Sałata 'Lollo Rossa'" [ref=e136] [cursor=pointer]:
+              - /url: /library/lettuce-lollo-rosso
+            - link "Sałata masłowa" [ref=e137] [cursor=pointer]:
+              - /url: /library/lettuce
+            - link "Sałata rzymska" [ref=e138] [cursor=pointer]:
+              - /url: /library/lettuce-romaine
+        - generic [ref=e139]:
+          - heading "Co przesadzić w tym miesiącu" [level=2] [ref=e140]:
+            - generic [ref=e141]: 🌿
+            - text: Co przesadzić w tym miesiącu
+          - generic [ref=e142]:
+            - link "Bakłażan" [ref=e143] [cursor=pointer]:
+              - /url: /library/eggplant
+            - link "Bazylia afrykańska (African Blue)" [ref=e144] [cursor=pointer]:
+              - /url: /library/basil-mrihani
+            - link "Bazylia azjatycka (tulsi)" [ref=e145] [cursor=pointer]:
+              - /url: /library/basil-holy-tulsi
+            - link "Bazylia cynamonowa" [ref=e146] [cursor=pointer]:
+              - /url: /library/basil-cinnamon
+            - link "Bazylia cytrynowa" [ref=e147] [cursor=pointer]:
+              - /url: /library/basil-lemon
+            - link "Bazylia czerwona 'Dark Opal'" [ref=e148] [cursor=pointer]:
+              - /url: /library/basil-dark-opal
+            - link "Bazylia genueńska 'Genovese'" [ref=e149] [cursor=pointer]:
+              - /url: /library/basil-genovese
+            - link "Bazylia grecka drobnolistna" [ref=e150] [cursor=pointer]:
+              - /url: /library/basil-greek-bush
+            - link "Bazylia limonkowa" [ref=e151] [cursor=pointer]:
+              - /url: /library/basil-lime
+            - link "Bazylia pospolita" [ref=e152] [cursor=pointer]:
+              - /url: /library/basil
+            - link "Bazylia 'Purple Ruffles'" [ref=e153] [cursor=pointer]:
+              - /url: /library/basil-purple-ruffles
+            - link "Bazylia sałatowa (wielkolistna)" [ref=e154] [cursor=pointer]:
+              - /url: /library/basil-lettuce-leaf
+            - link "Bazylia tajska" [ref=e155] [cursor=pointer]:
+              - /url: /library/basil-thai
+            - link "Brukselka" [ref=e156] [cursor=pointer]:
+              - /url: /library/brussels-sprouts
+            - link "Cukinia" [ref=e157] [cursor=pointer]:
+              - /url: /library/zucchini
+            - link "Cukinia 'Black Beauty'" [ref=e158] [cursor=pointer]:
+              - /url: /library/zucchini-black-beauty
+            - link "Cukinia 'Gold Rush'" [ref=e159] [cursor=pointer]:
+              - /url: /library/zucchini-gold-rush
+            - link "Cynia 'State Fair'" [ref=e160] [cursor=pointer]:
+              - /url: /library/zinnia-state-fair
+            - link "Dynia 'Bambino'" [ref=e161] [cursor=pointer]:
+              - /url: /library/pumpkin-bambino
+            - link "Dynia Hokkaido" [ref=e162] [cursor=pointer]:
+              - /url: /library/squash-hokkaido
+            - link "Dynia makaronowa" [ref=e163] [cursor=pointer]:
+              - /url: /library/squash-spaghetti
+            - link "Dynia olbrzymia" [ref=e164] [cursor=pointer]:
+              - /url: /library/pumpkin
+            - link "Dynia piżmowa (Butternut)" [ref=e165] [cursor=pointer]:
+              - /url: /library/squash-butternut
+            - link "Jarmuż" [ref=e166] [cursor=pointer]:
+              - /url: /library/kale
+            - link "Jarmuż 'Nero di Toscana'" [ref=e167] [cursor=pointer]:
+              - /url: /library/kale-nero-di-toscana
+            - link "Kalafior Romanesco" [ref=e168] [cursor=pointer]:
+              - /url: /library/romanesco
+            - link "Kalarepa" [ref=e169] [cursor=pointer]:
+              - /url: /library/kohlrabi
+            - link "Kalarepa 'Purpurowa'" [ref=e170] [cursor=pointer]:
+              - /url: /library/kohlrabi-purple
+            - link "Kalarepa 'Superschmelz'" [ref=e171] [cursor=pointer]:
+              - /url: /library/kohlrabi-superschmelz
+            - link "Kapusta 'Amager'" [ref=e172] [cursor=pointer]:
+              - /url: /library/cabbage-amager
+            - link "Kapusta włoska" [ref=e173] [cursor=pointer]:
+              - /url: /library/cabbage-savoy
+            - link "Ogórek gruntowy" [ref=e174] [cursor=pointer]:
+              - /url: /library/cucumber
+            - link "Ogórek gruntowy 'Marketmore'" [ref=e175] [cursor=pointer]:
+              - /url: /library/cucumber-marketmore
+            - link "Ogórek konserwowy (korniszon)" [ref=e176] [cursor=pointer]:
+              - /url: /library/cucumber-gherkin-vorgebirgstrauben
+            - link "Ogórek 'Saladyn'" [ref=e177] [cursor=pointer]:
+              - /url: /library/cucumber-pickling-saladin
+            - link "Papryka chili Cayenne" [ref=e178] [cursor=pointer]:
+              - /url: /library/pepper-cayenne
+            - link "Papryka chili Habanero" [ref=e179] [cursor=pointer]:
+              - /url: /library/pepper-habanero
+            - link "Papryka chili Jalapeño" [ref=e180] [cursor=pointer]:
+              - /url: /library/pepper-jalapeno
+            - link "Papryka Hungarian Hot Wax" [ref=e181] [cursor=pointer]:
+              - /url: /library/pepper-hungarian-wax
+            - link "Papryka 'Padrón'" [ref=e182] [cursor=pointer]:
+              - /url: /library/pepper-padron
+            - link "Papryka Scotch Bonnet" [ref=e183] [cursor=pointer]:
+              - /url: /library/pepper-scotch-bonnet
+            - link "Papryka słodka" [ref=e184] [cursor=pointer]:
+              - /url: /library/pepper-bell
+            - link "Papryka słodka 'California Wonder'" [ref=e185] [cursor=pointer]:
+              - /url: /library/pepper-california-wonder
+            - link "Papryka słodka 'Marconi'" [ref=e186] [cursor=pointer]:
+              - /url: /library/pepper-marconi
+            - link "Patison" [ref=e187] [cursor=pointer]:
+              - /url: /library/patty-pan-squash
+            - link "Patison 'Biały'" [ref=e188] [cursor=pointer]:
+              - /url: /library/squash-patison
+            - link "Piżmian jadalny (okra)" [ref=e189] [cursor=pointer]:
+              - /url: /library/okra
+            - link "Sałata dębolistna 'Salad Bowl'" [ref=e190] [cursor=pointer]:
+              - /url: /library/lettuce-oak-leaf
+            - link "Sałata 'Lodowa'" [ref=e191] [cursor=pointer]:
+              - /url: /library/lettuce-iceberg
+            - link "Sałata 'Lollo Rossa'" [ref=e192] [cursor=pointer]:
+              - /url: /library/lettuce-lollo-rosso
+            - link "Sałata masłowa" [ref=e193] [cursor=pointer]:
+              - /url: /library/lettuce
+            - link "Sałata rzymska" [ref=e194] [cursor=pointer]:
+              - /url: /library/lettuce-romaine
+            - link "Stewia (słodziszek)" [ref=e195] [cursor=pointer]:
+              - /url: /library/stevia
+            - link "Trawa cytrynowa (palczatka)" [ref=e196] [cursor=pointer]:
+              - /url: /library/lemongrass
+      - generic [ref=e197]:
+        - heading "Ostatnia pielęgnacja" [level=2] [ref=e198]:
+          - generic [ref=e199]: 📋
+          - text: Ostatnia pielęgnacja
+        - paragraph [ref=e200]: Brak zapisanych zabiegów. Podlej roślinę, aby rozpocząć dziennik!

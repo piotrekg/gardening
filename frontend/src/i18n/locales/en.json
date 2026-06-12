@@ -8,8 +8,8 @@
     "optional": "optional",
     "never": "never",
     "pageOf": "Page {{page}} of {{total}}",
-    "previous": "← Previous",
-    "next": "Next →",
+    "previous": "Previous",
+    "next": "Next",
     "plantCount_one": "{{count}} plant",
     "plantCount_other": "{{count}} plants",
     "everyDays_one": "every {{count}} day",
@@ -22,8 +22,8 @@
       "waterLabel": "Water every (days)",
       "fertilizeLabel": "Fertilize every (days)",
       "rangeInvalid": "Interval must be a whole number between 1 and 365.",
-      "waterEffective": "💧 {{schedule}}",
-      "fertilizeEffective": "🌾 {{schedule}}",
+      "waterEffective": "{{schedule}}",
+      "fertilizeEffective": "{{schedule}}",
       "scheduleTitle": "Care schedule",
       "customBadge": "custom",
       "unknownHint": "No schedule yet — set your own watering and fertilizing intervals via Edit."
@@ -41,7 +41,7 @@
     "settings": "Settings"
   },
   "layout": {
-    "tagline": "PlantDiary · grow happy 🌱",
+    "tagline": "PlantDiary · grow happy",
     "userMenu": "User menu",
     "logout": "Log out"
   },
@@ -153,7 +153,7 @@
     "aria": "Notifications",
     "ariaUnread": "Notifications, {{count}} unread",
     "markAllRead": "Mark all read",
-    "empty": "You're all caught up. 🌿",
+    "empty": "You're all caught up.",
     "goToDashboard": "Go to dashboard",
     "types": {
       "overdue_water": "overdue watering"
@@ -221,7 +221,7 @@
   "gardens": {
     "title": "My gardens",
     "subtitle": "All the places where things grow.",
-    "new": "+ New garden",
+    "new": "New garden",
     "emptyTitle": "No gardens yet",
     "emptyMessage": "Create your first garden to start tracking plants, watering and harvests.",
     "createFirst": "Create your first garden",
@@ -242,9 +242,9 @@
     }
   },
   "gardenDetail": {
-    "backToGardens": "← Back to gardens",
+    "backToGardens": "Back to gardens",
     "loadError": "Could not load this garden.",
-    "addPlant": "+ Add plant",
+    "addPlant": "Add plant",
     "health": {
       "overdueWater": "overdue water",
       "overdueFertilize": "overdue fertilize",
@@ -263,7 +263,7 @@
     "searchAria": "Search plant library",
     "searching": "Searching…",
     "noResults": "No plants match \"{{query}}\". Try another name.",
-    "pickDifferent": "← Pick a different plant",
+    "pickDifferent": "Pick a different plant",
     "quantity": "Quantity",
     "quantityInvalid": "Quantity must be a whole number of at least 1.",
     "plantedDate": "Planted date",
@@ -331,10 +331,10 @@
     }
   },
   "libraryPlant": {
-    "backToLibrary": "← Back to library",
+    "backToLibrary": "Back to library",
     "loadError": "Could not load this plant.",
     "difficultyChip": "difficulty: {{value}}",
-    "addToMyGarden": "+ Add to my garden",
+    "addToMyGarden": "Add to my garden",
     "seasonCalendar": "Season calendar",
     "sowLabel": "Sow",
     "transplantLabel": "Transplant",
@@ -348,8 +348,8 @@
     "spacing": "Spacing",
     "commonPests": "Common pests",
     "careNotes": "Care notes",
-    "goodCompanions": "🤝 Good companions",
-    "keepApart": "⚔️ Keep apart from",
+    "goodCompanions": "Good companions",
+    "keepApart": "Keep apart from",
     "noneListed": "None listed.",
     "addModal": {
       "title": "Add {{name}} to a garden",
@@ -397,7 +397,7 @@
   },
   "plantDetail": {
     "breadcrumbGarden": "Garden",
-    "backToGarden": "← Back to garden",
+    "backToGarden": "Back to garden",
     "loadError": "Could not load this plant.",
     "statusAria": "Plant status",
     "statusError": "Could not update status.",
@@ -414,8 +414,8 @@
     "careLog": "Care log",
     "careLogLoading": "Loading care log…",
     "careLogEmpty": "No care logged yet — tap a quick action above to start the journal.",
-    "newer": "← Newer",
-    "older": "Older →",
+    "newer": "Newer",
+    "older": "Older",
     "photos": "Photos",
     "photosLoading": "Loading photos…",
     "photosEmpty": "No photos yet — document your plant's progress!",
@@ -425,7 +425,7 @@
     "waterEvery": "Watering",
     "fertilizeEvery": "Fertilizing",
     "difficulty": "Difficulty",
-    "openInLibrary": "Open in library →",
+    "openInLibrary": "Open in library",
     "edit": {
       "title": "Edit plant",
       "customName": "Custom name",

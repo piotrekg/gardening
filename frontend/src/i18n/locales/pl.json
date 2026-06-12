@@ -8,8 +8,8 @@
     "optional": "opcjonalnie",
     "never": "nigdy",
     "pageOf": "Strona {{page}} z {{total}}",
-    "previous": "← Poprzednia",
-    "next": "Następna →",
+    "previous": "Poprzednia",
+    "next": "Następna",
     "plantCount_one": "{{count}} roślina",
     "plantCount_few": "{{count}} rośliny",
     "plantCount_many": "{{count}} roślin",
@@ -26,8 +26,8 @@
       "waterLabel": "Podlewanie co (dni)",
       "fertilizeLabel": "Nawożenie co (dni)",
       "rangeInvalid": "Odstęp musi być liczbą całkowitą od 1 do 365.",
-      "waterEffective": "💧 {{schedule}}",
-      "fertilizeEffective": "🌾 {{schedule}}",
+      "waterEffective": "{{schedule}}",
+      "fertilizeEffective": "{{schedule}}",
       "scheduleTitle": "Harmonogram pielęgnacji",
       "customBadge": "własny",
       "unknownHint": "Brak harmonogramu — ustaw własne odstępy podlewania i nawożenia przez „Edytuj”."
@@ -45,7 +45,7 @@
     "settings": "Ustawienia"
   },
   "layout": {
-    "tagline": "PlantDiary · rośnij z nami 🌱",
+    "tagline": "PlantDiary · rośnij z nami",
     "userMenu": "Menu użytkownika",
     "logout": "Wyloguj się"
   },
@@ -157,7 +157,7 @@
     "aria": "Powiadomienia",
     "ariaUnread": "Powiadomienia, nieprzeczytane: {{count}}",
     "markAllRead": "Oznacz wszystkie jako przeczytane",
-    "empty": "Wszystko ogarnięte. 🌿",
+    "empty": "Wszystko ogarnięte.",
     "goToDashboard": "Przejdź do pulpitu",
     "types": {
       "overdue_water": "zaległe podlewanie"
@@ -225,7 +225,7 @@
   "gardens": {
     "title": "Moje ogrody",
     "subtitle": "Wszystkie miejsca, w których coś rośnie.",
-    "new": "+ Nowy ogród",
+    "new": "Nowy ogród",
     "emptyTitle": "Nie masz jeszcze ogrodów",
     "emptyMessage": "Utwórz pierwszy ogród, aby śledzić rośliny, podlewanie i zbiory.",
     "createFirst": "Utwórz pierwszy ogród",
@@ -246,9 +246,9 @@
     }
   },
   "gardenDetail": {
-    "backToGardens": "← Wróć do ogrodów",
+    "backToGardens": "Wróć do ogrodów",
     "loadError": "Nie udało się załadować tego ogrodu.",
-    "addPlant": "+ Dodaj roślinę",
+    "addPlant": "Dodaj roślinę",
     "health": {
       "overdueWater": "zaległe podlewanie",
       "overdueFertilize": "zaległe nawożenie",
@@ -267,7 +267,7 @@
     "searchAria": "Szukaj w bibliotece roślin",
     "searching": "Szukanie…",
     "noResults": "Brak roślin pasujących do „{{query}}”. Spróbuj innej nazwy.",
-    "pickDifferent": "← Wybierz inną roślinę",
+    "pickDifferent": "Wybierz inną roślinę",
     "quantity": "Ilość",
     "quantityInvalid": "Ilość musi być liczbą całkowitą, co najmniej 1.",
     "plantedDate": "Data posadzenia",
@@ -337,10 +337,10 @@
     }
   },
   "libraryPlant": {
-    "backToLibrary": "← Wróć do biblioteki",
+    "backToLibrary": "Wróć do biblioteki",
     "loadError": "Nie udało się załadować tej rośliny.",
     "difficultyChip": "trudność: {{value}}",
-    "addToMyGarden": "+ Dodaj do mojego ogrodu",
+    "addToMyGarden": "Dodaj do mojego ogrodu",
     "seasonCalendar": "Kalendarz sezonowy",
     "sowLabel": "Siew",
     "transplantLabel": "Przesadzanie",
@@ -354,8 +354,8 @@
     "spacing": "Rozstaw",
     "commonPests": "Częste szkodniki",
     "careNotes": "Wskazówki pielęgnacyjne",
-    "goodCompanions": "🤝 Dobre sąsiedztwo",
-    "keepApart": "⚔️ Trzymaj z dala od",
+    "goodCompanions": "Dobre sąsiedztwo",
+    "keepApart": "Trzymaj z dala od",
     "noneListed": "Brak danych.",
     "addModal": {
       "title": "Dodaj {{name}} do ogrodu",
@@ -403,7 +403,7 @@
   },
   "plantDetail": {
     "breadcrumbGarden": "Ogród",
-    "backToGarden": "← Wróć do ogrodu",
+    "backToGarden": "Wróć do ogrodu",
     "loadError": "Nie udało się załadować tej rośliny.",
     "statusAria": "Status rośliny",
     "statusError": "Nie udało się zmienić statusu.",
@@ -420,8 +420,8 @@
     "careLog": "Dziennik pielęgnacji",
     "careLogLoading": "Ładowanie dziennika…",
     "careLogEmpty": "Brak wpisów — użyj szybkiej akcji powyżej, aby rozpocząć dziennik.",
-    "newer": "← Nowsze",
-    "older": "Starsze →",
+    "newer": "Nowsze",
+    "older": "Starsze",
     "photos": "Zdjęcia",
     "photosLoading": "Ładowanie zdjęć…",
     "photosEmpty": "Brak zdjęć — dokumentuj postępy swojej rośliny!",
@@ -431,7 +431,7 @@
     "waterEvery": "Podlewanie",
     "fertilizeEvery": "Nawożenie",
     "difficulty": "Poziom trudności",
-    "openInLibrary": "Otwórz w bibliotece →",
+    "openInLibrary": "Otwórz w bibliotece",
     "edit": {
       "title": "Edytuj roślinę",
       "customName": "Własna nazwa",

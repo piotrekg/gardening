@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Leaf } from 'lucide-react';
 import { register } from '../api/auth';
 import { getApiErrorMessage } from '../api/client';
 import { useAuthStore } from '../store/auth';
@@ -68,26 +69,26 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-surface px-4 py-8">
-      <div className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-paper px-4 py-8">
+      <div className="reveal w-full max-w-md">
         <div className="mb-8 text-center">
-          <span className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-2xl text-white">
-            🌿
+          <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-paper">
+            <Leaf className="h-7 w-7" strokeWidth={1.5} aria-hidden="true" />
           </span>
-          <h1 className="text-2xl font-bold tracking-tight text-primary-dark">
+          <h1 className="font-display text-h1 font-semibold tracking-tight text-primary-dark">
             {t('auth.register.title')}
           </h1>
-          <p className="mt-1 text-sm text-gray-500">{t('auth.register.subtitle')}</p>
+          <p className="mt-1.5 text-sm text-ink-soft">{t('auth.register.subtitle')}</p>
         </div>
 
         <form onSubmit={(e) => void handleSubmit(e)} className="card space-y-4 p-6" noValidate>
           {apiError && (
-            <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+            <div className="rounded-lg border border-danger-line bg-danger-bg px-3 py-2 text-sm text-danger" role="alert">
               {apiError}
             </div>
           )}
           <div>
-            <label htmlFor="name" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="name" className="mb-1 block text-sm font-medium text-ink-soft">
               {t('auth.register.name')}
             </label>
             <input
@@ -99,10 +100,10 @@ export function RegisterPage() {
               className="input-field"
               placeholder={t('auth.register.namePlaceholder')}
             />
-            {fieldErrors.name && <p className="mt-1 text-xs text-red-600">{fieldErrors.name}</p>}
+            {fieldErrors.name && <p className="mt-1 text-xs text-danger">{fieldErrors.name}</p>}
           </div>
           <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="mb-1 block text-sm font-medium text-ink-soft">
               {t('auth.login.email')}
             </label>
             <input
@@ -114,10 +115,10 @@ export function RegisterPage() {
               className="input-field"
               placeholder={t('auth.login.emailPlaceholder')}
             />
-            {fieldErrors.email && <p className="mt-1 text-xs text-red-600">{fieldErrors.email}</p>}
+            {fieldErrors.email && <p className="mt-1 text-xs text-danger">{fieldErrors.email}</p>}
           </div>
           <div>
-            <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="password" className="mb-1 block text-sm font-medium text-ink-soft">
               {t('auth.login.password')}
             </label>
             <input
@@ -130,13 +131,13 @@ export function RegisterPage() {
               placeholder={t('auth.register.passwordPlaceholder')}
             />
             {fieldErrors.password ? (
-              <p className="mt-1 text-xs text-red-600">{fieldErrors.password}</p>
+              <p className="mt-1 text-xs text-danger">{fieldErrors.password}</p>
             ) : (
-              <p className="mt-1 text-xs text-gray-400">{t('auth.register.passwordHint')}</p>
+              <p className="mt-1 text-xs text-ink-faint">{t('auth.register.passwordHint')}</p>
             )}
           </div>
           <div>
-            <label htmlFor="confirm" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="confirm" className="mb-1 block text-sm font-medium text-ink-soft">
               {t('auth.register.confirm')}
             </label>
             <input
@@ -149,7 +150,7 @@ export function RegisterPage() {
               placeholder={t('auth.register.confirmPlaceholder')}
             />
             {fieldErrors.confirm && (
-              <p className="mt-1 text-xs text-red-600">{fieldErrors.confirm}</p>
+              <p className="mt-1 text-xs text-danger">{fieldErrors.confirm}</p>
             )}
           </div>
           <button type="submit" disabled={submitting} className="btn-primary w-full">
@@ -157,7 +158,7 @@ export function RegisterPage() {
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-500">
+        <p className="mt-4 text-center text-sm text-ink-soft">
           {t('auth.register.haveAccount')}{' '}
           <Link to="/login" className="font-semibold text-primary hover:underline">
             {t('auth.register.signIn')}

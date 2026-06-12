@@ -1,11 +1,20 @@
 import { useTranslation } from 'react-i18next';
+import { AlertCircle, CheckCircle2, Circle, Clock } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { CareStatusValue } from '../types';
 
 const STYLES: Record<CareStatusValue, string> = {
-  overdue: 'bg-red-100 text-red-700 ring-red-200',
-  due_today: 'bg-yellow-100 text-yellow-800 ring-yellow-200',
-  ok: 'bg-green-100 text-green-700 ring-green-200',
-  unknown: 'bg-gray-100 text-gray-500 ring-gray-200',
+  overdue: 'bg-danger-bg text-danger border-danger-line',
+  due_today: 'bg-warn-bg text-clay-dark border-warn-line',
+  ok: 'bg-primary-light text-primary-dark border-accent-light',
+  unknown: 'bg-surface-2 text-ink-faint border-line',
+};
+
+const ICONS: Record<CareStatusValue, LucideIcon> = {
+  overdue: AlertCircle,
+  due_today: Clock,
+  ok: CheckCircle2,
+  unknown: Circle,
 };
 
 const LABEL_KEYS: Record<CareStatusValue, string> = {
@@ -22,10 +31,12 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ status, label }: StatusBadgeProps) {
   const { t } = useTranslation();
+  const Icon = ICONS[status];
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ring-inset ${STYLES[status]}`}
+      className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium ${STYLES[status]}`}
     >
+      <Icon className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
       {label ? `${label}: ` : ''}
       {t(LABEL_KEYS[status])}
     </span>

@@ -1,0 +1,2 @@
+[     436ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.50.11/api/notifications:0
+[     441ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.50.11/api/dashboard:0

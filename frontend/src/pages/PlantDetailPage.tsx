@@ -1,6 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import {
+  Droplet,
+  Eye,
+  FlaskConical,
+  Replace,
+  Scissors,
+  Sprout,
+  Wheat,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { getCareLog, logCare } from '../api/care';
 import { getApiErrorMessage } from '../api/client';
@@ -22,25 +32,25 @@ import type {
   PlantStatus,
 } from '../types';
 
-const CARE_ACTIONS: { action: CareAction; icon: string }[] = [
-  { action: 'watered', icon: '💧' },
-  { action: 'fertilized', icon: '🌾' },
-  { action: 'pruned', icon: '✂️' },
-  { action: 'repotted', icon: '🪴' },
-  { action: 'treated', icon: '🧪' },
-  { action: 'observed', icon: '👀' },
-  { action: 'harvested', icon: '🧺' },
-];
-
-const ACTION_ICONS: Record<CareAction, string> = {
-  watered: '💧',
-  fertilized: '🌾',
-  pruned: '✂️',
-  repotted: '🪴',
-  treated: '🧪',
-  observed: '👀',
-  harvested: '🧺',
+const ACTION_ICONS: Record<CareAction, LucideIcon> = {
+  watered: Droplet,
+  fertilized: Wheat,
+  pruned: Scissors,
+  repotted: Replace,
+  treated: FlaskConical,
+  observed: Eye,
+  harvested: Sprout,
 };
+
+const CARE_ACTIONS: CareAction[] = [
+  'watered',
+  'fertilized',
+  'pruned',
+  'repotted',
+  'treated',
+  'observed',
+  'harvested',
+];
 
 const STATUS_OPTIONS: PlantStatus[] = ['active', 'harvested', 'removed', 'dead'];
 
@@ -72,7 +82,7 @@ function EditPlantModal({
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Empty input → 0 (clear override). Positive number → set. Invalid → null (block submit).
+  // Empty input -> 0 (clear override). Positive number -> set. Invalid -> null (block submit).
   const parseFrequency = (value: string): number | null => {
     const trimmed = value.trim();
     if (trimmed === '') return 0;
@@ -125,12 +135,12 @@ function EditPlantModal({
     <Modal title={t('plantDetail.edit.title')} onClose={onClose}>
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4" noValidate>
         {error && (
-          <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+          <div className="rounded-lg border border-danger-line bg-danger-bg px-3 py-2 text-sm text-danger" role="alert">
             {error}
           </div>
         )}
         <div>
-          <label htmlFor="ep-name" className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="ep-name" className="mb-1 block text-sm font-medium text-ink-soft">
             {t('plantDetail.edit.customName')}
           </label>
           <input
@@ -145,7 +155,7 @@ function EditPlantModal({
           />
         </div>
         <div>
-          <label htmlFor="ep-notes" className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="ep-notes" className="mb-1 block text-sm font-medium text-ink-soft">
             {t('plantDetail.edit.locationNotes')}
           </label>
           <textarea
@@ -158,7 +168,7 @@ function EditPlantModal({
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label htmlFor="ep-qty" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="ep-qty" className="mb-1 block text-sm font-medium text-ink-soft">
               {t('plantDetail.edit.quantity')}
             </label>
             <input
@@ -171,7 +181,7 @@ function EditPlantModal({
             />
           </div>
           <div>
-            <label htmlFor="ep-date" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="ep-date" className="mb-1 block text-sm font-medium text-ink-soft">
               {t('plantDetail.edit.plantedDate')}
             </label>
             <input
@@ -185,9 +195,9 @@ function EditPlantModal({
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label htmlFor="ep-water" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="ep-water" className="mb-1 block text-sm font-medium text-ink-soft">
               {t('plant.customSchedule.waterLabel')}{' '}
-              <span className="font-normal text-gray-400">({t('common.optional')})</span>
+              <span className="font-normal text-ink-faint">({t('common.optional')})</span>
             </label>
             <input
               id="ep-water"
@@ -201,9 +211,9 @@ function EditPlantModal({
             />
           </div>
           <div>
-            <label htmlFor="ep-fertilize" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="ep-fertilize" className="mb-1 block text-sm font-medium text-ink-soft">
               {t('plant.customSchedule.fertilizeLabel')}{' '}
-              <span className="font-normal text-gray-400">({t('common.optional')})</span>
+              <span className="font-normal text-ink-faint">({t('common.optional')})</span>
             </label>
             <input
               id="ep-fertilize"
@@ -278,14 +288,14 @@ function LogCareModal({
     <Modal title={t('plantDetail.log.title', { action: t(`care.noun.${action}`) })} onClose={onClose}>
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4" noValidate>
         {error && (
-          <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+          <div className="rounded-lg border border-danger-line bg-danger-bg px-3 py-2 text-sm text-danger" role="alert">
             {error}
           </div>
         )}
         <div>
-          <label htmlFor="lc-note" className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="lc-note" className="mb-1 block text-sm font-medium text-ink-soft">
             {t('plantDetail.log.note')}{' '}
-            <span className="font-normal text-gray-400">({t('common.optional')})</span>
+            <span className="font-normal text-ink-faint">({t('common.optional')})</span>
           </label>
           <textarea
             id="lc-note"
@@ -298,9 +308,9 @@ function LogCareModal({
         </div>
         {action === 'harvested' && (
           <div>
-            <label htmlFor="lc-qty" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="lc-qty" className="mb-1 block text-sm font-medium text-ink-soft">
               {t('plantDetail.log.quantityHarvested')}{' '}
-              <span className="font-normal text-gray-400">({t('common.optional')})</span>
+              <span className="font-normal text-ink-faint">({t('common.optional')})</span>
             </label>
             <input
               id="lc-qty"
@@ -435,7 +445,7 @@ export function PlantDetailPage() {
   if (error) {
     return (
       <div className="card p-6 text-center">
-        <p className="text-sm text-red-600">{error}</p>
+        <p className="text-sm text-danger">{error}</p>
         <Link
           to={`/gardens/${gardenId}`}
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
@@ -461,7 +471,7 @@ export function PlantDetailPage() {
 
   return (
     <div className="space-y-6">
-      <nav className="text-xs text-gray-400">
+      <nav className="text-xs text-ink-faint">
         <Link to="/gardens" className="hover:text-primary hover:underline">
           {t('nav.gardens')}
         </Link>{' '}
@@ -469,11 +479,11 @@ export function PlantDetailPage() {
         <Link to={`/gardens/${gardenId}`} className="hover:text-primary hover:underline">
           {t('plantDetail.breadcrumbGarden')}
         </Link>{' '}
-        / <span className="text-gray-600">{plant.display_name}</span>
+        / <span className="text-ink-soft">{plant.display_name}</span>
       </nav>
 
       {actionError && (
-        <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+        <div className="rounded-lg border border-danger-line bg-danger-bg px-3 py-2 text-sm text-danger" role="alert">
           {actionError}
         </div>
       )}
@@ -482,14 +492,14 @@ export function PlantDetailPage() {
       <div className="card p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-h1 font-semibold tracking-tight text-ink">
               {plant.display_name}
               {plant.quantity > 1 && (
-                <span className="ml-2 text-base font-medium text-gray-400">×{plant.quantity}</span>
+                <span className="ml-2 text-base font-medium text-ink-faint">×{plant.quantity}</span>
               )}
             </h1>
             {lib && (
-              <p className="text-sm italic text-gray-400">
+              <p className="text-sm italic text-ink-faint">
                 {lib.latin_name} · {lib.common_name_en}
               </p>
             )}
@@ -499,7 +509,7 @@ export function PlantDetailPage() {
             </div>
             {(plant.effective_water_frequency_days > 0 ||
               plant.effective_fertilize_frequency_days > 0) && (
-              <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+              <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-soft">
                 {plant.effective_water_frequency_days > 0 && (
                   <span className="inline-flex items-center gap-1">
                     {t('plant.customSchedule.waterEffective', {
@@ -532,7 +542,7 @@ export function PlantDetailPage() {
             )}
             {plant.effective_water_frequency_days === 0 &&
               plant.effective_fertilize_frequency_days === 0 && (
-                <p className="mt-2 text-xs text-gray-400">{t('plant.customSchedule.unknownHint')}</p>
+                <p className="mt-2 text-xs text-ink-faint">{t('plant.customSchedule.unknownHint')}</p>
               )}
           </div>
           <div className="flex shrink-0 flex-wrap items-center gap-2">
@@ -558,7 +568,7 @@ export function PlantDetailPage() {
             <button
               type="button"
               onClick={() => void handleDelete()}
-              className="rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+              className="rounded-lg border border-danger-line bg-paper px-4 py-2 text-sm font-semibold text-danger transition hover:bg-danger-bg"
             >
               {t('common.delete')}
             </button>
@@ -567,16 +577,16 @@ export function PlantDetailPage() {
 
         <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-4">
           <div>
-            <dt className="text-xs text-gray-400">{t('plantDetail.planted')}</dt>
-            <dd className="text-gray-700">
+            <dt className="text-xs text-ink-faint">{t('plantDetail.planted')}</dt>
+            <dd className="text-ink">
               {plant.planted_date
                 ? format(new Date(plant.planted_date), 'd MMM yyyy', { locale: dateLocale })
                 : '—'}
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-gray-400">{t('plantDetail.lastWatered')}</dt>
-            <dd className="text-gray-700">
+            <dt className="text-xs text-ink-faint">{t('plantDetail.lastWatered')}</dt>
+            <dd className="text-ink">
               {plant.last_watered_at
                 ? formatDistanceToNow(new Date(plant.last_watered_at), {
                     addSuffix: true,
@@ -586,8 +596,8 @@ export function PlantDetailPage() {
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-gray-400">{t('plantDetail.lastFertilized')}</dt>
-            <dd className="text-gray-700">
+            <dt className="text-xs text-ink-faint">{t('plantDetail.lastFertilized')}</dt>
+            <dd className="text-ink">
               {plant.last_fertilized_at
                 ? formatDistanceToNow(new Date(plant.last_fertilized_at), {
                     addSuffix: true,
@@ -597,54 +607,59 @@ export function PlantDetailPage() {
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-gray-400">{t('plantDetail.locationNotes')}</dt>
-            <dd className="text-gray-700">{plant.location_notes ?? '—'}</dd>
+            <dt className="text-xs text-ink-faint">{t('plantDetail.locationNotes')}</dt>
+            <dd className="text-ink">{plant.location_notes ?? '—'}</dd>
           </div>
         </dl>
       </div>
 
       {/* Quick care actions */}
       <section className="card p-5">
-        <h2 className="mb-3 text-sm font-semibold text-gray-800">{t('plantDetail.quickCare')}</h2>
+        <h2 className="mb-3 text-h2 font-semibold text-ink">{t('plantDetail.quickCare')}</h2>
         <div className="flex flex-wrap gap-2">
-          {CARE_ACTIONS.map(({ action, icon }) => (
-            <button
-              key={action}
-              type="button"
-              onClick={() => setLogAction(action)}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-primary-light/60 px-3 py-2 text-sm font-semibold text-primary-dark transition hover:bg-accent-light"
-            >
-              <span aria-hidden="true">{icon}</span>
-              {t(`care.action.${action}`)}
-            </button>
-          ))}
+          {CARE_ACTIONS.map((action) => {
+            const Icon = ACTION_ICONS[action];
+            return (
+              <button
+                key={action}
+                type="button"
+                onClick={() => setLogAction(action)}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-paper px-3 py-2 text-sm font-semibold text-primary-dark transition hover:border-accent hover:bg-primary-light"
+              >
+                <Icon className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                {t(`care.action.${action}`)}
+              </button>
+            );
+          })}
         </div>
       </section>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Care log timeline */}
         <section className="card p-5">
-          <h2 className="mb-3 text-sm font-semibold text-gray-800">{t('plantDetail.careLog')}</h2>
+          <h2 className="mb-3 text-h2 font-semibold text-ink">{t('plantDetail.careLog')}</h2>
           {careLog === null ? (
             <Spinner label={t('plantDetail.careLogLoading')} />
           ) : careLog.entries.length === 0 ? (
-            <p className="py-4 text-sm text-gray-400">{t('plantDetail.careLogEmpty')}</p>
+            <p className="py-4 text-sm text-ink-faint">{t('plantDetail.careLogEmpty')}</p>
           ) : (
             <>
-              <ol className="relative space-y-4 border-l border-primary-light pl-5">
-                {careLog.entries.map((entry: CareEntry) => (
+              <ol className="relative space-y-4 border-l border-line pl-5">
+                {careLog.entries.map((entry: CareEntry) => {
+                  const EntryIcon = ACTION_ICONS[entry.action];
+                  return (
                   <li key={entry.id} className="relative">
-                    <span className="absolute -left-[27px] top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] ring-2 ring-accent">
-                      {ACTION_ICONS[entry.action]}
+                    <span className="absolute -left-[29px] top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-surface text-accent ring-2 ring-accent-light">
+                      <EntryIcon className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
                     </span>
-                    <p className="text-sm text-gray-800">
+                    <p className="text-sm text-ink">
                       <span className="font-semibold">{t(`care.past.${entry.action}`)}</span>
                       {entry.quantity_harvested !== null && (
-                        <span className="text-gray-500"> · {entry.quantity_harvested}</span>
+                        <span className="text-ink-soft"> · {entry.quantity_harvested}</span>
                       )}
                     </p>
-                    {entry.note && <p className="text-sm text-gray-500">{entry.note}</p>}
-                    <p className="text-xs text-gray-400">
+                    {entry.note && <p className="text-sm text-ink-soft">{entry.note}</p>}
+                    <p className="text-xs text-ink-faint">
                       {format(new Date(entry.timestamp), 'd MMM yyyy, HH:mm', {
                         locale: dateLocale,
                       })}{' '}
@@ -656,10 +671,11 @@ export function PlantDetailPage() {
                       )
                     </p>
                   </li>
-                ))}
+                  );
+                })}
               </ol>
               {totalPages > 1 && (
-                <div className="mt-4 flex items-center justify-between border-t border-gray-50 pt-3">
+                <div className="mt-4 flex items-center justify-between border-t border-line pt-3">
                   <button
                     type="button"
                     disabled={carePage <= 1}
@@ -668,7 +684,7 @@ export function PlantDetailPage() {
                   >
                     {t('plantDetail.newer')}
                   </button>
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-ink-faint">
                     {t('common.pageOf', { page: careLog.page, total: totalPages })}
                   </span>
                   <button
@@ -687,17 +703,17 @@ export function PlantDetailPage() {
 
         {/* Photos */}
         <section className="card p-5">
-          <h2 className="mb-3 text-sm font-semibold text-gray-800">{t('plantDetail.photos')}</h2>
+          <h2 className="mb-3 text-h2 font-semibold text-ink">{t('plantDetail.photos')}</h2>
           {photos === null ? (
             <Spinner label={t('plantDetail.photosLoading')} />
           ) : (
             <>
               {photos.length === 0 ? (
-                <p className="mb-3 text-sm text-gray-400">{t('plantDetail.photosEmpty')}</p>
+                <p className="mb-3 text-sm text-ink-faint">{t('plantDetail.photosEmpty')}</p>
               ) : (
                 <div className="mb-4 grid grid-cols-3 gap-2">
                   {photos.map((photo) => (
-                    <div key={photo.id} className="group relative aspect-square overflow-hidden rounded-lg bg-gray-100">
+                    <div key={photo.id} className="group relative aspect-square overflow-hidden rounded-lg bg-surface-2">
                       <a href={photo.url} target="_blank" rel="noreferrer">
                         <img
                           src={photo.thumb_url}
@@ -709,7 +725,7 @@ export function PlantDetailPage() {
                       <button
                         type="button"
                         onClick={() => void handleDeletePhoto(photo.id)}
-                        className="absolute right-1 top-1 rounded-full bg-black/50 p-1 text-white opacity-0 transition hover:bg-red-600 group-hover:opacity-100"
+                        className="absolute right-1 top-1 rounded-full bg-primary-dark/60 p-1 text-paper opacity-0 transition hover:bg-danger group-hover:opacity-100"
                         aria-label={t('plantDetail.deletePhotoAria')}
                       >
                         <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
@@ -734,42 +750,42 @@ export function PlantDetailPage() {
       {lib && (
         <section className="card p-5">
           <div className="mb-3 flex items-center justify-between gap-2">
-            <h2 className="text-sm font-semibold text-gray-800">{t('plantDetail.growingGuide')}</h2>
+            <h2 className="text-h2 font-semibold text-ink">{t('plantDetail.growingGuide')}</h2>
             <Link to={`/library/${lib.id}`} className="text-xs font-medium text-primary hover:underline">
               {t('plantDetail.openInLibrary')}
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-4">
             <div>
-              <dt className="text-xs text-gray-400">{t('plantDetail.sun')}</dt>
-              <dd className="text-gray-700">
+              <dt className="text-xs text-ink-faint">{t('plantDetail.sun')}</dt>
+              <dd className="text-ink">
                 {t(`library.sun.${lib.sun_requirement}`, { defaultValue: lib.sun_requirement })}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-gray-400">{t('plantDetail.waterEvery')}</dt>
-              <dd className="text-gray-700">
+              <dt className="text-xs text-ink-faint">{t('plantDetail.waterEvery')}</dt>
+              <dd className="text-ink">
                 {lib.water_frequency_days !== null
                   ? t('common.everyDays', { count: lib.water_frequency_days })
                   : '—'}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-gray-400">{t('plantDetail.fertilizeEvery')}</dt>
-              <dd className="text-gray-700">
+              <dt className="text-xs text-ink-faint">{t('plantDetail.fertilizeEvery')}</dt>
+              <dd className="text-ink">
                 {lib.fertilize_frequency_days !== null
                   ? t('common.everyDays', { count: lib.fertilize_frequency_days })
                   : '—'}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-gray-400">{t('plantDetail.difficulty')}</dt>
-              <dd className="text-gray-700">
+              <dt className="text-xs text-ink-faint">{t('plantDetail.difficulty')}</dt>
+              <dd className="text-ink">
                 {t(`library.difficulty.${lib.difficulty}`, { defaultValue: lib.difficulty })}
               </dd>
             </div>
           </div>
-          {lib.care_notes && <p className="mt-3 text-sm text-gray-600">{lib.care_notes}</p>}
+          {lib.care_notes && <p className="mt-3 text-sm text-ink-soft">{lib.care_notes}</p>}
         </section>
       )}
 

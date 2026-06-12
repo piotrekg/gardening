@@ -10,7 +10,7 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
     <div
       role="group"
       aria-label={t('language.switch')}
-      className={`flex items-center rounded-lg bg-gray-100 p-0.5 ${className}`}
+      className={`flex items-center rounded-lg bg-surface-2 p-0.5 ${className}`}
     >
       {APP_LANGUAGES.map((lang) => (
         <button
@@ -21,8 +21,8 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
           aria-label={t(`language.${lang}`)}
           className={`rounded-md px-2 py-1 text-[11px] font-bold uppercase tracking-wide transition ${
             current === lang
-              ? 'bg-white text-primary-dark shadow-sm'
-              : 'text-gray-400 hover:text-gray-600'
+              ? 'bg-paper text-primary-dark shadow-card'
+              : 'text-ink-faint hover:text-ink'
           }`}
         >
           {lang}
