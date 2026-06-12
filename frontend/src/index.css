@@ -99,6 +99,22 @@
   --forest-mid: #2d4a31;
   --forest-light: #3d6342;
   --forest-pale: #e8f0e9;
+
+  /* Radius aliases (mockup names). */
+  --radius: 3px;
+  --radius-lg: 6px;
+
+  /* ---- Shell chrome tokens (S1) ---- */
+  --shell-sidebar-width: 220px;
+  --shell-sidebar-bg: #ffffff;
+  --shell-sidebar-border: 1px solid var(--parchment-dark);
+  --shell-topbar-height: 52px;
+  --shell-topbar-bg: rgba(247, 243, 236, 0.94);
+
+  /* z-index scale (S7). */
+  --z-sidebar: 200;
+  --z-topbar: 150;
+  --z-hero: 1;
 }
 
 @layer base {
@@ -294,6 +310,66 @@
     line-height: 0.75;
     margin: 6px 8px -4px 0;
     color: var(--color-forest);
+  }
+}
+
+/* P13: smaller drop cap on narrow screens. */
+@media (max-width: 600px) {
+  .drop-cap::first-letter {
+    font-size: 3em;
+  }
+}
+
+/* ---- Shell chrome: left-nav item (S2) ---- */
+@utility nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px 9px 20px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-ink-soft);
+  border-left: 3px solid transparent;
+  transition:
+    background-color 0.15s var(--ease-out-quart),
+    color 0.15s var(--ease-out-quart);
+}
+@utility nav-item {
+  & svg {
+    width: 16px;
+    height: 16px;
+    color: var(--color-ink-faint);
+    transition: color 0.15s var(--ease-out-quart);
+  }
+  &:hover {
+    background-color: var(--color-parchment);
+    color: var(--color-ink);
+  }
+  &:hover svg {
+    color: var(--color-ink);
+  }
+}
+
+/* Active left-nav item. */
+@utility nav-item-active {
+  background-color: var(--color-forest-pale);
+  border-left-color: var(--color-forest);
+  color: var(--color-forest);
+  font-weight: 500;
+}
+@utility nav-item-active {
+  & svg {
+    color: var(--color-forest);
+  }
+}
+
+/* P10: subtle hover affordance on care-guide cells. */
+@utility care-cell {
+  transition: background-color 0.12s var(--ease-out-quart);
+}
+@utility care-cell {
+  &:hover {
+    background-color: #fcfaf6;
   }
 }
 

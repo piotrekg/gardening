@@ -11,16 +11,18 @@ export function BotanicalOrnament() {
       <svg
         width="34"
         height="34"
-        viewBox="0 0 34 34"
+        viewBox="0 0 52 52"
         fill="none"
         className="shrink-0 opacity-35"
         stroke="var(--color-copper)"
         strokeWidth="1"
       >
-        <circle cx="17" cy="17" r="3" />
-        <circle cx="17" cy="17" r="8" />
-        <circle cx="17" cy="17" r="14" />
-        <path d="M17 0v6M17 28v6M0 17h6M28 17h6" stroke="var(--color-copper)" />
+        {/* Centered at 26,26 within a 52 box; r=22 leaves a 4px margin so the
+            radiating marks at r=20..25 stay fully inside the viewBox (P5). */}
+        <circle cx="26" cy="26" r="5" />
+        <circle cx="26" cy="26" r="13" />
+        <circle cx="26" cy="26" r="22" />
+        <path d="M26 1v6M26 45v6M1 26h6M45 26h6" stroke="var(--color-copper)" />
       </svg>
       <span className="h-px flex-1 bg-line" />
     </div>

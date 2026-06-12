@@ -50,7 +50,9 @@
   "layout": {
     "tagline": "PlantDiary · grow happy",
     "userMenu": "User menu",
-    "logout": "Log out"
+    "logout": "Log out",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "language": {
     "label": "Language",

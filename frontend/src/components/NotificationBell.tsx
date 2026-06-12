@@ -34,14 +34,14 @@ export function NotificationBell() {
           setOpen((o) => !o);
           if (!open) void fetch();
         }}
-        className="relative rounded-full p-2 text-ink-soft transition hover:bg-surface-2 hover:text-primary"
+        className="relative flex h-8 w-8 items-center justify-center rounded-[3px] border border-parchment-dark text-ink-muted transition-colors hover:border-copper hover:text-copper"
         aria-label={
           unreadCount > 0
             ? t('notifications.ariaUnread', { count: unreadCount })
             : t('notifications.aria')
         }
       >
-        <Bell className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+        <Bell className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
         {unreadCount > 0 && (
           <span className="absolute -right-0.5 -top-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-clay px-1 text-[10px] font-bold text-paper">
             {unreadCount > 99 ? '99+' : unreadCount}

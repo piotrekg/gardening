@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { BookOpen, CalendarDays, Home, Settings, Sprout } from 'lucide-react';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { BookOpen, CalendarDays, Home, Menu, Settings, Sprout, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { logout as apiLogout } from '../api/auth';
 import { useAuthStore } from '../store/auth';
@@ -16,25 +16,12 @@ const NAV_ITEMS: { to: string; labelKey: string; icon: LucideIcon }[] = [
   { to: '/settings', labelKey: 'nav.settings', icon: Settings },
 ];
 
-function navClasses(isActive: boolean): string {
-  return [
-    'flex items-center gap-3 rounded-[3px] px-3 py-2.5 text-sm font-medium transition-colors duration-200',
-    isActive
-      ? 'bg-forest-pale text-forest'
-      : 'text-ink-soft hover:bg-surface-2 hover:text-copper',
-  ].join(' ');
-}
-
-/** Playfair wordmark + copper dot — the botanical-atlas logo. */
-function Wordmark({ size = 'lg' }: { size?: 'lg' | 'sm' }) {
+/** Playfair wordmark + copper dot — the botanical-atlas logo (S3). */
+function Wordmark() {
   return (
     <span className="flex items-center gap-2">
       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-copper" aria-hidden="true" />
-      <span
-        className={`font-display font-bold tracking-tight text-forest ${
-          size === 'lg' ? 'text-lg' : 'text-base'
-        }`}
-      >
+      <span className="font-display text-base font-bold tracking-tight text-forest">
         PlantDiary
       </span>
     </span>
@@ -47,7 +34,9 @@ export function Layout() {
   const refreshToken = useAuthStore((s) => s.refreshToken);
   const clearAuth = useAuthStore((s) => s.clearAuth);
   const navigate = useNavigate();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,6 +47,11 @@ export function Layout() {
     document.addEventListener('mousedown', onClick);
     return () => document.removeEventListener('mousedown', onClick);
   }, [menuOpen]);
+
+  // Close the mobile drawer whenever the route changes.
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     try {
@@ -81,44 +75,84 @@ export function Layout() {
 
   return (
     <div className="min-h-screen bg-paper">
-      {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-line bg-surface md:flex">
-        <Link to="/dashboard" className="px-5 py-5">
-          <Wordmark size="lg" />
+      {/* Sidebar (S1-S3, S6): fixed left, 220px; drawer on mobile. */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-[200] flex w-[220px] flex-col border-r border-parchment-dark bg-white transition-transform duration-200 ease-out max-md:shadow-lift md:translate-x-0 ${
+          drawerOpen ? 'translate-x-0' : '-translate-x-[220px]'
+        }`}
+      >
+        <Link
+          to="/dashboard"
+          className="flex items-center justify-between border-b border-parchment-dark px-5 pb-8 pt-5"
+        >
+          <Wordmark />
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              setDrawerOpen(false);
+            }}
+            className="flex h-8 w-8 items-center justify-center rounded-[3px] text-ink-muted transition hover:text-copper md:hidden"
+            aria-label={t('layout.closeMenu')}
+          >
+            <X className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
+          </button>
         </Link>
-        <nav className="flex-1 space-y-1 px-3 py-2">
+        <nav className="flex-1 py-2">
           {NAV_ITEMS.map(({ to, labelKey, icon: Icon }) => (
-            <NavLink key={to} to={to} className={({ isActive }) => navClasses(isActive)}>
-              <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
+            <NavLink
+              key={to}
+              to={to}
+              className={({ isActive }) => `nav-item ${isActive ? 'nav-item-active' : ''}`}
+            >
+              <Icon strokeWidth={1.5} aria-hidden="true" />
               {t(labelKey)}
             </NavLink>
           ))}
         </nav>
-        <div className="border-t border-line px-5 py-4 text-xs text-ink-faint">
+        <div className="border-t border-parchment-dark px-5 py-4 text-xs text-ink-faint">
           {t('layout.tagline')}
         </div>
       </aside>
 
-      {/* Header */}
-      <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-line bg-paper/85 px-4 backdrop-blur md:ml-60 md:px-6">
+      {/* Scrim behind the mobile drawer. */}
+      {drawerOpen && (
+        <button
+          type="button"
+          aria-hidden="true"
+          tabIndex={-1}
+          onClick={() => setDrawerOpen(false)}
+          className="fixed inset-0 z-[150] bg-forest/30 md:hidden"
+        />
+      )}
+
+      {/* Topbar (S4, S6): fixed, 52px. */}
+      <header className="fixed inset-x-0 top-0 z-[150] flex h-[52px] items-center gap-3 border-b border-parchment-dark bg-paper/95 px-4 backdrop-blur md:left-[220px] md:px-6">
+        <button
+          type="button"
+          onClick={() => setDrawerOpen(true)}
+          className="flex h-8 w-8 items-center justify-center rounded-[3px] border border-parchment-dark text-ink-muted transition hover:border-copper hover:text-copper md:hidden"
+          aria-label={t('layout.openMenu')}
+        >
+          <Menu className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
+        </button>
         <Link to="/dashboard" className="md:hidden">
-          <Wordmark size="sm" />
+          <Wordmark />
         </Link>
-        <div className="hidden md:block" />
-        <div className="flex items-center gap-1.5">
-          <LanguageSwitcher className="mr-1" />
+        <div className="ml-auto flex items-center gap-3">
+          <LanguageSwitcher />
           <NotificationBell />
           <div className="relative" ref={menuRef}>
             <button
               type="button"
               onClick={() => setMenuOpen((o) => !o)}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-light text-sm font-semibold text-primary-dark transition hover:ring-2 hover:ring-accent"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-forest text-[12px] font-semibold text-parchment transition hover:ring-2 hover:ring-copper"
               aria-label={t('layout.userMenu')}
             >
               {initials}
             </button>
             {menuOpen && (
-              <div className="reveal absolute right-0 z-40 mt-2 w-52 overflow-hidden rounded-xl border border-line bg-surface shadow-lift">
+              <div className="reveal absolute right-0 z-[200] mt-2 w-52 overflow-hidden rounded-[6px] border border-line bg-surface shadow-lift">
                 <div className="border-b border-line px-4 py-3">
                   <p className="truncate text-sm font-semibold text-ink">{user?.name}</p>
                   <p className="truncate text-xs text-ink-faint">{user?.email}</p>
@@ -143,31 +177,12 @@ export function Layout() {
         </div>
       </header>
 
-      {/* Main content */}
-      <main className="px-4 pb-24 pt-6 md:ml-60 md:px-8 md:pb-10 md:pt-8">
+      {/* Main content (S6): offset by the fixed sidebar + topbar. */}
+      <main className="px-4 pb-16 pt-[calc(52px+1.5rem)] md:ml-[220px] md:px-8 md:pb-10 md:pt-[calc(52px+2rem)]">
         <div className="mx-auto max-w-6xl">
           <Outlet />
         </div>
       </main>
-
-      {/* Mobile bottom nav */}
-      <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-line bg-paper/95 backdrop-blur md:hidden">
-        {NAV_ITEMS.map(({ to, labelKey, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) =>
-              [
-                'flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors',
-                isActive ? 'text-copper' : 'text-ink-faint',
-              ].join(' ')
-            }
-          >
-            <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
-            {t(labelKey)}
-          </NavLink>
-        ))}
-      </nav>
     </div>
   );
 }

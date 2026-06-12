@@ -29,15 +29,17 @@ export function SeasonTimeline({ rows, currentMonth }: SeasonTimelineProps) {
     format(new Date(2000, i, 1), 'LLLLL', { locale }),
   );
   // 0-based fractional position of "today" across the 12 columns (center of column).
+  // --tl-pad is the months container's horizontal padding (8px on mobile, 16px on
+  // sm+), so the copper "today" line stays aligned with the cells at every width.
   const todayFrac = (currentMonth - 0.5) / 12;
-  const todayLeft = `calc(16px + ${todayFrac} * (100% - 32px))`;
+  const todayLeft = `calc(var(--tl-pad) + ${todayFrac} * (100% - 2 * var(--tl-pad)))`;
 
   return (
     <div className="overflow-hidden rounded-md border border-line bg-surface">
       {/* Header row with month initials */}
       <div className="flex items-center border-b border-line bg-paper">
-        <div className="w-[120px] shrink-0 self-stretch border-r border-line sm:w-[130px]" />
-        <div className="relative grid flex-1 grid-cols-12 gap-[3px] px-4 py-1.5">
+        <div className="w-[90px] shrink-0 self-stretch border-r border-line sm:w-[130px]" />
+        <div className="relative grid flex-1 grid-cols-12 gap-[2px] px-2 py-1.5 [--tl-pad:8px] sm:gap-[3px] sm:px-4 sm:[--tl-pad:16px]">
           <span
             className="pointer-events-none absolute inset-y-0 w-px bg-copper/50"
             style={{ left: todayLeft }}
@@ -64,10 +66,10 @@ export function SeasonTimeline({ rows, currentMonth }: SeasonTimelineProps) {
             key={ri}
             className={`flex items-center ${ri < visible.length - 1 ? 'border-b border-line' : ''}`}
           >
-            <div className="w-[120px] shrink-0 self-stretch border-r border-line px-4 py-3 text-xs font-medium text-ink sm:w-[130px]">
+            <div className="w-[90px] shrink-0 self-stretch border-r border-line px-2.5 py-2.5 text-xs font-medium text-ink sm:w-[130px] sm:px-4 sm:py-3">
               {row.label}
             </div>
-            <div className="relative grid flex-1 grid-cols-12 gap-[3px] px-4 py-2.5">
+            <div className="relative grid flex-1 grid-cols-12 gap-[2px] px-2 py-1.5 [--tl-pad:8px] sm:gap-[3px] sm:px-4 sm:py-2.5 sm:[--tl-pad:16px]">
               <span
                 className="pointer-events-none absolute inset-y-0 z-[2] w-px bg-copper/50"
                 style={{ left: todayLeft }}
@@ -84,7 +86,7 @@ export function SeasonTimeline({ rows, currentMonth }: SeasonTimelineProps) {
                 return (
                   <span
                     key={i}
-                    className={`h-[26px] rounded-[2px] ${base} ${
+                    className={`h-[22px] rounded-[2px] sm:h-[26px] ${base} ${
                       active && isToday ? 'ring-[1.5px] ring-copper' : ''
                     }`}
                   />

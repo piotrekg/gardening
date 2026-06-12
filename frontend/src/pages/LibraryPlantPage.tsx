@@ -286,12 +286,13 @@ function CareBlock({
 }) {
   if (!body) return null;
   return (
-    <div className="bg-surface p-5">
+    <div className="care-cell bg-surface p-5">
       <span className="mb-3 flex h-[30px] w-[30px] items-center justify-center rounded-[3px] bg-forest-pale text-forest">
         <Icon className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
       </span>
       <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.09em] text-copper">{label}</p>
-      <p className="whitespace-pre-line text-[13px] font-light leading-[1.8] text-ink">{body}</p>
+      {/* P1: 400 weight, 13.5px for readability. */}
+      <p className="whitespace-pre-line text-[13.5px] font-normal leading-[1.8] text-ink">{body}</p>
     </div>
   );
 }
@@ -334,7 +335,9 @@ function DiseaseCard({ disease }: { disease: PlantDisease }) {
           </>
         )}
         {treatment && (
-          <div className="mt-2 rounded-[3px] border-l-2 border-forest-light bg-forest-pale px-3.5 py-2.5">
+          // P11: clean, intentional treatment box — rounded 3px, forest-pale fill,
+          // generous left padding; no flat left-border that fought the radius.
+          <div className="mt-2 rounded-[3px] bg-forest-pale py-2.5 pl-4 pr-3.5">
             <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-forest-mid">
               {t('plantProfile.treatment')}
             </p>
@@ -377,7 +380,7 @@ function CompanionsBlock({
   const { t } = useTranslation();
   const { name: libName } = useLibraryPlantName();
   return (
-    <div className="overflow-hidden rounded-md border border-line bg-surface">
+    <div className="flex h-full flex-col overflow-hidden rounded-md border border-line bg-surface">
       <div
         className={`border-b border-line px-4 py-3 text-[10px] font-bold uppercase tracking-[0.09em] ${
           tone === 'good' ? 'bg-forest-pale text-forest' : 'bg-danger-bg text-danger'
@@ -546,74 +549,104 @@ export function LibraryPlantPage() {
   if (plant.hardiness_zone)
     params.push({ name: t('plantProfile.hardiness'), val: plant.hardiness_zone });
 
+  // H2: at most 4 hero tags — category (primary) + lifecycle + difficulty +
+  // frost-sensitive. Raw plant.tags are intentionally not surfaced here so the
+  // row never exceeds four and stays legible over the photo.
   const heroTags: { label: string; primary?: boolean }[] = [
     { label: t(`library.category.${plant.category}`, { defaultValue: plant.category }), primary: true },
     { label: t(`library.lifecycle.${plant.lifecycle}`, { defaultValue: plant.lifecycle }) },
     { label: difficultyLabel },
   ];
   if (plant.frost_sensitive) heroTags.push({ label: t('library.frostSensitive') });
-  plant.tags.slice(0, 2).forEach((tag) => heroTags.push({ label: tag }));
+  const visibleHeroTags = heroTags.slice(0, 4);
 
   return (
     <div className="-mx-4 -mt-6 md:-mx-8 md:-mt-8">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-1.5 px-4 pt-4 text-[12px] text-ink-faint md:px-8">
-        <Link to="/library" className="hover:text-copper">
+      {/* Breadcrumb. Hidden < 600px; 600-760px shows only the plant name (P7);
+          ancestor crumbs appear from 760px up. */}
+      <nav className="hidden items-center gap-1.5 px-4 pt-4 text-[12px] text-ink-faint min-[600px]:flex md:px-8">
+        <Link to="/library" className="hidden hover:text-copper min-[760px]:inline">
           {t('nav.library')}
         </Link>
-        <span className="text-parchment-dark">/</span>
-        <span className="text-ink-muted">
+        <span className="hidden text-parchment-dark min-[760px]:inline">/</span>
+        <span className="hidden text-ink-muted min-[760px]:inline">
           {t(`library.category.${plant.category}`, { defaultValue: plant.category })}
         </span>
-        <span className="text-parchment-dark">/</span>
+        <span className="hidden text-parchment-dark min-[760px]:inline">/</span>
         <span className="text-ink-muted">{name}</span>
       </nav>
 
       {/* HERO */}
       <div className="relative mt-3 h-[420px] overflow-hidden sm:h-[480px]">
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,#111F13_0%,#1A2E1E_35%,#2D4A31_60%,#1A2E1E_100%)]">
-          {plant.image_url ? (
+        {plant.image_url ? (
+          <div className="absolute inset-0 bg-forest">
             <img
               src={plant.image_url}
               alt={name}
-              className="h-full w-full object-cover opacity-70"
+              className="h-full w-full object-cover opacity-75"
               loading="eager"
             />
-          ) : (
+          </div>
+        ) : (
+          // P6: radial fallback — deepest toward the bottom-left where the title
+          // sits, lifting toward the top-right; keeps the forest palette.
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(120% 120% at 78% 18%, #3D6342 0%, #2D4A31 38%, #1A2E1E 68%, #111F13 100%)',
+            }}
+          >
             <HeroBotanical />
-          )}
-        </div>
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_15%,rgba(8,16,10,0.25)_55%,rgba(8,16,10,0.9)_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 grid grid-cols-1 items-end gap-6 px-6 pb-9 pt-12 sm:grid-cols-[1fr_auto] sm:px-12">
+          </div>
+        )}
+        {/* H1: stronger overlay — darken from ~30% height to near-opaque at the
+            bottom, plus an inset bottom shadow so the title reads over any photo. */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(to bottom, transparent 30%, rgba(8,16,10,0.45) 62%, rgba(8,16,10,0.92) 100%)',
+            boxShadow: 'inset 0 -200px 120px -40px rgba(8,16,10,0.95)',
+          }}
+        />
+        <div className="absolute inset-x-0 bottom-0 grid grid-cols-1 items-end gap-6 px-6 pb-9 pt-12 sm:grid-cols-[1fr_auto] sm:px-16">
           <div>
-            <div className="mb-3.5 flex flex-wrap gap-1.5">
-              {heroTags.map((tag, i) => (
+            {/* H4: 20px gap below the tag row. H2: padding 2px 7px, font 9px. */}
+            <div className="mb-5 flex flex-wrap gap-1.5">
+              {visibleHeroTags.map((tag, i) => (
                 <span
                   key={i}
-                  className={`rounded-[2px] border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.1em] ${
+                  className={`rounded-[2px] border px-[7px] py-[2px] text-[9px] font-semibold uppercase tracking-[0.1em] ${
                     tag.primary
                       ? 'border-copper bg-copper text-white'
-                      : 'border-white/20 bg-white/[0.06] text-white/60'
+                      : 'border-white/25 bg-white/[0.06] text-white/70'
                   }`}
                 >
                   {tag.label}
                 </span>
               ))}
             </div>
-            <h1 className="font-display text-4xl font-bold leading-[1.02] tracking-tight text-white sm:text-6xl">
+            {/* H3: dominant title — clamp(48px, 5vw, 72px) Playfair 700. */}
+            <h1
+              className="font-display font-bold leading-[1.02] tracking-tight text-white"
+              style={{ fontSize: 'clamp(48px, 5vw, 72px)' }}
+            >
               {name}
             </h1>
             {plant.latin_name && (
-              <p className="mt-2.5 font-display text-sm italic text-white/50">{plant.latin_name}</p>
+              <p className="mt-2.5 font-display text-sm italic text-white/55">{plant.latin_name}</p>
             )}
           </div>
+          {/* H5: container px-16 (64px) gives the right block the same 64px edge
+              gap as the left content. */}
           <div className="text-left sm:pb-1 sm:text-right">
-            <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/40">
+            <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/45">
               {t('plantDetail.difficulty')}
             </p>
             <p className="font-display text-2xl font-semibold text-copper-light">{difficultyLabel}</p>
             {plant.frost_sensitive && (
-              <p className="mt-2 flex items-center gap-1.5 text-[10px] tracking-[0.04em] text-white/35 sm:justify-end">
+              <p className="mt-2 flex items-center gap-1.5 text-[10px] tracking-[0.04em] text-white/40 sm:justify-end">
                 <Snowflake className="h-3 w-3 opacity-50" strokeWidth={2} aria-hidden="true" />
                 {t('library.frostSensitive')}
               </p>
@@ -634,10 +667,11 @@ export function LibraryPlantPage() {
               </div>
             )}
 
-            {/* Quick stats */}
+            {/* Quick stats. P4: 24px top gap on stacked (≤960px) layouts so it
+                doesn't hug the hero bottom; flush on the desktop two-col grid. */}
             {stats.length > 0 && (
               <div
-                className="mb-2 grid overflow-hidden rounded-md border border-line bg-surface"
+                className="mb-2 mt-6 grid overflow-hidden rounded-md border border-line bg-surface lg:mt-0"
                 style={{ gridTemplateColumns: `repeat(${stats.length}, minmax(0, 1fr))` }}
               >
                 {stats.map((s, i) => (
@@ -724,7 +758,8 @@ export function LibraryPlantPage() {
                     {tips.map((tip, i) => (
                       <div
                         key={i}
-                        className="flex items-start gap-3.5 border-b border-line bg-surface px-5 py-3.5 text-[13px] font-light leading-[1.7] text-ink last:border-b-0 hover:bg-paper"
+                        // P12: tips are not interactive — no hover bg, default cursor.
+                        className="flex cursor-default items-start gap-3.5 border-b border-line bg-surface px-5 py-3.5 text-[13px] font-light leading-[1.7] text-ink last:border-b-0"
                       >
                         <span className="w-5 shrink-0 text-right font-display text-[17px] font-bold leading-tight text-copper">
                           {i + 1}
@@ -762,7 +797,8 @@ export function LibraryPlantPage() {
                 eyebrow={t('libraryPlant.eyebrow.companions')}
                 title={t('libraryPlant.goodCompanions')}
               />
-              <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+              {/* P9: stretch so good/bad blocks are equal height. */}
+              <div className="grid grid-cols-1 items-stretch gap-3.5 sm:grid-cols-2">
                 <CompanionsBlock
                   tone="good"
                   title={t('libraryPlant.goodCompanions')}
@@ -794,10 +830,11 @@ export function LibraryPlantPage() {
               <p className="mb-3.5 mt-1 text-[11px] font-light text-white/50">
                 {t('libraryPlant.sidebar.ctaSub')}
               </p>
+              {/* P3: CTA label bumped to 13px. */}
               <button
                 type="button"
                 onClick={() => setShowAdd(true)}
-                className="inline-flex w-full items-center justify-center gap-1.5 rounded-[3px] bg-parchment px-4 py-2.5 text-[12px] font-semibold tracking-[0.04em] text-forest transition hover:bg-white"
+                className="inline-flex w-full items-center justify-center gap-1.5 rounded-[3px] bg-parchment px-4 py-2.5 text-[13px] font-semibold tracking-[0.04em] text-forest transition hover:bg-white"
               >
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 {t('libraryPlant.sidebar.ctaButton')}

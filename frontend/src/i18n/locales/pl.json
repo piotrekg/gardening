@@ -54,7 +54,9 @@
   "layout": {
     "tagline": "PlantDiary · rośnij z nami",
     "userMenu": "Menu użytkownika",
-    "logout": "Wyloguj się"
+    "logout": "Wyloguj się",
+    "openMenu": "Otwórz menu",
+    "closeMenu": "Zamknij menu"
   },
   "language": {
     "label": "Język",
