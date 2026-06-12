@@ -94,11 +94,27 @@ func applyEnrichment(db *gorm.DB, enrichmentRaw, imagesRaw []byte, force bool) e
 		}
 	}
 
+	// Some target ids never made it into library_plants — a catalog plant whose
+	// latin name collided with a curated one is dropped during base seeding. Skip
+	// enrichment/image entries for ids not in the table so a stale reference can't
+	// fail the whole overlay (and FK-violate on plant_diseases).
+	existing := map[string]bool{}
+	{
+		var ids []string
+		db.Table("library_plants").Pluck("id", &ids)
+		for _, id := range ids {
+			existing[id] = true
+		}
+	}
+
 	return db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Exec("DELETE FROM plant_diseases").Error; err != nil {
 			return err
 		}
 		for id, img := range images {
+			if !existing[id] {
+				continue
+			}
 			if err := tx.Table("library_plants").Where("id = ?", id).Updates(map[string]any{
 				"image_url":         img.ImageURL,
 				"image_thumb_url":   img.ImageThumbURL,
@@ -110,6 +126,9 @@ func applyEnrichment(db *gorm.DB, enrichmentRaw, imagesRaw []byte, force bool) e
 			}
 		}
 		for id, e := range enrichment {
+			if !existing[id] {
+				continue
+			}
 			if err := tx.Table("library_plants").Where("id = ?", id).Updates(map[string]any{
 				"description_pl":     e.DescriptionPL,
 				"description_en":     e.DescriptionEN,
