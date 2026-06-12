@@ -1,0 +1,50 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - link "PlantDiary" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - generic [ref=e8]: PlantDiary
+    - navigation [ref=e9]:
+      - link "Pulpit" [ref=e10] [cursor=pointer]:
+        - /url: /dashboard
+        - img [ref=e11]
+        - text: Pulpit
+      - link "Ogrody" [ref=e14] [cursor=pointer]:
+        - /url: /gardens
+        - img [ref=e15]
+        - text: Ogrody
+      - link "Biblioteka" [ref=e18] [cursor=pointer]:
+        - /url: /library
+        - img [ref=e19]
+        - text: Biblioteka
+      - link "Kalendarz" [ref=e21] [cursor=pointer]:
+        - /url: /calendar
+        - img [ref=e22]
+        - text: Kalendarz
+      - link "Ustawienia" [ref=e24] [cursor=pointer]:
+        - /url: /settings
+        - img [ref=e25]
+        - text: Ustawienia
+    - generic [ref=e28]: PlantDiary · rośnij z nami
+  - banner [ref=e29]:
+    - generic [ref=e30]:
+      - group "Zmień język" [ref=e31]:
+        - button "Polski" [pressed] [ref=e33]: pl
+        - button "Angielski" [ref=e36]: en
+      - button "Powiadomienia" [ref=e38]:
+        - img [ref=e39]
+      - button "Menu użytkownika" [ref=e43]: T
+  - main [ref=e44]:
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - paragraph [ref=e48]: Kompendium
+        - heading "Biblioteka roślin" [level=1] [ref=e49]
+        - paragraph [ref=e50]: Przewodniki uprawy wszystkich roślin, które zna PlantDiary.
+      - generic [ref=e51]:
+        - searchbox "Szukaj roślin" [ref=e52]
+        - combobox "Filtruj według kategorii" [ref=e53]:
+          - option "Wszystkie kategorie" [selected]
+        - combobox "Filtruj według cyklu życia" [ref=e54]:
+          - option "Wszystkie cykle życia" [selected]
+          - option "Jednoroczna"
+          - option "Dwuletnia"
+          - option "Wieloletnia"

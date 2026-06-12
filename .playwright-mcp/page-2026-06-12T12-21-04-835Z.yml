@@ -1,0 +1,303 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - link "PlantDiary" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - generic [ref=e8]: PlantDiary
+    - navigation [ref=e9]:
+      - link "Pulpit" [ref=e10] [cursor=pointer]:
+        - /url: /dashboard
+        - img [ref=e11]
+        - text: Pulpit
+      - link "Ogrody" [ref=e14] [cursor=pointer]:
+        - /url: /gardens
+        - img [ref=e15]
+        - text: Ogrody
+      - link "Biblioteka" [ref=e18] [cursor=pointer]:
+        - /url: /library
+        - img [ref=e19]
+        - text: Biblioteka
+      - link "Kalendarz" [ref=e21] [cursor=pointer]:
+        - /url: /calendar
+        - img [ref=e22]
+        - text: Kalendarz
+      - link "Ustawienia" [ref=e24] [cursor=pointer]:
+        - /url: /settings
+        - img [ref=e25]
+        - text: Ustawienia
+    - generic [ref=e28]: PlantDiary · rośnij z nami
+  - banner [ref=e29]:
+    - generic [ref=e30]:
+      - group "Zmień język" [ref=e31]:
+        - button "Polski" [pressed] [ref=e33]: pl
+        - button "Angielski" [ref=e36]: en
+      - button "Powiadomienia" [ref=e38]:
+        - img [ref=e39]
+      - button "Menu użytkownika" [ref=e43]: T
+  - main [ref=e44]:
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - paragraph [ref=e48]: Kompendium
+        - heading "Biblioteka roślin" [level=1] [ref=e49]
+        - paragraph [ref=e50]: Przewodniki uprawy wszystkich roślin, które zna PlantDiary.
+      - generic [ref=e51]:
+        - searchbox "Szukaj roślin" [ref=e52]
+        - combobox "Filtruj według kategorii" [ref=e53]:
+          - option "Wszystkie kategorie" [selected]
+          - option "Kwiat"
+          - option "Owoc"
+          - option "Zioło"
+          - option "Roślina doniczkowa"
+          - option "Krzew lub drzewo"
+          - option "Warzywo"
+          - option "Dziko rosnąca"
+        - combobox "Filtruj według cyklu życia" [ref=e54]:
+          - option "Wszystkie cykle życia" [selected]
+          - option "Jednoroczna"
+          - option "Dwuletnia"
+          - option "Wieloletnia"
+      - paragraph [ref=e80]: Znaleziono 13889 roślin
+      - generic [ref=e81]:
+        - link "Aglaonema 'Silver Queen' Roślina doniczkowa Chinese Evergreen 'Silver Queen' · Aglaonema 'Silver Queen' Wieloletnia łatwa cień wrażliwa na przymrozki" [ref=e82] [cursor=pointer]:
+          - /url: /library/aglaonema-silver
+          - generic [ref=e84]:
+            - heading "Aglaonema 'Silver Queen'" [level=2] [ref=e85]
+            - generic [ref=e86]: Roślina doniczkowa
+          - paragraph [ref=e87]: Chinese Evergreen 'Silver Queen' · Aglaonema 'Silver Queen'
+          - generic [ref=e88]:
+            - generic [ref=e89]: Wieloletnia
+            - generic [ref=e90]: łatwa
+            - generic [ref=e91]:
+              - img [ref=e92]
+              - text: cień
+            - generic [ref=e98]:
+              - img [ref=e99]
+              - text: wrażliwa na przymrozki
+        - link "Agrest Owoc Gooseberry · Ribes uva-crispa Wieloletnia łatwa pełne słońce" [ref=e112] [cursor=pointer]:
+          - /url: /library/gooseberry
+          - generic [ref=e114]:
+            - heading "Agrest" [level=2] [ref=e115]
+            - generic [ref=e116]: Owoc
+          - paragraph [ref=e117]: Gooseberry · Ribes uva-crispa
+          - generic [ref=e118]:
+            - generic [ref=e119]: Wieloletnia
+            - generic [ref=e120]: łatwa
+            - generic [ref=e121]:
+              - img [ref=e122]
+              - text: pełne słońce
+        - link "Aksamitka rozpierzchła Kwiat French Marigold · Tagetes patula Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e128] [cursor=pointer]:
+          - /url: /library/marigold
+          - generic [ref=e130]:
+            - heading "Aksamitka rozpierzchła" [level=2] [ref=e131]
+            - generic [ref=e132]: Kwiat
+          - paragraph [ref=e133]: French Marigold · Tagetes patula
+          - generic [ref=e134]:
+            - generic [ref=e135]: Jednoroczna
+            - generic [ref=e136]: łatwa
+            - generic [ref=e137]:
+              - img [ref=e138]
+              - text: pełne słońce
+            - generic [ref=e144]:
+              - img [ref=e145]
+              - text: wrażliwa na przymrozki
+        - link "Aloes drzewiasty Roślina doniczkowa Krantz Aloe · Aloe arborescens Wieloletnia łatwa pełne słońce wrażliwa na przymrozki" [ref=e158] [cursor=pointer]:
+          - /url: /library/aloe-vera-houseplant
+          - generic [ref=e160]:
+            - heading "Aloes drzewiasty" [level=2] [ref=e161]
+            - generic [ref=e162]: Roślina doniczkowa
+          - paragraph [ref=e163]: Krantz Aloe · Aloe arborescens
+          - generic [ref=e164]:
+            - generic [ref=e165]: Wieloletnia
+            - generic [ref=e166]: łatwa
+            - generic [ref=e167]:
+              - img [ref=e168]
+              - text: pełne słońce
+            - generic [ref=e174]:
+              - img [ref=e175]
+              - text: wrażliwa na przymrozki
+        - link "Aronia czarnoowocowa Owoc Chokeberry (Aronia) · Aronia melanocarpa Wieloletnia łatwa pełne słońce" [ref=e188] [cursor=pointer]:
+          - /url: /library/aronia
+          - generic [ref=e190]:
+            - heading "Aronia czarnoowocowa" [level=2] [ref=e191]
+            - generic [ref=e192]: Owoc
+          - paragraph [ref=e193]: Chokeberry (Aronia) · Aronia melanocarpa
+          - generic [ref=e194]:
+            - generic [ref=e195]: Wieloletnia
+            - generic [ref=e196]: łatwa
+            - generic [ref=e197]:
+              - img [ref=e198]
+              - text: pełne słońce
+        - link "Aster nowobelgijski (marcinki) Kwiat Michaelmas Daisy · Symphyotrichum novi-belgii Wieloletnia łatwa pełne słońce" [ref=e204] [cursor=pointer]:
+          - /url: /library/aster-novi-belgii
+          - generic [ref=e206]:
+            - heading "Aster nowobelgijski (marcinki)" [level=2] [ref=e207]
+            - generic [ref=e208]: Kwiat
+          - paragraph [ref=e209]: Michaelmas Daisy · Symphyotrichum novi-belgii
+          - generic [ref=e210]:
+            - generic [ref=e211]: Wieloletnia
+            - generic [ref=e212]: łatwa
+            - generic [ref=e213]:
+              - img [ref=e214]
+              - text: pełne słońce
+        - link "Azalia japońska Krzew lub drzewo Japanese Azalea · Rhododendron (Japanese Azalea Group) Wieloletnia średnia półcień" [ref=e220] [cursor=pointer]:
+          - /url: /library/azalea-japanese
+          - generic [ref=e222]:
+            - heading "Azalia japońska" [level=2] [ref=e223]
+            - generic [ref=e224]: Krzew lub drzewo
+          - paragraph [ref=e225]: Japanese Azalea · Rhododendron (Japanese Azalea Group)
+          - generic [ref=e226]:
+            - generic [ref=e227]: Wieloletnia
+            - generic [ref=e228]: średnia
+            - generic [ref=e229]:
+              - img [ref=e230]
+              - text: półcień
+        - link "Azalia wielkokwiatowa 'Klondyke' Krzew lub drzewo Knap Hill Azalea 'Klondyke' · Rhododendron 'Klondyke' Wieloletnia średnia półcień" [ref=e236] [cursor=pointer]:
+          - /url: /library/azalea-knaphill
+          - generic [ref=e238]:
+            - heading "Azalia wielkokwiatowa 'Klondyke'" [level=2] [ref=e239]
+            - generic [ref=e240]: Krzew lub drzewo
+          - paragraph [ref=e241]: Knap Hill Azalea 'Klondyke' · Rhododendron 'Klondyke'
+          - generic [ref=e242]:
+            - generic [ref=e243]: Wieloletnia
+            - generic [ref=e244]: średnia
+            - generic [ref=e245]:
+              - img [ref=e246]
+              - text: półcień
+        - link "Babka lancetowata Dziko rosnąca Buckhorn · Plantago lanceolata Wieloletnia średnia pełne słońce" [ref=e252] [cursor=pointer]:
+          - /url: /library/gbif-8208358
+          - generic [ref=e254]:
+            - heading "Babka lancetowata" [level=2] [ref=e255]
+            - generic [ref=e256]: Dziko rosnąca
+          - paragraph [ref=e257]: Buckhorn · Plantago lanceolata
+          - generic [ref=e258]:
+            - generic [ref=e259]: Wieloletnia
+            - generic [ref=e260]: średnia
+            - generic [ref=e261]:
+              - img [ref=e262]
+              - text: pełne słońce
+        - link "Babka średnia Dziko rosnąca Hoary Plantain · Plantago media Wieloletnia średnia pełne słońce" [ref=e268] [cursor=pointer]:
+          - /url: /library/gbif-3189747
+          - generic [ref=e270]:
+            - heading "Babka średnia" [level=2] [ref=e271]
+            - generic [ref=e272]: Dziko rosnąca
+          - paragraph [ref=e273]: Hoary Plantain · Plantago media
+          - generic [ref=e274]:
+            - generic [ref=e275]: Wieloletnia
+            - generic [ref=e276]: średnia
+            - generic [ref=e277]:
+              - img [ref=e278]
+              - text: pełne słońce
+        - link "Bakłażan Warzywo Eggplant · Solanum melongena Jednoroczna trudna pełne słońce wrażliwa na przymrozki" [ref=e284] [cursor=pointer]:
+          - /url: /library/eggplant
+          - generic [ref=e286]:
+            - heading "Bakłażan" [level=2] [ref=e287]
+            - generic [ref=e288]: Warzywo
+          - paragraph [ref=e289]: Eggplant · Solanum melongena
+          - generic [ref=e290]:
+            - generic [ref=e291]: Jednoroczna
+            - generic [ref=e292]: trudna
+            - generic [ref=e293]:
+              - img [ref=e294]
+              - text: pełne słońce
+            - generic [ref=e300]:
+              - img [ref=e301]
+              - text: wrażliwa na przymrozki
+        - link "Barszcz Mantegazziego Dziko rosnąca Cartwheel-flower · Heracleum mantegazzianum Wieloletnia średnia pełne słońce" [ref=e314] [cursor=pointer]:
+          - /url: /library/gbif-3034825
+          - generic [ref=e316]:
+            - heading "Barszcz Mantegazziego" [level=2] [ref=e317]
+            - generic [ref=e318]: Dziko rosnąca
+          - paragraph [ref=e319]: Cartwheel-flower · Heracleum mantegazzianum
+          - generic [ref=e320]:
+            - generic [ref=e321]: Wieloletnia
+            - generic [ref=e322]: średnia
+            - generic [ref=e323]:
+              - img [ref=e324]
+              - text: pełne słońce
+        - link "Barszcz zwyczajny Dziko rosnąca Cow Parsnip · Heracleum sphondylium Wieloletnia średnia pełne słońce" [ref=e330] [cursor=pointer]:
+          - /url: /library/gbif-3034830
+          - generic [ref=e332]:
+            - heading "Barszcz zwyczajny" [level=2] [ref=e333]
+            - generic [ref=e334]: Dziko rosnąca
+          - paragraph [ref=e335]: Cow Parsnip · Heracleum sphondylium
+          - generic [ref=e336]:
+            - generic [ref=e337]: Wieloletnia
+            - generic [ref=e338]: średnia
+            - generic [ref=e339]:
+              - img [ref=e340]
+              - text: pełne słońce
+        - link "Barwinek pospolity Dziko rosnąca Common Periwinkle · Vinca minor Wieloletnia średnia pełne słońce" [ref=e346] [cursor=pointer]:
+          - /url: /library/gbif-3169707
+          - generic [ref=e348]:
+            - heading "Barwinek pospolity" [level=2] [ref=e349]
+            - generic [ref=e350]: Dziko rosnąca
+          - paragraph [ref=e351]: Common Periwinkle · Vinca minor
+          - generic [ref=e352]:
+            - generic [ref=e353]: Wieloletnia
+            - generic [ref=e354]: średnia
+            - generic [ref=e355]:
+              - img [ref=e356]
+              - text: pełne słońce
+        - link "Bazylia afrykańska (African Blue) Zioło African Blue Basil · Ocimum basilicum 'African Blue' Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e362] [cursor=pointer]:
+          - /url: /library/basil-mrihani
+          - generic [ref=e364]:
+            - heading "Bazylia afrykańska (African Blue)" [level=2] [ref=e365]
+            - generic [ref=e366]: Zioło
+          - paragraph [ref=e367]: African Blue Basil · Ocimum basilicum 'African Blue'
+          - generic [ref=e368]:
+            - generic [ref=e369]: Jednoroczna
+            - generic [ref=e370]: łatwa
+            - generic [ref=e371]:
+              - img [ref=e372]
+              - text: pełne słońce
+            - generic [ref=e378]:
+              - img [ref=e379]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia azjatycka (tulsi) Zioło Holy Basil (Tulsi) · Ocimum tenuiflorum Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e392] [cursor=pointer]:
+          - /url: /library/basil-holy-tulsi
+          - generic [ref=e394]:
+            - heading "Bazylia azjatycka (tulsi)" [level=2] [ref=e395]
+            - generic [ref=e396]: Zioło
+          - paragraph [ref=e397]: Holy Basil (Tulsi) · Ocimum tenuiflorum
+          - generic [ref=e398]:
+            - generic [ref=e399]: Jednoroczna
+            - generic [ref=e400]: łatwa
+            - generic [ref=e401]:
+              - img [ref=e402]
+              - text: pełne słońce
+            - generic [ref=e408]:
+              - img [ref=e409]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia cynamonowa Zioło Cinnamon Basil · Ocimum basilicum 'Cinnamon' Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e422] [cursor=pointer]:
+          - /url: /library/basil-cinnamon
+          - generic [ref=e424]:
+            - heading "Bazylia cynamonowa" [level=2] [ref=e425]
+            - generic [ref=e426]: Zioło
+          - paragraph [ref=e427]: Cinnamon Basil · Ocimum basilicum 'Cinnamon'
+          - generic [ref=e428]:
+            - generic [ref=e429]: Jednoroczna
+            - generic [ref=e430]: łatwa
+            - generic [ref=e431]:
+              - img [ref=e432]
+              - text: pełne słońce
+            - generic [ref=e438]:
+              - img [ref=e439]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia cytrynowa Zioło Lemon Basil · Ocimum basilicum var. citriodorum Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e452] [cursor=pointer]:
+          - /url: /library/basil-lemon
+          - generic [ref=e454]:
+            - heading "Bazylia cytrynowa" [level=2] [ref=e455]
+            - generic [ref=e456]: Zioło
+          - paragraph [ref=e457]: Lemon Basil · Ocimum basilicum var. citriodorum
+          - generic [ref=e458]:
+            - generic [ref=e459]: Jednoroczna
+            - generic [ref=e460]: łatwa
+            - generic [ref=e461]:
+              - img [ref=e462]
+              - text: pełne słońce
+            - generic [ref=e468]:
+              - img [ref=e469]
+              - text: wrażliwa na przymrozki
+      - generic [ref=e482]:
+        - button "Poprzednia" [disabled] [ref=e483]
+        - generic [ref=e484]: Strona 1 z 772
+        - button "Następna" [ref=e485]

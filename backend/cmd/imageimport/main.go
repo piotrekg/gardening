@@ -23,6 +23,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -76,13 +77,9 @@ type commonsResp struct {
 }
 
 var (
-	htmlTagRE = regexp.MustCompile(`<[^>]*>`)
-	wsRE      = regexp.MustCompile(`\s+`)
-	// thumbWidthRE matches the "<N>px-" width token Wikimedia embeds in thumb
-	// URLs (e.g. ".../960px-Foo.jpg"); the requested width is honored only up to
-	// the source's native width, so it is not always 800.
-	thumbWidthRE = regexp.MustCompile(`/\d+px-`)
-	allowedExt   = map[string]bool{
+	htmlTagRE  = regexp.MustCompile(`<[^>]*>`)
+	wsRE       = regexp.MustCompile(`\s+`)
+	allowedExt = map[string]bool{
 		".jpg": true, ".jpeg": true, ".png": true, ".webp": true,
 	}
 )
@@ -252,26 +249,24 @@ func queryCommons(client *http.Client, search string) (Image, bool) {
 			return Image{}, false
 		}
 
-		imageURL := info.ThumbURL
-		if imageURL == "" {
-			imageURL = info.URL
-		}
-
-		// Derive a 320px thumb from the rendered thumb URL by replacing its
-		// width token (which may be 800 or smaller for low-res sources).
-		thumbURL := imageURL
-		if info.ThumbURL != "" {
-			thumbURL = thumbWidthRE.ReplaceAllString(info.ThumbURL, "/320px-")
-		}
-
 		sourceURL := info.DescriptionURL
 		if sourceURL == "" {
 			sourceURL = "https://commons.wikimedia.org/wiki/" + page.Title
 		}
 
+		// Serve images through Special:FilePath?width=N rather than hand-built
+		// /thumb/ URLs: it always redirects to a correctly sized rendering (or the
+		// original when smaller) and never 400s on upscale, unlike width-token
+		// string surgery on the thumbnail URL.
+		file := strings.TrimPrefix(page.Title, "File:")
+		filePath := func(w int) string {
+			return "https://commons.wikimedia.org/wiki/Special:FilePath/" +
+				url.PathEscape(file) + "?width=" + strconv.Itoa(w)
+		}
+
 		return Image{
-			ImageURL:         imageURL,
-			ImageThumbURL:    thumbURL,
+			ImageURL:         filePath(1000),
+			ImageThumbURL:    filePath(400),
 			ImageSourceURL:   sourceURL,
 			ImageLicense:     cleanText(info.ExtMetadata.LicenseShortName.Value, 0),
 			ImageAttribution: cleanText(info.ExtMetadata.Artist.Value, maxAttrLen),

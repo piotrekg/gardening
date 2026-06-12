@@ -257,7 +257,12 @@ func (l *Library) searchDB(query, category, lifecycle string, page, pageSize int
 	q.Count(&total)
 
 	var rows []libraryRow
-	q.Order("CASE WHEN source = 'curated' THEN 0 ELSE 1 END").
+	// Promote the plants we actually have rich data for: fully enriched first,
+	// then those with at least an image, then the rest — alphabetical within each
+	// tier. This surfaces the well-documented, popular species ahead of the bare
+	// catalog long tail.
+	q.Order("enriched DESC").
+		Order("(image_url <> '') DESC").
 		Order("sort_key").
 		Offset((page - 1) * pageSize).Limit(pageSize).Find(&rows)
 

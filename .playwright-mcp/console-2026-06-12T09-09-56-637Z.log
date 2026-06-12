@@ -1,3 +1,5 @@
 [     715ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.50.11/api/notifications:0
 [     719ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.50.11/api/plants/library/tomato-beefsteak:0
 [     719ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.50.11/api/plants/library/tomato-beefsteak/companions:0
+[11078991ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.50.11/api/plants/library/categories:0
+[11078996ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.50.11/api/plants/library?page=1&page_size=18:0
