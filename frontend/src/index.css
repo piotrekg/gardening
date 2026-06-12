@@ -60,6 +60,8 @@
   --color-ink: #1c1c1a;
   --color-ink-soft: #6b6459;
   --color-ink-faint: #a89f94;
+  /* Muted axis/label tone — kept ≥4.5:1 on white surface. */
+  --color-ink-track: #6e6754;
 
   /* Functional status — kept muted, fitted to the palette. */
   --color-danger: #7a2020;
@@ -371,6 +373,20 @@
   &:hover {
     background-color: #fcfaf6;
   }
+}
+
+/* Single fade-in of season-track segments (disabled under reduced motion). */
+@keyframes seasonSegFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.season-seg {
+  animation: seasonSegFade 0.5s var(--ease-out-quart) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

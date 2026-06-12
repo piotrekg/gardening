@@ -313,7 +313,25 @@
     "harvest": "Harvest",
     "harvestEmpty": "No harvests expected this month.",
     "recommended": "Recommended to sow — {{month}}",
-    "recommendedEmpty": "No sowing recommendations for this month — a good time to plan ahead."
+    "recommendedEmpty": "No sowing recommendations for this month — a good time to plan ahead.",
+    "seasonTrack": {
+      "eyebrow": "Today · {{date}}",
+      "kindSiew": "Sowing",
+      "kindPrzesadzanie": "Transplanting",
+      "kindZbior": "Harvest",
+      "axisLabel": "Season calendar. Today: {{date}}. {{schedule}}",
+      "axisSchedule": "{{kind}}: {{range}}.",
+      "axisRange": "{{from}}–{{to}}",
+      "noData": "No seasonal data for this plant.",
+      "dayUnit": "days",
+      "inside": "{{label}} in progress. <em>{{count}} {{unit}} left</em>.",
+      "betweenAfterSiew": "Sown.",
+      "betweenAfterPrzesadzanie": "Planted out.",
+      "betweenAfterZbior": "Season over.",
+      "between": "{{state}} {{nextLabel}} starts <em>in {{count}} {{unit}}, from {{month}}</em>.",
+      "before": "Season starts <em>in {{count}} {{unit}}</em>. Sowing from {{month}}.",
+      "after": "Season over. Next sowing: <em>{{month}} {{year}}</em>."
+    }
   },
   "library": {
     "title": "Plant library",

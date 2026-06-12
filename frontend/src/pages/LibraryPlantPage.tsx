@@ -27,7 +27,7 @@ import { addPlantToGarden } from '../api/plants';
 import { BotanicalOrnament, HeroBotanical } from '../components/BotanicalArt';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { Modal } from '../components/Modal';
-import { SeasonTimeline } from '../components/SeasonTimeline';
+import { SeasonCalendar } from '../components/SeasonCalendar';
 import { Skeleton } from '../components/Skeleton';
 import { TagChip } from '../components/TagChip';
 import { useBilingual } from '../i18n/bilingual';
@@ -751,17 +751,10 @@ export function LibraryPlantPage() {
                 eyebrow={t('libraryPlant.eyebrow.season')}
                 title={t('libraryPlant.seasonCalendar')}
               />
-              <SeasonTimeline
-                currentMonth={currentMonth}
-                rows={[
-                  { label: t('libraryPlant.sowLabel'), months: plant.sow_months, tone: 'forest' },
-                  {
-                    label: t('libraryPlant.transplantLabel'),
-                    months: plant.transplant_months,
-                    tone: 'forest',
-                  },
-                  { label: t('libraryPlant.harvestLabel'), months: plant.harvest_months, tone: 'copper' },
-                ]}
+              <SeasonCalendar
+                sowMonths={plant.sow_months}
+                transplantMonths={plant.transplant_months}
+                harvestMonths={plant.harvest_months}
               />
             </section>
 

@@ -317,7 +317,25 @@
     "harvest": "Zbiory",
     "harvestEmpty": "W tym miesiącu nie zapowiadają się zbiory.",
     "recommended": "Polecane do wysiewu — {{month}}",
-    "recommendedEmpty": "Brak rekomendacji siewu na ten miesiąc — dobry czas na planowanie."
+    "recommendedEmpty": "Brak rekomendacji siewu na ten miesiąc — dobry czas na planowanie.",
+    "seasonTrack": {
+      "eyebrow": "Dziś · {{date}}",
+      "kindSiew": "Siew",
+      "kindPrzesadzanie": "Przesadzanie",
+      "kindZbior": "Zbiór",
+      "axisLabel": "Kalendarz sezonowy. Dziś: {{date}}. {{schedule}}",
+      "axisSchedule": "{{kind}}: {{range}}.",
+      "axisRange": "{{from}}–{{to}}",
+      "noData": "Brak danych sezonowych dla tej rośliny.",
+      "dayUnit": "dni",
+      "inside": "Trwa {{label}}. Do końca: <em>{{count}} {{unit}}</em>.",
+      "betweenAfterSiew": "Wysiane.",
+      "betweenAfterPrzesadzanie": "Rośliny w gruncie.",
+      "betweenAfterZbior": "Sezon zakończony.",
+      "between": "{{state}} {{nextLabel}} rozpocznie się <em>za {{count}} {{unit}}, od {{month}}</em>.",
+      "before": "Sezon rozpocznie się <em>za {{count}} {{unit}}</em>. Siew od {{month}}.",
+      "after": "Sezon zakończony. Następny siew: <em>{{month}} {{year}}</em>."
+    }
   },
   "library": {
     "title": "Biblioteka roślin",
