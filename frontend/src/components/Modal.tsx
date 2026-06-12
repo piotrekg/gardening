@@ -26,7 +26,7 @@ export function Modal({ title, onClose, children, wide = false }: ModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-primary-dark/30 p-0 backdrop-blur-[2px] sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-forest/40 p-0 backdrop-blur-[2px] sm:items-center sm:p-4"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -35,7 +35,7 @@ export function Modal({ title, onClose, children, wide = false }: ModalProps) {
       aria-label={title}
     >
       <div
-        className={`reveal max-h-[92vh] w-full overflow-y-auto rounded-t-2xl border border-line bg-surface shadow-lift sm:rounded-2xl ${
+        className={`reveal max-h-[92vh] w-full overflow-y-auto rounded-t-md border border-line bg-surface sm:rounded-md ${
           wide ? 'sm:max-w-2xl' : 'sm:max-w-md'
         }`}
       >

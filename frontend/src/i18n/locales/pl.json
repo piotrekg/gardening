@@ -44,6 +44,13 @@
     "calendar": "Kalendarz",
     "settings": "Ustawienia"
   },
+  "pageEyebrow": {
+    "dashboard": "Ogród dziś",
+    "gardens": "Twoje zagony",
+    "library": "Kompendium",
+    "calendar": "Rok ogrodnika",
+    "settings": "Konto"
+  },
   "layout": {
     "tagline": "PlantDiary · rośnij z nami",
     "userMenu": "Menu użytkownika",
@@ -357,6 +364,44 @@
     "goodCompanions": "Dobre sąsiedztwo",
     "keepApart": "Trzymaj z dala od",
     "noneListed": "Brak danych.",
+    "eyebrow": {
+      "description": "Charakterystyka",
+      "careGuide": "Uprawa",
+      "season": "Kalendarz",
+      "tips": "Ze szkółki",
+      "diseases": "Czujność",
+      "companions": "Towarzystwo",
+      "params": "Atlas"
+    },
+    "stats": {
+      "height": "Wysokość",
+      "spacing": "Rozstaw",
+      "watering": "Podlewanie",
+      "fertilizing": "Nawożenie",
+      "harvest": "Do zbioru",
+      "everyDaysShort": "co {{count}} dni"
+    },
+    "timeline": {
+      "today": "Dziś",
+      "legendSow": "Siew",
+      "legendTransplant": "Przesadzanie",
+      "legendHarvest": "Zbiór"
+    },
+    "sidebar": {
+      "ctaTitle": "Dodaj do ogrodu",
+      "ctaSub": "Zacznij notować pielęgnację tej rośliny.",
+      "ctaButton": "Dodaj roślinę",
+      "nowTitle": "Teraz do zrobienia",
+      "nowSow": "Pora na siew — ten miesiąc jest w oknie wysiewu.",
+      "nowTransplant": "Dobry moment na przesadzanie.",
+      "nowHarvest": "Czas zbioru — sprawdź dojrzałość.",
+      "nowGeneric": "Doglądaj rośliny zgodnie z harmonogramem podlewania i nawożenia.",
+      "paramsTitle": "Parametry",
+      "pestsTitle": "Częste szkodniki",
+      "statusTitle": "Status",
+      "statusEnriched": "Pełny profil",
+      "statusBasic": "Profil podstawowy"
+    },
     "addModal": {
       "title": "Dodaj {{name}} do ogrodu",
       "success": "{{plant}} — dodano do ogrodu „{{garden}}”.",

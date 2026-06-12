@@ -7,21 +7,15 @@ import {
   Bug,
   Droplet,
   Globe,
-  Handshake,
-  Leaf,
   type LucideIcon,
   Mountain,
   PartyPopper,
-  Pill,
   Plus,
-  Ruler,
   Scissors,
   ShieldAlert,
   Snowflake,
-  Sparkles,
   Sprout,
   Sun,
-  Swords,
   Thermometer,
   Wheat,
   Wind,
@@ -30,8 +24,9 @@ import { getApiErrorMessage } from '../api/client';
 import { listGardens } from '../api/gardens';
 import { getLibraryPlant, getLibraryPlantCompanions } from '../api/library';
 import { addPlantToGarden } from '../api/plants';
+import { BotanicalOrnament, HeroBotanical } from '../components/BotanicalArt';
 import { Modal } from '../components/Modal';
-import { MonthChips } from '../components/MonthChips';
+import { SeasonTimeline } from '../components/SeasonTimeline';
 import { Skeleton } from '../components/Skeleton';
 import { useBilingual } from '../i18n/bilingual';
 import { useLibraryPlantName } from '../i18n/libraryName';
@@ -56,9 +51,14 @@ function AddToGardenModal({
   const [gardenId, setGardenId] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [plantedDate, setPlantedDate] = useState('');
+  const [customWater, setCustomWater] = useState('');
+  const [customFertilize, setCustomFertilize] = useState('');
+  const [scheduleOpen, setScheduleOpen] = useState(!plant.water_frequency_days);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<Garden | null>(null);
+
+  const hasSchedule = !!plant.water_frequency_days;
 
   useEffect(() => {
     listGardens()
@@ -80,6 +80,20 @@ function AddToGardenModal({
       setError(t('plantSearch.quantityInvalid'));
       return;
     }
+    // Empty -> omit (no override). Positive 1-365 -> set. Anything else -> invalid.
+    const parseFrequency = (value: string): number | 'empty' | 'invalid' => {
+      const trimmed = value.trim();
+      if (trimmed === '') return 'empty';
+      const n = Number(trimmed);
+      if (!Number.isInteger(n) || n < 1 || n > 365) return 'invalid';
+      return n;
+    };
+    const water = parseFrequency(customWater);
+    const fertilize = parseFrequency(customFertilize);
+    if (water === 'invalid' || fertilize === 'invalid') {
+      setError(t('plant.customSchedule.rangeInvalid'));
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -87,6 +101,8 @@ function AddToGardenModal({
         plant_library_id: plant.id,
         quantity: qty,
         ...(plantedDate ? { planted_date: plantedDate } : {}),
+        ...(typeof water === 'number' ? { custom_water_frequency_days: water } : {}),
+        ...(typeof fertilize === 'number' ? { custom_fertilize_frequency_days: fertilize } : {}),
       });
       setSuccess(gardens?.find((g) => g.id === gardenId) ?? null);
     } catch (err) {
@@ -129,7 +145,7 @@ function AddToGardenModal({
       ) : (
         <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4" noValidate>
           {error && (
-            <div className="rounded-lg border border-danger-line bg-danger-bg px-3 py-2 text-sm text-danger" role="alert">
+            <div className="rounded-md border border-danger-line bg-danger-bg px-3 py-2 text-sm text-danger" role="alert">
               {error}
             </div>
           )}
@@ -177,6 +193,61 @@ function AddToGardenModal({
               />
             </div>
           </div>
+          <div className="rounded-md border border-line p-3">
+            {hasSchedule && !scheduleOpen ? (
+              <button
+                type="button"
+                onClick={() => setScheduleOpen(true)}
+                className="inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
+              >
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                {t('plant.customSchedule.sectionTitle')}
+              </button>
+            ) : (
+              <>
+                <p className="mb-2 text-sm font-medium text-ink-soft">
+                  {t('plant.customSchedule.sectionTitle')}
+                </p>
+                {!hasSchedule && (
+                  <p className="mb-3 text-xs text-ink-faint">
+                    {t('plant.customSchedule.sectionHint')}
+                  </p>
+                )}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="atg-water" className="mb-1 block text-sm font-medium text-ink-soft">
+                      {t('plant.customSchedule.waterLabel')}{' '}
+                      <span className="font-normal text-ink-faint">({t('common.optional')})</span>
+                    </label>
+                    <input
+                      id="atg-water"
+                      type="number"
+                      min={1}
+                      max={365}
+                      value={customWater}
+                      onChange={(e) => setCustomWater(e.target.value)}
+                      className="input-field"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="atg-fertilize" className="mb-1 block text-sm font-medium text-ink-soft">
+                      {t('plant.customSchedule.fertilizeLabel')}{' '}
+                      <span className="font-normal text-ink-faint">({t('common.optional')})</span>
+                    </label>
+                    <input
+                      id="atg-fertilize"
+                      type="number"
+                      min={1}
+                      max={365}
+                      value={customFertilize}
+                      onChange={(e) => setCustomFertilize(e.target.value)}
+                      className="input-field"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
           <div className="flex justify-end gap-2 pt-1">
             <button type="button" onClick={onClose} className="btn-secondary">
               {t('common.cancel')}
@@ -193,64 +264,43 @@ function AddToGardenModal({
   );
 }
 
-function PlantChips({ plants, tone }: { plants: LibraryPlant[]; tone: 'good' | 'bad' }) {
-  const { t } = useTranslation();
-  const { name: libName } = useLibraryPlantName();
-  if (plants.length === 0) {
-    return <p className="text-sm text-ink-faint">{t('libraryPlant.noneListed')}</p>;
-  }
+/** Section header: copper eyebrow over a Playfair title. */
+function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
-    <div className="flex flex-wrap gap-2">
-      {plants.map((p) => (
-        <Link
-          key={p.id}
-          to={`/library/${p.id}`}
-          className={`rounded-full border px-3 py-1 text-xs font-semibold transition ${
-            tone === 'good'
-              ? 'border-line bg-primary-light text-primary-dark hover:border-accent hover:bg-accent-light'
-              : 'border-danger-line bg-danger-bg text-danger hover:bg-danger-bg/70'
-          }`}
-        >
-          {libName(p)}
-        </Link>
-      ))}
+    <div className="mb-4">
+      <p className="eyebrow mb-2.5">{eyebrow}</p>
+      <h2 className="font-display text-2xl font-semibold text-ink">{title}</h2>
     </div>
   );
 }
 
-/** A labeled care-guide block; renders nothing when its content is empty. */
+/** A care-guide tile; renders nothing when its content is empty. */
 function CareBlock({
   icon: Icon,
   label,
   body,
-  emphasize = false,
 }: {
   icon: LucideIcon;
   label: string;
   body: string;
-  emphasize?: boolean;
 }) {
   if (!body) return null;
   return (
-    <div
-      className={`rounded-lg border p-4 ${
-        emphasize ? 'border-accent-light bg-accent-light/40' : 'border-line bg-surface-2/50'
-      }`}
-    >
-      <p className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-ink-soft">
-        <Icon className="h-3.5 w-3.5 text-accent" strokeWidth={1.75} aria-hidden="true" />
-        {label}
-      </p>
-      <p className="whitespace-pre-line text-sm leading-relaxed text-ink">{body}</p>
+    <div className="bg-surface p-5">
+      <span className="mb-3 flex h-[30px] w-[30px] items-center justify-center rounded-[3px] bg-forest-pale text-forest">
+        <Icon className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+      </span>
+      <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.09em] text-copper">{label}</p>
+      <p className="whitespace-pre-line text-[13px] font-light leading-[1.8] text-ink">{body}</p>
     </div>
   );
 }
 
 const DISEASE_KIND_STYLES: Record<PlantDisease['kind'], { badge: string; icon: LucideIcon }> = {
-  disease: { badge: 'bg-danger-bg text-danger', icon: Bug },
-  pest: { badge: 'bg-warn-bg text-clay-dark', icon: Bug },
-  disorder: { badge: 'bg-warn-bg text-clay-dark', icon: ShieldAlert },
-  behavior: { badge: 'bg-frost-bg text-frost', icon: Wind },
+  disease: { badge: 'bg-warn-bg text-warn border-warn-line', icon: Bug },
+  pest: { badge: 'bg-warn-bg text-warn border-warn-line', icon: Bug },
+  disorder: { badge: 'bg-frost-bg text-frost border-frost-line', icon: ShieldAlert },
+  behavior: { badge: 'bg-frost-bg text-frost border-frost-line', icon: Wind },
 };
 
 function DiseaseCard({ disease }: { disease: PlantDisease }) {
@@ -264,41 +314,95 @@ function DiseaseCard({ disease }: { disease: PlantDisease }) {
   const prevention = pick(disease.prevention_pl, disease.prevention_en);
 
   return (
-    <div className="rounded-lg border border-line p-4">
-      <div className="mb-3 flex flex-wrap items-center gap-2">
+    <div className="bg-surface p-5">
+      <div className="mb-3 flex flex-wrap items-start gap-2.5">
         <span
-          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${style.badge}`}
+          className={`mt-0.5 inline-flex items-center gap-1 rounded-[2px] border px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] ${style.badge}`}
         >
-          <KindIcon className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
+          <KindIcon className="h-2.5 w-2.5" strokeWidth={2} aria-hidden="true" />
           {t(`diseaseKind.${disease.kind}`)}
         </span>
-        <h3 className="text-sm font-semibold text-ink">{name}</h3>
+        <h3 className="font-display text-[17px] font-semibold text-ink">{name}</h3>
       </div>
-      <div className="space-y-2 text-sm">
+      <div className="space-y-1 text-[13px]">
         {symptoms && (
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-ink-faint">
+          <>
+            <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-ink-faint">
               {t('plantProfile.symptoms')}
             </p>
-            <p className="text-ink">{symptoms}</p>
-          </div>
+            <p className="font-light leading-[1.8] text-ink">{symptoms}</p>
+          </>
         )}
         {treatment && (
-          <div className="rounded-lg bg-primary-light/60 px-3 py-2">
-            <p className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-primary-dark/80">
-              <Pill className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+          <div className="mt-2 rounded-[3px] border-l-2 border-forest-light bg-forest-pale px-3.5 py-2.5">
+            <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-forest-mid">
               {t('plantProfile.treatment')}
             </p>
-            <p className="font-medium text-primary-dark">{treatment}</p>
+            <p className="leading-[1.7] text-forest-mid">{treatment}</p>
           </div>
         )}
         {prevention && (
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-ink-faint">
+          <>
+            <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.1em] text-ink-faint">
               {t('plantProfile.prevention')}
             </p>
-            <p className="text-ink">{prevention}</p>
-          </div>
+            <p className="font-light leading-[1.8] text-ink">{prevention}</p>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** One stat cell in the quick-stats bar; only rendered when value present. */
+function StatCell({ label, value, sub }: { label: string; value: string; sub?: string }) {
+  return (
+    <div className="border-r border-line px-5 py-4 last:border-r-0">
+      <p className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.1em] text-ink-faint">{label}</p>
+      <p className="font-display text-[22px] font-semibold leading-none text-ink">{value}</p>
+      {sub && <p className="mt-1 text-[11px] font-light text-ink-faint">{sub}</p>}
+    </div>
+  );
+}
+
+function CompanionsBlock({
+  tone,
+  title,
+  plants,
+}: {
+  tone: 'good' | 'bad';
+  title: string;
+  plants: LibraryPlant[];
+}) {
+  const { t } = useTranslation();
+  const { name: libName } = useLibraryPlantName();
+  return (
+    <div className="overflow-hidden rounded-md border border-line bg-surface">
+      <div
+        className={`border-b border-line px-4 py-3 text-[10px] font-bold uppercase tracking-[0.09em] ${
+          tone === 'good' ? 'bg-forest-pale text-forest' : 'bg-danger-bg text-danger'
+        }`}
+      >
+        {title}
+      </div>
+      <div className="flex flex-col px-4 py-2.5">
+        {plants.length === 0 ? (
+          <p className="py-1 text-[13px] font-light text-ink-faint">{t('libraryPlant.noneListed')}</p>
+        ) : (
+          plants.map((p) => (
+            <Link
+              key={p.id}
+              to={`/library/${p.id}`}
+              className="flex items-center gap-2 border-b border-paper py-1.5 text-[13px] font-light text-ink last:border-b-0 hover:text-copper"
+            >
+              <span
+                className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                  tone === 'good' ? 'bg-forest-light' : 'bg-danger'
+                }`}
+              />
+              {libName(p)}
+            </Link>
+          ))
         )}
       </div>
     </div>
@@ -307,7 +411,7 @@ function DiseaseCard({ disease }: { disease: PlantDisease }) {
 
 export function LibraryPlantPage() {
   const { t } = useTranslation();
-  const { name: libName, altName: libAltName } = useLibraryPlantName();
+  const { name: libName } = useLibraryPlantName();
   const { pick, pickField } = useBilingual();
   const { id } = useParams<{ id: string }>();
   const plantId = id ?? '';
@@ -345,7 +449,10 @@ export function LibraryPlantPage() {
     return (
       <div className="card p-6 text-center">
         <p className="text-sm text-danger">{error}</p>
-        <Link to="/library" className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+        <Link
+          to="/library"
+          className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
+        >
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
           {t('libraryPlant.backToLibrary')}
         </Link>
@@ -357,12 +464,15 @@ export function LibraryPlantPage() {
     return (
       <div className="space-y-4">
         <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-40" />
+        <Skeleton className="h-72" />
         <Skeleton className="h-40" />
       </div>
     );
   }
 
+  const currentMonth = new Date().getMonth() + 1;
+
+  const name = libName(plant);
   const description = pickField(plant, 'description');
   const light = pickField(plant, 'light');
   const soil = pickField(plant, 'soil');
@@ -378,314 +488,397 @@ export function LibraryPlantPage() {
     light || soil || wateringDetail || fertilizing || pruning || propagation || harvestDetail || overwintering,
   );
 
+  const difficultyLabel = t(`library.difficulty.${plant.difficulty}`, {
+    defaultValue: plant.difficulty,
+  });
+
+  // Quick-stats: only cells with data.
+  const stats: { label: string; value: string; sub?: string }[] = [];
+  if (plant.typical_height_cm)
+    stats.push({ label: t('libraryPlant.stats.height'), value: `${plant.typical_height_cm}`, sub: 'cm' });
+  if (plant.spacing_cm)
+    stats.push({ label: t('libraryPlant.stats.spacing'), value: `${plant.spacing_cm}`, sub: 'cm' });
+  if (plant.water_frequency_days)
+    stats.push({
+      label: t('libraryPlant.stats.watering'),
+      value: `${plant.water_frequency_days}`,
+      sub: t('libraryPlant.stats.everyDaysShort', { count: plant.water_frequency_days }),
+    });
+  if (plant.fertilize_frequency_days)
+    stats.push({
+      label: t('libraryPlant.stats.fertilizing'),
+      value: `${plant.fertilize_frequency_days}`,
+      sub: t('libraryPlant.stats.everyDaysShort', { count: plant.fertilize_frequency_days }),
+    });
+  if (plant.harvest_months.length > 0)
+    stats.push({
+      label: t('libraryPlant.stats.harvest'),
+      value: String(Math.min(...plant.harvest_months)).padStart(2, '0'),
+      sub: t('libraryPlant.timeline.legendHarvest'),
+    });
+
+  // "Now to do" context hint from current month vs the plant's windows.
+  let nowKey = 'libraryPlant.sidebar.nowGeneric';
+  if (plant.harvest_months.includes(currentMonth)) nowKey = 'libraryPlant.sidebar.nowHarvest';
+  else if (plant.sow_months.includes(currentMonth)) nowKey = 'libraryPlant.sidebar.nowSow';
+  else if (plant.transplant_months.includes(currentMonth)) nowKey = 'libraryPlant.sidebar.nowTransplant';
+
+  const params: { name: string; val: string }[] = [
+    {
+      name: t('libraryPlant.sunRequirement'),
+      val: t(`library.sun.${plant.sun_requirement}`, { defaultValue: plant.sun_requirement }),
+    },
+  ];
+  if (plant.water_frequency_days)
+    params.push({
+      name: t('libraryPlant.waterEvery'),
+      val: t('common.everyDays', { count: plant.water_frequency_days }),
+    });
+  if (plant.fertilize_frequency_days)
+    params.push({
+      name: t('libraryPlant.fertilizeEvery'),
+      val: t('common.everyDays', { count: plant.fertilize_frequency_days }),
+    });
+  if (plant.typical_height_cm)
+    params.push({ name: t('libraryPlant.typicalHeight'), val: `${plant.typical_height_cm} cm` });
+  if (plant.spacing_cm)
+    params.push({ name: t('libraryPlant.spacing'), val: `${plant.spacing_cm} cm` });
+  if (plant.hardiness_zone)
+    params.push({ name: t('plantProfile.hardiness'), val: plant.hardiness_zone });
+
+  const heroTags: { label: string; primary?: boolean }[] = [
+    { label: t(`library.category.${plant.category}`, { defaultValue: plant.category }), primary: true },
+    { label: t(`library.lifecycle.${plant.lifecycle}`, { defaultValue: plant.lifecycle }) },
+    { label: difficultyLabel },
+  ];
+  if (plant.frost_sensitive) heroTags.push({ label: t('library.frostSensitive') });
+  plant.tags.slice(0, 2).forEach((tag) => heroTags.push({ label: tag }));
+
   return (
-    <div className="space-y-6">
-      <nav className="text-xs text-ink-faint">
-        <Link to="/library" className="hover:text-primary hover:underline">
+    <div className="-mx-4 -mt-6 md:-mx-8 md:-mt-8">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-1.5 px-4 pt-4 text-[12px] text-ink-faint md:px-8">
+        <Link to="/library" className="hover:text-copper">
           {t('nav.library')}
-        </Link>{' '}
-        / <span className="text-ink-soft">{libName(plant)}</span>
+        </Link>
+        <span className="text-parchment-dark">/</span>
+        <span className="text-ink-muted">
+          {t(`library.category.${plant.category}`, { defaultValue: plant.category })}
+        </span>
+        <span className="text-parchment-dark">/</span>
+        <span className="text-ink-muted">{name}</span>
       </nav>
 
-      <div className="card overflow-hidden">
-        <figure className="relative">
+      {/* HERO */}
+      <div className="relative mt-3 h-[420px] overflow-hidden sm:h-[480px]">
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,#111F13_0%,#1A2E1E_35%,#2D4A31_60%,#1A2E1E_100%)]">
           {plant.image_url ? (
             <img
               src={plant.image_url}
-              alt={libName(plant)}
-              className="h-56 w-full object-cover sm:h-72"
-              loading="lazy"
+              alt={name}
+              className="h-full w-full object-cover opacity-70"
+              loading="eager"
             />
           ) : (
-            <div
-              className="flex h-40 w-full items-center justify-center bg-primary-light"
-              aria-label={t('plantProfile.noImage')}
-            >
-              <Leaf className="h-12 w-12 text-accent" strokeWidth={1.25} aria-hidden="true" />
-            </div>
+            <HeroBotanical />
           )}
-          {plant.image_url && plant.image_attribution && (
-            <figcaption className="absolute bottom-0 right-0 max-w-full truncate bg-primary-dark/55 px-2 py-1 text-[11px] text-paper/90">
-              {plant.image_source_url ? (
-                <a
-                  href={plant.image_source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:underline"
-                >
-                  {plant.image_license
-                    ? t('plantProfile.photoCredit', {
-                        attribution: plant.image_attribution,
-                        license: plant.image_license,
-                      })
-                    : t('plantProfile.photoCreditSimple', {
-                        attribution: plant.image_attribution,
-                      })}
-                </a>
-              ) : plant.image_license ? (
-                t('plantProfile.photoCredit', {
-                  attribution: plant.image_attribution,
-                  license: plant.image_license,
-                })
-              ) : (
-                t('plantProfile.photoCreditSimple', { attribution: plant.image_attribution })
-              )}
-            </figcaption>
-          )}
-        </figure>
-        <div className="flex flex-wrap items-start justify-between gap-4 p-5">
+        </div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_15%,rgba(8,16,10,0.25)_55%,rgba(8,16,10,0.9)_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 grid grid-cols-1 items-end gap-6 px-6 pb-9 pt-12 sm:grid-cols-[1fr_auto] sm:px-12">
           <div>
-            <h1 className="text-h1 font-semibold tracking-tight text-ink">{libName(plant)}</h1>
-            <p className="text-sm text-ink-soft">
-              {libAltName(plant)} · <span className="italic">{plant.latin_name}</span>
-            </p>
-            <div className="mt-2.5 flex flex-wrap gap-2 text-[11px]">
-              <span className="rounded-full bg-primary-light px-2 py-0.5 font-semibold text-primary-dark">
-                {t(`library.category.${plant.category}`, { defaultValue: plant.category })}
-              </span>
-              <span className="rounded-full border border-line px-2 py-0.5 text-ink-soft">
-                {t(`library.lifecycle.${plant.lifecycle}`, { defaultValue: plant.lifecycle })}
-              </span>
-              <span className="rounded-full border border-line px-2 py-0.5 text-ink-soft">
-                {t('libraryPlant.difficultyChip', {
-                  value: t(`library.difficulty.${plant.difficulty}`, {
-                    defaultValue: plant.difficulty,
-                  }),
-                })}
-              </span>
-              {plant.frost_sensitive && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-frost-bg px-2 py-0.5 text-frost">
-                  <Snowflake className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
-                  {t('library.frostSensitive')}
-                </span>
-              )}
-              {plant.tags.map((tag) => (
-                <span key={tag} className="rounded-full border border-line px-2 py-0.5 text-ink-faint">
-                  #{tag}
+            <div className="mb-3.5 flex flex-wrap gap-1.5">
+              {heroTags.map((tag, i) => (
+                <span
+                  key={i}
+                  className={`rounded-[2px] border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.1em] ${
+                    tag.primary
+                      ? 'border-copper bg-copper text-white'
+                      : 'border-white/20 bg-white/[0.06] text-white/60'
+                  }`}
+                >
+                  {tag.label}
                 </span>
               ))}
             </div>
+            <h1 className="font-display text-4xl font-bold leading-[1.02] tracking-tight text-white sm:text-6xl">
+              {name}
+            </h1>
+            {plant.latin_name && (
+              <p className="mt-2.5 font-display text-sm italic text-white/50">{plant.latin_name}</p>
+            )}
           </div>
-          <button type="button" onClick={() => setShowAdd(true)} className="btn-primary shrink-0">
-            <Plus className="h-4 w-4" aria-hidden="true" />
-            {t('libraryPlant.addToMyGarden')}
-          </button>
+          <div className="text-left sm:pb-1 sm:text-right">
+            <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/40">
+              {t('plantDetail.difficulty')}
+            </p>
+            <p className="font-display text-2xl font-semibold text-copper-light">{difficultyLabel}</p>
+            {plant.frost_sensitive && (
+              <p className="mt-2 flex items-center gap-1.5 text-[10px] tracking-[0.04em] text-white/35 sm:justify-end">
+                <Snowflake className="h-3 w-3 opacity-50" strokeWidth={2} aria-hidden="true" />
+                {t('library.frostSensitive')}
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
-      {!plant.enriched && (
-        <div className="flex items-center gap-2 rounded-lg border border-clay-light bg-clay-light/40 px-4 py-3 text-sm text-clay-dark">
-          <Sparkles className="h-4 w-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
-          {t('plantProfile.comingSoon')}
-        </div>
-      )}
+      {/* MAIN GRID */}
+      <div className="mx-auto max-w-6xl px-4 pb-20 md:px-8">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_300px] lg:gap-16">
+          {/* CONTENT */}
+          <div>
+            {!plant.enriched && (
+              <div className="mb-8 flex items-center gap-2 rounded-md border border-warn-line bg-warn-bg px-4 py-3 text-sm text-warn">
+                <Sprout className="h-4 w-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                {t('plantProfile.comingSoon')}
+              </div>
+            )}
 
-      {description && (
-        <section className="card p-5">
-          <h2 className="mb-2 text-h2 font-semibold text-ink">{t('plantProfile.description')}</h2>
-          <p className="whitespace-pre-line text-sm leading-relaxed text-ink">{description}</p>
-        </section>
-      )}
+            {/* Quick stats */}
+            {stats.length > 0 && (
+              <div
+                className="mb-2 grid overflow-hidden rounded-md border border-line bg-surface"
+                style={{ gridTemplateColumns: `repeat(${stats.length}, minmax(0, 1fr))` }}
+              >
+                {stats.map((s, i) => (
+                  <StatCell key={i} label={s.label} value={s.value} sub={s.sub} />
+                ))}
+              </div>
+            )}
 
-      {hasCareGuide && (
-        <section className="card p-5">
-          <h2 className="mb-4 text-h2 font-semibold text-ink">{t('plantProfile.careGuide')}</h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <CareBlock icon={Sun} label={t('plantProfile.light')} body={light} />
-            <CareBlock icon={Mountain} label={t('plantProfile.soil')} body={soil} />
-            <CareBlock icon={Droplet} label={t('plantProfile.watering')} body={wateringDetail} />
-            <CareBlock
-              icon={Wheat}
-              label={t('plantProfile.fertilizing')}
-              body={fertilizing}
-              emphasize
-            />
-            <CareBlock icon={Scissors} label={t('plantProfile.pruning')} body={pruning} />
-            <CareBlock icon={Sprout} label={t('plantProfile.propagation')} body={propagation} />
-            <CareBlock icon={Wheat} label={t('plantProfile.harvest')} body={harvestDetail} />
-            <CareBlock icon={Snowflake} label={t('plantProfile.overwintering')} body={overwintering} />
-          </div>
-        </section>
-      )}
+            {/* Description with drop cap */}
+            {description && (
+              <section className="mt-10">
+                <SectionHeader
+                  eyebrow={t('libraryPlant.eyebrow.description')}
+                  title={t('plantProfile.description')}
+                />
+                <p className="drop-cap whitespace-pre-line text-[15px] font-light leading-[1.85] text-ink">
+                  {description}
+                </p>
+              </section>
+            )}
 
-      {tips.length > 0 && (
-        <section className="card p-5">
-          <h2 className="mb-3 text-h2 font-semibold text-ink">{t('plantProfile.tips')}</h2>
-          <ul className="space-y-2">
-            {tips.map((tip, i) => (
-              <li key={i} className="flex gap-2.5 text-sm text-ink">
-                <Leaf className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" strokeWidth={1.75} aria-hidden="true" />
-                <span>{tip}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+            {/* Toxicity */}
+            {toxicity && (
+              <div className="mt-6 flex items-start gap-3 rounded-md border border-warn-line bg-warn-bg px-4 py-3.5">
+                <ShieldAlert className="mt-0.5 h-[18px] w-[18px] shrink-0 text-warn" strokeWidth={1.75} aria-hidden="true" />
+                <p className="text-[12px] leading-[1.65] text-warn">
+                  <strong className="font-semibold">{t('plantProfile.toxicity')}: </strong>
+                  {toxicity}
+                </p>
+              </div>
+            )}
 
-      <section className="card p-5">
-        <h2 className="mb-4 text-h2 font-semibold text-ink">{t('libraryPlant.seasonCalendar')}</h2>
-        <div className="space-y-3">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="flex w-28 items-center gap-1.5 text-xs font-medium text-ink-soft">
-              <Sprout className="h-3.5 w-3.5 text-accent" strokeWidth={1.75} aria-hidden="true" />
-              {t('libraryPlant.sowLabel')}
-            </span>
-            <MonthChips months={plant.sow_months} activeClass="bg-accent text-primary-dark" />
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="flex w-28 items-center gap-1.5 text-xs font-medium text-ink-soft">
-              <Leaf className="h-3.5 w-3.5 text-accent" strokeWidth={1.75} aria-hidden="true" />
-              {t('libraryPlant.transplantLabel')}
-            </span>
-            <MonthChips months={plant.transplant_months} activeClass="bg-primary text-paper" />
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="flex w-28 items-center gap-1.5 text-xs font-medium text-ink-soft">
-              <Wheat className="h-3.5 w-3.5 text-accent" strokeWidth={1.75} aria-hidden="true" />
-              {t('libraryPlant.harvestLabel')}
-            </span>
-            <MonthChips months={plant.harvest_months} activeClass="bg-clay text-paper" />
-          </div>
-        </div>
-      </section>
+            {/* Care guide */}
+            {hasCareGuide && (
+              <>
+                <hr className="copper-rule my-12" />
+                <section>
+                  <SectionHeader
+                    eyebrow={t('libraryPlant.eyebrow.careGuide')}
+                    title={t('plantProfile.careGuide')}
+                  />
+                  <div className="grid grid-cols-1 gap-px overflow-hidden rounded-md border border-line bg-line sm:grid-cols-2">
+                    <CareBlock icon={Sun} label={t('plantProfile.light')} body={light} />
+                    <CareBlock icon={Mountain} label={t('plantProfile.soil')} body={soil} />
+                    <CareBlock icon={Droplet} label={t('plantProfile.watering')} body={wateringDetail} />
+                    <CareBlock icon={Wheat} label={t('plantProfile.fertilizing')} body={fertilizing} />
+                    <CareBlock icon={Scissors} label={t('plantProfile.pruning')} body={pruning} />
+                    <CareBlock icon={Sprout} label={t('plantProfile.propagation')} body={propagation} />
+                    <CareBlock icon={Wheat} label={t('plantProfile.harvest')} body={harvestDetail} />
+                    <CareBlock icon={Snowflake} label={t('plantProfile.overwintering')} body={overwintering} />
+                  </div>
+                </section>
+              </>
+            )}
 
-      <section className="card p-5">
-        <h2 className="mb-4 text-h2 font-semibold text-ink">{t('libraryPlant.careParams')}</h2>
-        {plant.source === 'gbif' && (
-          <div className="mb-4 flex items-start gap-2 rounded-lg border border-clay-light bg-clay-light/40 px-4 py-3 text-sm text-clay-dark">
-            <Globe className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
-            {t('libraryPlant.catalogNote')}
+            {/* Season timeline */}
+            <BotanicalOrnament />
+            <section>
+              <SectionHeader
+                eyebrow={t('libraryPlant.eyebrow.season')}
+                title={t('libraryPlant.seasonCalendar')}
+              />
+              <SeasonTimeline
+                currentMonth={currentMonth}
+                rows={[
+                  { label: t('libraryPlant.sowLabel'), months: plant.sow_months, tone: 'forest' },
+                  {
+                    label: t('libraryPlant.transplantLabel'),
+                    months: plant.transplant_months,
+                    tone: 'forest',
+                  },
+                  { label: t('libraryPlant.harvestLabel'), months: plant.harvest_months, tone: 'copper' },
+                ]}
+              />
+            </section>
+
+            {/* Tips */}
+            {tips.length > 0 && (
+              <>
+                <hr className="copper-rule my-12" />
+                <section>
+                  <SectionHeader eyebrow={t('libraryPlant.eyebrow.tips')} title={t('plantProfile.tips')} />
+                  <div className="overflow-hidden rounded-md border border-line">
+                    {tips.map((tip, i) => (
+                      <div
+                        key={i}
+                        className="flex items-start gap-3.5 border-b border-line bg-surface px-5 py-3.5 text-[13px] font-light leading-[1.7] text-ink last:border-b-0 hover:bg-paper"
+                      >
+                        <span className="w-5 shrink-0 text-right font-display text-[17px] font-bold leading-tight text-copper">
+                          {i + 1}
+                        </span>
+                        <span>{tip}</span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </>
+            )}
+
+            {/* Diseases */}
+            {plant.diseases.length > 0 && (
+              <>
+                <hr className="copper-rule my-12" />
+                <section>
+                  <SectionHeader
+                    eyebrow={t('libraryPlant.eyebrow.diseases')}
+                    title={t('plantProfile.diseases')}
+                  />
+                  <div className="flex flex-col gap-px overflow-hidden rounded-md border border-line bg-line">
+                    {plant.diseases.map((disease, i) => (
+                      <DiseaseCard key={i} disease={disease} />
+                    ))}
+                  </div>
+                </section>
+              </>
+            )}
+
+            {/* Companions */}
+            <hr className="copper-rule my-12" />
+            <section>
+              <SectionHeader
+                eyebrow={t('libraryPlant.eyebrow.companions')}
+                title={t('libraryPlant.goodCompanions')}
+              />
+              <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+                <CompanionsBlock
+                  tone="good"
+                  title={t('libraryPlant.goodCompanions')}
+                  plants={companions?.companions ?? []}
+                />
+                <CompanionsBlock
+                  tone="bad"
+                  title={t('libraryPlant.keepApart')}
+                  plants={companions?.antagonists ?? []}
+                />
+              </div>
+            </section>
+
+            {plant.source === 'gbif' && (
+              <div className="mt-8 flex items-start gap-2 rounded-md border border-warn-line bg-warn-bg px-4 py-3 text-sm text-warn">
+                <Globe className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                {t('libraryPlant.catalogNote')}
+              </div>
+            )}
           </div>
-        )}
-        <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm sm:grid-cols-3">
-          <div>
-            <dt className="text-xs text-ink-faint">{t('libraryPlant.sunRequirement')}</dt>
-            <dd className="mt-0.5 flex items-center gap-1.5 text-ink">
-              <Sun className="h-4 w-4 text-accent" strokeWidth={1.75} aria-hidden="true" />
-              {t(`library.sun.${plant.sun_requirement}`, { defaultValue: plant.sun_requirement })}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-xs text-ink-faint">{t('libraryPlant.waterEvery')}</dt>
-            <dd className="mt-0.5 flex items-center gap-1.5 text-ink">
-              {plant.water_frequency_days ? (
-                <>
-                  <Droplet className="h-4 w-4 text-accent" strokeWidth={1.75} aria-hidden="true" />
-                  {t('common.everyDays', { count: plant.water_frequency_days })}
-                </>
-              ) : (
-                '—'
-              )}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-xs text-ink-faint">{t('libraryPlant.fertilizeEvery')}</dt>
-            <dd className="mt-0.5 flex items-center gap-1.5 text-ink">
-              {plant.fertilize_frequency_days ? (
-                <>
-                  <Wheat className="h-4 w-4 text-accent" strokeWidth={1.75} aria-hidden="true" />
-                  {t('common.everyDays', { count: plant.fertilize_frequency_days })}
-                </>
-              ) : (
-                '—'
-              )}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-xs text-ink-faint">{t('libraryPlant.typicalHeight')}</dt>
-            <dd className="mt-0.5 flex items-center gap-1.5 text-ink">
-              {plant.typical_height_cm ? (
-                <>
-                  <Ruler className="h-4 w-4 text-accent" strokeWidth={1.75} aria-hidden="true" />
-                  {plant.typical_height_cm} cm
-                </>
-              ) : (
-                '—'
-              )}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-xs text-ink-faint">{t('libraryPlant.spacing')}</dt>
-            <dd className="mt-0.5 flex items-center gap-1.5 text-ink">
-              {plant.spacing_cm ? (
-                <>
-                  <ArrowLeftRight className="h-4 w-4 text-accent" strokeWidth={1.75} aria-hidden="true" />
-                  {plant.spacing_cm} cm
-                </>
-              ) : (
-                '—'
-              )}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-xs text-ink-faint">{t('libraryPlant.commonPests')}</dt>
-            <dd className="mt-0.5 text-ink">
-              {plant.common_pests.length > 0 ? plant.common_pests.join(', ') : '—'}
-            </dd>
-          </div>
-          {plant.hardiness_zone && (
-            <div>
-              <dt className="text-xs text-ink-faint">{t('plantProfile.hardiness')}</dt>
-              <dd className="mt-0.5 flex items-center gap-1.5 text-ink">
-                <Thermometer className="h-4 w-4 text-accent" strokeWidth={1.75} aria-hidden="true" />
-                {plant.hardiness_zone}
-              </dd>
+
+          {/* SIDEBAR */}
+          <aside className="self-start lg:sticky lg:top-20">
+            {/* CTA */}
+            <div className="mb-3.5 rounded-md bg-forest px-5 py-5 text-center">
+              <p className="font-display text-[17px] font-semibold text-white">
+                {t('libraryPlant.sidebar.ctaTitle')}
+              </p>
+              <p className="mb-3.5 mt-1 text-[11px] font-light text-white/50">
+                {t('libraryPlant.sidebar.ctaSub')}
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowAdd(true)}
+                className="inline-flex w-full items-center justify-center gap-1.5 rounded-[3px] bg-parchment px-4 py-2.5 text-[12px] font-semibold tracking-[0.04em] text-forest transition hover:bg-white"
+              >
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                {t('libraryPlant.sidebar.ctaButton')}
+              </button>
             </div>
-          )}
-        </dl>
-        {toxicity && (
-          <div className="mt-4 rounded-lg border border-danger-line bg-danger-bg px-4 py-3">
-            <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-danger">
-              <ShieldAlert className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
-              {t('plantProfile.toxicity')}
-            </p>
-            <p className="mt-1 text-sm text-danger">{toxicity}</p>
-          </div>
-        )}
-        {plant.care_notes && (
-          <div className="mt-4 rounded-lg bg-primary-light/60 px-4 py-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-primary-dark/80">
-              {t('libraryPlant.careNotes')}
-            </p>
-            <p className="mt-1 text-sm text-primary-dark">{plant.care_notes}</p>
-          </div>
-        )}
-      </section>
 
-      {plant.diseases.length > 0 && (
-        <section className="card p-5">
-          <h2 className="mb-4 text-h2 font-semibold text-ink">{t('plantProfile.diseases')}</h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {plant.diseases.map((disease, i) => (
-              <DiseaseCard key={i} disease={disease} />
-            ))}
-          </div>
-        </section>
-      )}
+            {/* Now to do */}
+            <div className="mb-3.5 rounded-md border border-forest-light/25 bg-forest-pale px-4 py-4">
+              <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.1em] text-forest">
+                {t('libraryPlant.sidebar.nowTitle')}
+              </p>
+              <p className="text-[12px] leading-[1.7] text-forest-mid">{t(nowKey)}</p>
+            </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <section className="card p-5">
-          <h2 className="mb-3 flex items-center gap-2 text-h2 font-semibold text-ink">
-            <Handshake className="h-[18px] w-[18px] text-accent" strokeWidth={1.5} aria-hidden="true" />
-            {t('libraryPlant.goodCompanions')}
-          </h2>
-          {companions === null ? (
-            <p className="text-sm text-ink-faint">{t('common.loading')}</p>
-          ) : (
-            <PlantChips plants={companions.companions} tone="good" />
-          )}
-        </section>
-        <section className="card p-5">
-          <h2 className="mb-3 flex items-center gap-2 text-h2 font-semibold text-ink">
-            <Swords className="h-[18px] w-[18px] text-clay-dark" strokeWidth={1.5} aria-hidden="true" />
-            {t('libraryPlant.keepApart')}
-          </h2>
-          {companions === null ? (
-            <p className="text-sm text-ink-faint">{t('common.loading')}</p>
-          ) : (
-            <PlantChips plants={companions.antagonists} tone="bad" />
-          )}
-        </section>
+            {/* Params + pests + status card */}
+            <div className="overflow-hidden rounded-md border border-line bg-surface">
+              <div className="border-b border-line px-[18px] py-[18px]">
+                <p className="mb-2.5 text-[9px] font-bold uppercase tracking-[0.1em] text-ink-faint">
+                  {t('libraryPlant.sidebar.paramsTitle')}
+                </p>
+                {params.map((p, i) => (
+                  <div
+                    key={i}
+                    className="flex items-baseline justify-between border-b border-paper py-1.5 text-[12px] last:border-b-0"
+                  >
+                    <span className="font-light text-ink-muted">{p.name}</span>
+                    <span className="font-medium text-ink">{p.val}</span>
+                  </div>
+                ))}
+              </div>
+              {plant.common_pests.length > 0 && (
+                <div className="border-b border-line px-[18px] py-[18px]">
+                  <p className="mb-2.5 text-[9px] font-bold uppercase tracking-[0.1em] text-ink-faint">
+                    {t('libraryPlant.sidebar.pestsTitle')}
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {plant.common_pests.map((pest) => (
+                      <span
+                        key={pest}
+                        className="rounded-[2px] border border-line bg-paper px-2 py-0.5 text-[10px] text-ink-muted"
+                      >
+                        {pest}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="px-[18px] py-[18px]">
+                <p className="mb-2.5 text-[9px] font-bold uppercase tracking-[0.1em] text-ink-faint">
+                  {t('libraryPlant.sidebar.statusTitle')}
+                </p>
+                <div className="flex items-center justify-between text-[12px]">
+                  <span className="font-light text-ink-muted">
+                    {plant.enriched
+                      ? t('libraryPlant.sidebar.statusEnriched')
+                      : t('libraryPlant.sidebar.statusBasic')}
+                  </span>
+                  <span
+                    className={`flex items-center gap-1.5 font-medium ${
+                      plant.enriched ? 'text-forest-light' : 'text-ink-faint'
+                    }`}
+                  >
+                    <Thermometer className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                    {plant.hardiness_zone || (
+                      <ArrowLeftRight className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />
+                    )}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {plant.care_notes && (
+              <div className="mt-3.5 rounded-md border border-copper-pale bg-copper-pale/50 px-4 py-3.5">
+                <p className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.1em] text-copper">
+                  {t('libraryPlant.careNotes')}
+                </p>
+                <p className="text-[12px] leading-[1.7] text-ink">{plant.care_notes}</p>
+              </div>
+            )}
+          </aside>
+        </div>
       </div>
 
       {showAdd && <AddToGardenModal plant={plant} onClose={() => setShowAdd(false)} />}

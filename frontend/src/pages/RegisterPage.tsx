@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { Leaf } from 'lucide-react';
 import { register } from '../api/auth';
 import { getApiErrorMessage } from '../api/client';
 import { useAuthStore } from '../store/auth';
@@ -72,10 +71,8 @@ export function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center bg-paper px-4 py-8">
       <div className="reveal w-full max-w-md">
         <div className="mb-8 text-center">
-          <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-paper">
-            <Leaf className="h-7 w-7" strokeWidth={1.5} aria-hidden="true" />
-          </span>
-          <h1 className="font-display text-h1 font-semibold tracking-tight text-primary-dark">
+          <span className="mx-auto mb-3 block h-2 w-2 rounded-full bg-copper" aria-hidden="true" />
+          <h1 className="font-display text-h1 font-bold tracking-tight text-forest">
             {t('auth.register.title')}
           </h1>
           <p className="mt-1.5 text-sm text-ink-soft">{t('auth.register.subtitle')}</p>

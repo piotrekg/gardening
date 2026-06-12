@@ -40,6 +40,13 @@
     "calendar": "Calendar",
     "settings": "Settings"
   },
+  "pageEyebrow": {
+    "dashboard": "The garden today",
+    "gardens": "Your plots",
+    "library": "Compendium",
+    "calendar": "The gardener's year",
+    "settings": "Account"
+  },
   "layout": {
     "tagline": "PlantDiary · grow happy",
     "userMenu": "User menu",
@@ -351,6 +358,44 @@
     "goodCompanions": "Good companions",
     "keepApart": "Keep apart from",
     "noneListed": "None listed.",
+    "eyebrow": {
+      "description": "Character",
+      "careGuide": "Cultivation",
+      "season": "Calendar",
+      "tips": "From the nursery",
+      "diseases": "Vigilance",
+      "companions": "Company",
+      "params": "Atlas"
+    },
+    "stats": {
+      "height": "Height",
+      "spacing": "Spacing",
+      "watering": "Watering",
+      "fertilizing": "Fertilizing",
+      "harvest": "To harvest",
+      "everyDaysShort": "every {{count}} days"
+    },
+    "timeline": {
+      "today": "Today",
+      "legendSow": "Sow",
+      "legendTransplant": "Transplant",
+      "legendHarvest": "Harvest"
+    },
+    "sidebar": {
+      "ctaTitle": "Add to garden",
+      "ctaSub": "Start logging care for this plant.",
+      "ctaButton": "Add plant",
+      "nowTitle": "Now to do",
+      "nowSow": "Time to sow — this month is within the sowing window.",
+      "nowTransplant": "A good moment to transplant.",
+      "nowHarvest": "Harvest time — check for ripeness.",
+      "nowGeneric": "Tend the plant on its watering and fertilizing schedule.",
+      "paramsTitle": "Parameters",
+      "pestsTitle": "Common pests",
+      "statusTitle": "Status",
+      "statusEnriched": "Full profile",
+      "statusBasic": "Basic profile"
+    },
     "addModal": {
       "title": "Add {{name}} to a garden",
       "success": "{{plant}} was added to \"{{garden}}\".",

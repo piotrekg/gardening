@@ -5,8 +5,8 @@ import type { CareStatusValue } from '../types';
 
 const STYLES: Record<CareStatusValue, string> = {
   overdue: 'bg-danger-bg text-danger border-danger-line',
-  due_today: 'bg-warn-bg text-clay-dark border-warn-line',
-  ok: 'bg-primary-light text-primary-dark border-accent-light',
+  due_today: 'bg-copper-pale text-copper border-copper-pale',
+  ok: 'bg-forest-pale text-forest border-forest-pale',
   unknown: 'bg-surface-2 text-ink-faint border-line',
 };
 
@@ -34,7 +34,7 @@ export function StatusBadge({ status, label }: StatusBadgeProps) {
   const Icon = ICONS[status];
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium ${STYLES[status]}`}
+      className={`inline-flex items-center gap-1 rounded-[2px] border px-2 py-0.5 text-[11px] font-medium ${STYLES[status]}`}
     >
       <Icon className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
       {label ? `${label}: ` : ''}

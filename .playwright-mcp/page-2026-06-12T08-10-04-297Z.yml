@@ -1,0 +1,36 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - link "PlantDiary" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - generic [ref=e8]: PlantDiary
+    - navigation [ref=e9]:
+      - link "Pulpit" [ref=e10] [cursor=pointer]:
+        - /url: /dashboard
+        - img [ref=e11]
+        - text: Pulpit
+      - link "Ogrody" [ref=e14] [cursor=pointer]:
+        - /url: /gardens
+        - img [ref=e15]
+        - text: Ogrody
+      - link "Biblioteka" [ref=e18] [cursor=pointer]:
+        - /url: /library
+        - img [ref=e19]
+        - text: Biblioteka
+      - link "Kalendarz" [ref=e21] [cursor=pointer]:
+        - /url: /calendar
+        - img [ref=e22]
+        - text: Kalendarz
+      - link "Ustawienia" [ref=e24] [cursor=pointer]:
+        - /url: /settings
+        - img [ref=e25]
+        - text: Ustawienia
+    - generic [ref=e28]: PlantDiary · rośnij z nami
+  - banner [ref=e29]:
+    - generic [ref=e30]:
+      - group "Zmień język" [ref=e31]:
+        - button "Polski" [pressed] [ref=e32]: pl
+        - button "Angielski" [ref=e33]: en
+      - button "Powiadomienia" [ref=e35]:
+        - img [ref=e36]
+      - button "Menu użytkownika" [ref=e40]: T
+  - main [ref=e41]

@@ -100,6 +100,7 @@ export function LibraryPage() {
   return (
     <div className="space-y-6">
       <div>
+        <p className="eyebrow mb-2">{t('pageEyebrow.library')}</p>
         <h1 className="text-h1 font-semibold tracking-tight text-ink">{t('library.title')}</h1>
         <p className="mt-1 text-sm text-ink-soft">{t('library.subtitle')}</p>
       </div>

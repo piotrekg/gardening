@@ -1,70 +1,116 @@
 @import 'tailwindcss';
 
 /*
-  PlantDiary design system — botanical-modern, editorial calm.
-  Tinted neutrals in OKLCH (no pure black/white), forest-green primary,
-  warm clay accent, hairline borders over heavy shadows.
+  PlantDiary design system — "16th-century botanical atlas rendered on an iPad".
+  Parchment surfaces, ink text, copper as the sole accent, forest for dark
+  surfaces/CTAs. Playfair Display (display) + Inter (body/UI). Hairline borders,
+  no drop shadows on UI (focus rings only), no text gradients.
+
+  Tailwind semantic tokens (primary/accent/clay/ink/paper/surface/line/danger/
+  warn/frost…) are remapped onto the botanical palette so existing utility
+  classes across the app re-skin at once. Raw palette tokens (parchment/copper/
+  forest…) are also exposed for new botanical-atlas chrome.
 */
 @theme {
-  /* Warm paper background, tinted toward green — not grey, not white. */
-  --color-paper: oklch(0.985 0.012 120);
-  --color-surface: oklch(0.972 0.014 122);
-  --color-surface-2: oklch(0.955 0.016 124);
+  /* ---- Raw botanical palette (authoritative HTML mockup) ---- */
+  --color-parchment: #f7f3ec;
+  --color-parchment-mid: #ede7db;
+  --color-parchment-dark: #ddd4c5;
 
-  /* Hairline borders: low-contrast, tinted toward the brand hue. */
-  --color-line: oklch(0.9 0.018 130);
-  --color-line-strong: oklch(0.85 0.022 132);
+  --color-ink-base: #1c1c1a;
+  --color-ink-muted: #6b6459;
+  --color-ink-ghost: #a89f94;
 
-  /* Primary — refined, slightly desaturated deep forest green. */
-  --color-primary: oklch(0.5 0.09 155);
-  --color-primary-dark: oklch(0.4 0.085 157);
-  --color-primary-light: oklch(0.93 0.04 145);
-  --color-accent: oklch(0.7 0.09 152);
-  --color-accent-light: oklch(0.9 0.05 148);
+  --color-copper: #b5672a;
+  --color-copper-light: #d4894f;
+  --color-copper-pale: #f5e8d8;
 
-  /* Warm secondary accent — clay/terracotta, used sparingly. */
-  --color-clay: oklch(0.66 0.12 55);
-  --color-clay-light: oklch(0.93 0.045 60);
-  --color-clay-dark: oklch(0.5 0.1 50);
+  --color-forest: #1a2e1e;
+  --color-forest-mid: #2d4a31;
+  --color-forest-light: #3d6342;
+  --color-forest-pale: #e8f0e9;
 
-  /* Text tinted toward green-black, not pure grey. */
-  --color-ink: oklch(0.28 0.02 155);
-  --color-ink-soft: oklch(0.46 0.02 150);
-  --color-ink-faint: oklch(0.62 0.018 145);
+  --color-warn-base: #8b4513;
 
-  /* Functional status — calm, not neon, fitted to the palette. */
-  --color-danger: oklch(0.56 0.13 28);
-  --color-danger-bg: oklch(0.95 0.03 30);
-  --color-danger-line: oklch(0.88 0.05 30);
-  --color-warn: oklch(0.74 0.1 75);
-  --color-warn-bg: oklch(0.95 0.04 80);
-  --color-warn-line: oklch(0.88 0.06 80);
-  --color-frost: oklch(0.62 0.07 240);
-  --color-frost-bg: oklch(0.95 0.025 240);
-  --color-frost-line: oklch(0.88 0.04 240);
+  /* ---- Semantic tokens (drive existing utility classes app-wide) ---- */
+  /* Surfaces: white cards on parchment. */
+  --color-paper: #f7f3ec;
+  --color-surface: #ffffff;
+  --color-surface-2: #ede7db;
 
-  --font-sans:
-    'Hanken Grotesk Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  /* Hairline borders. */
+  --color-line: #ddd4c5;
+  --color-line-strong: #c9bda9;
 
-  /* Soft, brand-tinted shadows — used very sparingly. */
-  --shadow-card: 0 1px 2px 0 oklch(0.4 0.06 155 / 0.05);
-  --shadow-lift: 0 8px 28px -10px oklch(0.4 0.06 155 / 0.18), 0 2px 6px -3px oklch(0.4 0.06 155 / 0.08);
+  /* "Primary" maps to forest (dark surfaces / CTAs / nav). */
+  --color-primary: #1a2e1e;
+  --color-primary-dark: #1a2e1e;
+  --color-primary-light: #e8f0e9;
 
-  /* Fluid display scale. */
-  --text-display: clamp(1.75rem, 1.3rem + 2vw, 2.6rem);
-  --text-h1: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
-  --text-h2: clamp(1.05rem, 0.95rem + 0.5vw, 1.25rem);
+  /* "Accent" maps to copper — the sole accent. */
+  --color-accent: #b5672a;
+  --color-accent-light: #f5e8d8;
+
+  /* "Clay" also maps to copper (legacy secondary accent -> unified). */
+  --color-clay: #b5672a;
+  --color-clay-light: #f5e8d8;
+  --color-clay-dark: #8b4513;
+
+  /* Text. */
+  --color-ink: #1c1c1a;
+  --color-ink-soft: #6b6459;
+  --color-ink-faint: #a89f94;
+
+  /* Functional status — kept muted, fitted to the palette. */
+  --color-danger: #7a2020;
+  --color-danger-bg: #fef0f0;
+  --color-danger-line: #e8b4b4;
+  --color-warn: #8b4513;
+  --color-warn-bg: #fef8f0;
+  --color-warn-line: #e8c49a;
+  --color-frost: #1a3a7a;
+  --color-frost-bg: #eef4fe;
+  --color-frost-line: #a8c4f0;
+
+  --font-sans: 'Inter', 'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+
+  /* Display scale. */
+  --text-display: clamp(2rem, 1.4rem + 2.6vw, 3.4rem);
+  --text-h1: clamp(1.55rem, 1.2rem + 1.5vw, 2.1rem);
+  --text-h2: clamp(1.1rem, 0.98rem + 0.55vw, 1.35rem);
 
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* No drop shadows on UI — these tokens stay flat so legacy shadow-* classes
+     resolve to a hairline emphasis (copper-tinted) rather than a real shadow. */
+  --shadow-card: 0 0 0 0 transparent;
+  --shadow-lift: 0 0 0 1px color-mix(in srgb, var(--color-copper) 35%, transparent);
+
+  /* Plain CSS-var aliases mirroring the mockup names (for inline styles/SVG). */
+  --copper: #b5672a;
+  --copper-light: #d4894f;
+  --copper-pale: #f5e8d8;
+  --parchment: #f7f3ec;
+  --parchment-mid: #ede7db;
+  --parchment-dark: #ddd4c5;
+  --forest: #1a2e1e;
+  --forest-mid: #2d4a31;
+  --forest-light: #3d6342;
+  --forest-pale: #e8f0e9;
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -73,34 +119,57 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-optical-sizing: auto;
+    letter-spacing: -0.015em;
   }
 
   ::selection {
-    background-color: var(--color-accent-light);
-    color: var(--color-primary-dark);
+    background-color: var(--color-copper-pale);
+    color: var(--color-copper);
   }
 
-  /* Refined, tinted focus ring everywhere. */
+  /* Refined focus ring everywhere (copper). */
   *:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-copper);
     outline-offset: 2px;
-    border-radius: 0.25rem;
+    border-radius: 3px;
   }
 }
 
-/* Reusable composites — same names, new system. */
+/* ---- Signature botanical-atlas utilities ---- */
+
+/* Copper eyebrow: uppercase, letter-spaced, tiny, copper. Place above titles. */
+@utility eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-copper);
+}
+
+/* Copper-rule gradient divider. */
+@utility copper-rule {
+  height: 1px;
+  border: none;
+  background: linear-gradient(
+    to right,
+    var(--color-copper),
+    var(--color-parchment-dark) 40%,
+    var(--color-parchment-dark)
+  );
+}
+
+/* Reusable composites — same names, botanical system. */
 @utility card {
   background-color: var(--color-surface);
   border: 1px solid var(--color-line);
-  border-radius: 1rem;
+  border-radius: 6px;
 }
 
 @utility input-field {
   width: 100%;
-  border-radius: 0.625rem;
+  border-radius: 3px;
   border: 1px solid var(--color-line-strong);
-  background-color: var(--color-paper);
+  background-color: var(--color-surface);
   padding: 0.55rem 0.75rem;
   font-size: 0.875rem;
   color: var(--color-ink);
@@ -114,30 +183,32 @@
     color: var(--color-ink-faint);
   }
   &:focus {
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px oklch(0.7 0.09 152 / 0.18);
+    border-color: var(--color-copper);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-copper) 18%, transparent);
   }
 }
 
+/* Primary button -> forest. */
 @utility btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 0.625rem;
-  background-color: var(--color-primary);
+  border-radius: 3px;
+  background-color: var(--color-forest);
   padding: 0.55rem 1.05rem;
   font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-paper);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--color-parchment);
   border: 1px solid transparent;
   transition:
-    background-color 0.2s var(--ease-out-quart),
-    transform 0.2s var(--ease-out-quart);
+    background-color 0.15s var(--ease-out-quart),
+    transform 0.15s var(--ease-out-quart);
 }
 @utility btn-primary {
   &:hover {
-    background-color: var(--color-primary-dark);
+    background-color: var(--color-forest-mid);
   }
   &:active {
     transform: translateY(0.5px);
@@ -148,26 +219,27 @@
   }
 }
 
+/* Secondary button -> hairline-bordered parchment. */
 @utility btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 0.625rem;
+  border-radius: 3px;
   border: 1px solid var(--color-line-strong);
-  background-color: var(--color-paper);
+  background-color: var(--color-surface);
   padding: 0.55rem 1.05rem;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-ink-soft);
   transition:
-    background-color 0.2s var(--ease-out-quart),
-    border-color 0.2s var(--ease-out-quart);
+    border-color 0.15s var(--ease-out-quart),
+    color 0.15s var(--ease-out-quart);
 }
 @utility btn-secondary {
   &:hover {
-    background-color: var(--color-surface-2);
-    border-color: var(--color-line-strong);
+    border-color: var(--color-copper);
+    color: var(--color-copper);
   }
   &:disabled {
     cursor: not-allowed;
@@ -175,29 +247,28 @@
   }
 }
 
-/* Ghost button — lowest emphasis in the hierarchy. */
+/* Ghost button — lowest emphasis. */
 @utility btn-ghost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  border-radius: 0.625rem;
+  border-radius: 3px;
   padding: 0.45rem 0.7rem;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-ink-soft);
   background-color: transparent;
   border: 1px solid transparent;
-  transition: background-color 0.2s var(--ease-out-quart);
+  transition: color 0.15s var(--ease-out-quart);
 }
 @utility btn-ghost {
   &:hover {
-    background-color: var(--color-surface-2);
-    color: var(--color-primary-dark);
+    color: var(--color-copper);
   }
 }
 
-/* Restrained staggered reveal for a key page load. */
+/* Restrained staggered reveal for key page loads. */
 @keyframes rise {
   from {
     opacity: 0;
@@ -211,6 +282,19 @@
 
 @utility reveal {
   animation: rise 0.6s var(--ease-out-expo) both;
+}
+
+/* Drop cap for the first paragraph of a description. */
+@utility drop-cap {
+  &::first-letter {
+    font-family: var(--font-display);
+    font-size: 4em;
+    font-weight: 700;
+    float: left;
+    line-height: 0.75;
+    margin: 6px 8px -4px 0;
+    color: var(--color-forest);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

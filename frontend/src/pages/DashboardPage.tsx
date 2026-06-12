@@ -175,6 +175,7 @@ export function DashboardPage() {
   return (
     <div className="space-y-8">
       <div className="reveal" style={{ animationDelay: '0ms' }}>
+        <p className="eyebrow mb-2">{t('pageEyebrow.dashboard')}</p>
         <h1 className="text-h1 font-semibold tracking-tight text-ink">{t('dashboard.title')}</h1>
         <p className="mt-1 text-sm text-ink-soft">
           {format(new Date(), 'EEEE, d MMMM yyyy', { locale: dateLocale })}

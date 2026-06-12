@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { BookOpen, CalendarDays, Home, Leaf, Settings, Sprout } from 'lucide-react';
+import { BookOpen, CalendarDays, Home, Settings, Sprout } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { logout as apiLogout } from '../api/auth';
 import { useAuthStore } from '../store/auth';
@@ -18,11 +18,27 @@ const NAV_ITEMS: { to: string; labelKey: string; icon: LucideIcon }[] = [
 
 function navClasses(isActive: boolean): string {
   return [
-    'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200',
+    'flex items-center gap-3 rounded-[3px] px-3 py-2.5 text-sm font-medium transition-colors duration-200',
     isActive
-      ? 'bg-primary-light text-primary-dark'
-      : 'text-ink-soft hover:bg-surface-2 hover:text-primary-dark',
+      ? 'bg-forest-pale text-forest'
+      : 'text-ink-soft hover:bg-surface-2 hover:text-copper',
   ].join(' ');
+}
+
+/** Playfair wordmark + copper dot — the botanical-atlas logo. */
+function Wordmark({ size = 'lg' }: { size?: 'lg' | 'sm' }) {
+  return (
+    <span className="flex items-center gap-2">
+      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-copper" aria-hidden="true" />
+      <span
+        className={`font-display font-bold tracking-tight text-forest ${
+          size === 'lg' ? 'text-lg' : 'text-base'
+        }`}
+      >
+        PlantDiary
+      </span>
+    </span>
+  );
 }
 
 export function Layout() {
@@ -67,13 +83,8 @@ export function Layout() {
     <div className="min-h-screen bg-paper">
       {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-line bg-surface md:flex">
-        <Link to="/dashboard" className="flex items-center gap-2.5 px-5 py-5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-paper">
-            <Leaf className="h-[18px] w-[18px]" strokeWidth={1.75} />
-          </span>
-          <span className="font-display text-lg font-semibold tracking-tight text-primary-dark">
-            PlantDiary
-          </span>
+        <Link to="/dashboard" className="px-5 py-5">
+          <Wordmark size="lg" />
         </Link>
         <nav className="flex-1 space-y-1 px-3 py-2">
           {NAV_ITEMS.map(({ to, labelKey, icon: Icon }) => (
@@ -90,11 +101,8 @@ export function Layout() {
 
       {/* Header */}
       <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-line bg-paper/85 px-4 backdrop-blur md:ml-60 md:px-6">
-        <Link to="/dashboard" className="flex items-center gap-2 md:hidden">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-paper">
-            <Leaf className="h-4 w-4" strokeWidth={1.75} />
-          </span>
-          <span className="font-display text-base font-semibold text-primary-dark">PlantDiary</span>
+        <Link to="/dashboard" className="md:hidden">
+          <Wordmark size="sm" />
         </Link>
         <div className="hidden md:block" />
         <div className="flex items-center gap-1.5">
@@ -151,7 +159,7 @@ export function Layout() {
             className={({ isActive }) =>
               [
                 'flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors',
-                isActive ? 'text-primary' : 'text-ink-faint',
+                isActive ? 'text-copper' : 'text-ink-faint',
               ].join(' ')
             }
           >
