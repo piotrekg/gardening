@@ -189,10 +189,19 @@ export interface LibraryPlantDetail extends LibraryPlant {
   diseases: PlantDisease[];
 }
 
+export type Difficulty = 'easy' | 'medium' | 'hard';
+export type SunRequirement = 'full_sun' | 'partial_shade' | 'shade';
+
 export interface LibrarySearchParams {
   search?: string;
   category?: string;
   lifecycle?: string;
+  difficulty?: Difficulty;
+  sun?: SunRequirement;
+  /** Exact, case-insensitive tag match. */
+  tag?: string;
+  /** When true, only fully-documented (enriched) plants are returned. */
+  enriched?: boolean;
   page?: number;
   page_size?: number;
 }

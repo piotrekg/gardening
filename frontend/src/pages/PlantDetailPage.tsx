@@ -16,6 +16,7 @@ import { getCareLog, logCare } from '../api/care';
 import { getApiErrorMessage } from '../api/client';
 import { deletePhoto, listPhotos } from '../api/photos';
 import { deleteGardenPlant, getGardenPlant, updateGardenPlant } from '../api/plants';
+import { Breadcrumb } from '../components/Breadcrumb';
 import { Modal } from '../components/Modal';
 import { PhotoUpload } from '../components/PhotoUpload';
 import { Skeleton } from '../components/Skeleton';
@@ -471,16 +472,13 @@ export function PlantDetailPage() {
 
   return (
     <div className="space-y-6">
-      <nav className="text-xs text-ink-faint">
-        <Link to="/gardens" className="hover:text-primary hover:underline">
-          {t('nav.gardens')}
-        </Link>{' '}
-        /{' '}
-        <Link to={`/gardens/${gardenId}`} className="hover:text-primary hover:underline">
-          {t('plantDetail.breadcrumbGarden')}
-        </Link>{' '}
-        / <span className="text-ink-soft">{plant.display_name}</span>
-      </nav>
+      <Breadcrumb
+        items={[
+          { label: t('nav.gardens'), to: '/gardens' },
+          { label: t('plantDetail.breadcrumbGarden'), to: `/gardens/${gardenId}` },
+          { label: plant.display_name },
+        ]}
+      />
 
       {actionError && (
         <div className="rounded-lg border border-danger-line bg-danger-bg px-3 py-2 text-sm text-danger" role="alert">

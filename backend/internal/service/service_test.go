@@ -147,21 +147,25 @@ func TestApplyCustomFrequency(t *testing.T) {
 func TestLibrarySearch(t *testing.T) {
 	lib := testLibrary(t)
 
-	plants, total := lib.Search("pomidor", "", "", 1, 20)
+	plants, total := lib.Search(plantlib.Filter{Query: "pomidor"}, 1, 20)
 	if total != 1 || len(plants) != 1 || plants[0].ID != "tomato-beefsteak" {
 		t.Errorf("search pomidor: got total=%d", total)
 	}
-	_, total = lib.Search("", "vegetable", "", 1, 20)
+	_, total = lib.Search(plantlib.Filter{Category: "vegetable"}, 1, 20)
 	if total != 2 {
 		t.Errorf("category filter: got total=%d, want 2", total)
 	}
-	_, total = lib.Search("", "", "annual", 1, 20)
+	_, total = lib.Search(plantlib.Filter{Lifecycle: "annual"}, 1, 20)
 	if total != 2 {
 		t.Errorf("lifecycle filter: got total=%d, want 2", total)
 	}
-	plants, total = lib.Search("", "", "", 2, 2)
+	plants, total = lib.Search(plantlib.Filter{}, 2, 2)
 	if total != 3 || len(plants) != 1 {
 		t.Errorf("pagination: total=%d page2len=%d, want 3/1", total, len(plants))
+	}
+	_, total = lib.Search(plantlib.Filter{Sun: "full_sun"}, 1, 20)
+	if total != 3 {
+		t.Errorf("sun filter: got total=%d, want 3", total)
 	}
 }
 

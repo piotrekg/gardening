@@ -44,6 +44,23 @@
     "calendar": "Kalendarz",
     "settings": "Ustawienia"
   },
+  "breadcrumb": {
+    "aria": "Ścieżka nawigacji"
+  },
+  "quickSearch": {
+    "open": "Szukaj roślin",
+    "openHintAria": "Szukaj roślin (Ctrl+K)",
+    "placeholder": "Szukaj roślin w bibliotece…",
+    "label": "Szybkie wyszukiwanie",
+    "shortcutKey": "K",
+    "empty": "Brak roślin pasujących do „{{query}}”.",
+    "typeToSearch": "Wpisz, aby przeszukać bibliotekę roślin.",
+    "searching": "Szukanie…",
+    "seeAll": "Zobacz wszystkie wyniki dla „{{query}}”",
+    "enrichedMarker": "Pełny profil",
+    "resultsAria": "Wyniki wyszukiwania",
+    "close": "Zamknij wyszukiwanie"
+  },
   "pageEyebrow": {
     "dashboard": "Ogród dziś",
     "gardens": "Twoje zagony",
@@ -311,6 +328,20 @@
     "allCategories": "Wszystkie kategorie",
     "filterLifecycle": "Filtruj według cyklu życia",
     "allLifecycles": "Wszystkie cykle życia",
+    "filterDifficulty": "Filtruj według trudności",
+    "allDifficulties": "Każda trudność",
+    "filterSun": "Filtruj według stanowiska",
+    "allSun": "Każde stanowisko",
+    "onlyDocumented": "Tylko z pełnym opisem",
+    "onlyDocumentedAria": "Pokaż tylko rośliny z pełnym opisem",
+    "activeFilters": "Aktywne filtry",
+    "clearAll": "Wyczyść wszystko",
+    "removeFilter": "Usuń filtr: {{label}}",
+    "chip": {
+      "search": "Szukaj: {{value}}",
+      "tag": "Tag: {{value}}"
+    },
+    "tagsTitle": "Tagi",
     "loadError": "Nie udało się załadować biblioteki roślin.",
     "emptyTitle": "Nie znaleziono roślin",
     "emptyMessage": "Spróbuj innego hasła albo wyczyść filtry.",

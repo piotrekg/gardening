@@ -28,8 +28,11 @@ Library plant object: the plants.json schema (id, common_name_pl, common_name_en
 - `family`: botanical family (catalog plants only).
 
 Catalog (`gbif`) plants have no care schedule: numeric care fields are `0` and month arrays empty (UI shows "Brak danych"). Their `category` may be `wild`. They are searchable (name/latin/family) and can be added to gardens like any other plant. Curated plants always win on a latin-name collision and sort first in unfiltered listings.
-- `GET /api/plants/library?search=&category=&lifecycle=&page=1&page_size=20` → `{plants: [...], total, page, page_size}`
-  - search matches common_name_pl / common_name_en / latin_name, case-insensitive substring.
+- `GET /api/plants/library?search=&category=&lifecycle=&difficulty=&sun=&tag=&enriched=&page=1&page_size=20` → `{plants: [...], total, page, page_size}`
+  - `search` matches common_name_pl / common_name_en / latin_name / family / tags, case-insensitive substring.
+  - `category`, `lifecycle`, `difficulty` (easy|medium|hard), `sun` (full_sun|partial_shade|shade): exact filters.
+  - `tag`: exact tag match (case-insensitive). `enriched=true`: only plants with full bilingual data.
+  - Results ordered: enriched first, then has-image, then alphabetical.
 - `GET /api/plants/library/categories` → `{categories: ["vegetable", ...]}`
 - `GET /api/plants/library/:id` → `{plant}` where `plant` is the full enriched detail: all base fields PLUS bilingual enrichment and an image. Enrichment fields (all present, may be empty string/array): `description_pl/en`, `watering_detail_pl/en`, `fertilizing_pl/en`, `light_pl/en`, `soil_pl/en`, `pruning_pl/en`, `propagation_pl/en`, `harvest_detail_pl/en`, `overwintering_pl/en`, `toxicity_pl/en`, `hardiness_zone`, `tips_pl[]`, `tips_en[]`, `enriched` (bool). Image fields: `image_url`, `image_thumb_url`, `image_source_url`, `image_license`, `image_attribution`. Diseases: `diseases: [{kind: "disease"|"pest"|"disorder"|"behavior", name_pl, name_en, symptoms_pl, symptoms_en, treatment_pl, treatment_en, prevention_pl, prevention_en}]`.
   - List/search results and embedded instance `library` objects carry the lightweight subset: `image_thumb_url`, `image_url`, `enriched` (plus base fields), not the long-form text/diseases.

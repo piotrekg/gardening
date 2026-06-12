@@ -5,6 +5,7 @@ import { Leaf, Plus } from 'lucide-react';
 import { getApiErrorMessage } from '../api/client';
 import { getGarden, getGardenCompatibility } from '../api/gardens';
 import { listGardenPlants } from '../api/plants';
+import { Breadcrumb } from '../components/Breadcrumb';
 import { CompanionAlert } from '../components/CompanionAlert';
 import { EmptyState } from '../components/EmptyState';
 import { PlantCard } from '../components/PlantCard';
@@ -86,12 +87,12 @@ export function GardenDetailPage() {
 
   return (
     <div className="space-y-6">
-      <nav className="text-xs text-ink-faint">
-        <Link to="/gardens" className="hover:text-primary hover:underline">
-          {t('nav.gardens')}
-        </Link>{' '}
-        / <span className="text-ink-soft">{garden.name}</span>
-      </nav>
+      <Breadcrumb
+        items={[
+          { label: t('nav.gardens'), to: '/gardens' },
+          { label: garden.name },
+        ]}
+      />
 
       <div className="card p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">

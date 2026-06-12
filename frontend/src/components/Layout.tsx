@@ -5,6 +5,7 @@ import { BookOpen, CalendarDays, Home, Menu, Settings, Sprout, X } from 'lucide-
 import type { LucideIcon } from 'lucide-react';
 import { logout as apiLogout } from '../api/auth';
 import { useAuthStore } from '../store/auth';
+import { GlobalSearch } from './GlobalSearch';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { NotificationBell } from './NotificationBell';
 
@@ -140,6 +141,7 @@ export function Layout() {
           <Wordmark />
         </Link>
         <div className="ml-auto flex items-center gap-3">
+          <GlobalSearch />
           <LanguageSwitcher />
           <NotificationBell />
           <div className="relative" ref={menuRef}>

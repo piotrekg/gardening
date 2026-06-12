@@ -17,8 +17,15 @@ func NewLibraryHandler(lib *plantlib.Library) *LibraryHandler { return &LibraryH
 func (h *LibraryHandler) Search(c *gin.Context) {
 	page := intQuery(c, "page", 1)
 	pageSize := intQuery(c, "page_size", 20)
-	plants, total := h.lib.Search(
-		c.Query("search"), c.Query("category"), c.Query("lifecycle"), page, pageSize)
+	plants, total := h.lib.Search(plantlib.Filter{
+		Query:        c.Query("search"),
+		Category:     c.Query("category"),
+		Lifecycle:    c.Query("lifecycle"),
+		Difficulty:   c.Query("difficulty"),
+		Sun:          c.Query("sun"),
+		Tag:          c.Query("tag"),
+		EnrichedOnly: c.Query("enriched") == "true" || c.Query("enriched") == "1",
+	}, page, pageSize)
 	c.JSON(http.StatusOK, gin.H{
 		"plants":    plants,
 		"total":     total,

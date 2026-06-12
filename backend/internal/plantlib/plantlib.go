@@ -184,25 +184,58 @@ func (l *Library) Get(id string) (*Plant, bool) {
 	return v.(*Plant), true
 }
 
-// Search filters by case-insensitive substring on names plus exact category/lifecycle,
-// returning the requested page and the total match count. Backed by SQL when a
-// database is configured, otherwise by the in-memory cache.
-func (l *Library) Search(query, category, lifecycle string, page, pageSize int) ([]*Plant, int) {
+// Filter holds every library search/filter criterion. Empty fields are ignored.
+type Filter struct {
+	Query        string
+	Category     string
+	Lifecycle    string
+	Difficulty   string
+	Sun          string // sun_requirement
+	Tag          string
+	EnrichedOnly bool
+}
+
+// Search filters the library by the given criteria, returning the requested page
+// and the total match count. Backed by SQL when a database is configured,
+// otherwise by the in-memory cache.
+func (l *Library) Search(f Filter, page, pageSize int) ([]*Plant, int) {
 	if l.db != nil {
-		return l.searchDB(query, category, lifecycle, page, pageSize)
+		return l.searchDB(f, page, pageSize)
 	}
-	query = strings.ToLower(strings.TrimSpace(query))
+	query := strings.ToLower(strings.TrimSpace(f.Query))
+	tag := strings.ToLower(strings.TrimSpace(f.Tag))
 	var matches []*Plant
 	for _, id := range l.ids {
 		p, _ := l.Get(id)
 		if p == nil {
 			continue
 		}
-		if category != "" && p.Category != category {
+		if f.Category != "" && p.Category != f.Category {
 			continue
 		}
-		if lifecycle != "" && p.Lifecycle != lifecycle {
+		if f.Lifecycle != "" && p.Lifecycle != f.Lifecycle {
 			continue
+		}
+		if f.Difficulty != "" && p.Difficulty != f.Difficulty {
+			continue
+		}
+		if f.Sun != "" && p.SunRequirement != f.Sun {
+			continue
+		}
+		if f.EnrichedOnly && !p.Enriched {
+			continue
+		}
+		if tag != "" {
+			found := false
+			for _, t := range p.Tags {
+				if strings.ToLower(t) == tag {
+					found = true
+					break
+				}
+			}
+			if !found {
+				continue
+			}
 		}
 		if query != "" {
 			hay := strings.ToLower(p.CommonNamePL + " " + p.CommonNameEN + " " +

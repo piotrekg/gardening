@@ -25,9 +25,11 @@ import { listGardens } from '../api/gardens';
 import { getLibraryPlant, getLibraryPlantCompanions } from '../api/library';
 import { addPlantToGarden } from '../api/plants';
 import { BotanicalOrnament, HeroBotanical } from '../components/BotanicalArt';
+import { Breadcrumb } from '../components/Breadcrumb';
 import { Modal } from '../components/Modal';
 import { SeasonTimeline } from '../components/SeasonTimeline';
 import { Skeleton } from '../components/Skeleton';
+import { TagChip } from '../components/TagChip';
 import { useBilingual } from '../i18n/bilingual';
 import { useLibraryPlantName } from '../i18n/libraryName';
 import type {
@@ -552,29 +554,39 @@ export function LibraryPlantPage() {
   // H2: at most 4 hero tags — category (primary) + lifecycle + difficulty +
   // frost-sensitive. Raw plant.tags are intentionally not surfaced here so the
   // row never exceeds four and stays legible over the photo.
-  const heroTags: { label: string; primary?: boolean }[] = [
-    { label: t(`library.category.${plant.category}`, { defaultValue: plant.category }), primary: true },
-    { label: t(`library.lifecycle.${plant.lifecycle}`, { defaultValue: plant.lifecycle }) },
-    { label: difficultyLabel },
+  const heroTags: { label: string; primary?: boolean; to?: string }[] = [
+    {
+      label: t(`library.category.${plant.category}`, { defaultValue: plant.category }),
+      primary: true,
+      to: `/library?category=${encodeURIComponent(plant.category)}`,
+    },
+    {
+      label: t(`library.lifecycle.${plant.lifecycle}`, { defaultValue: plant.lifecycle }),
+      to: `/library?lifecycle=${encodeURIComponent(plant.lifecycle)}`,
+    },
+    {
+      label: difficultyLabel,
+      to: `/library?difficulty=${encodeURIComponent(plant.difficulty)}`,
+    },
   ];
   if (plant.frost_sensitive) heroTags.push({ label: t('library.frostSensitive') });
   const visibleHeroTags = heroTags.slice(0, 4);
 
   return (
     <div className="-mx-4 -mt-6 md:-mx-8 md:-mt-8">
-      {/* Breadcrumb. Hidden < 600px; 600-760px shows only the plant name (P7);
-          ancestor crumbs appear from 760px up. */}
-      <nav className="hidden items-center gap-1.5 px-4 pt-4 text-[12px] text-ink-faint min-[600px]:flex md:px-8">
-        <Link to="/library" className="hidden hover:text-copper min-[760px]:inline">
-          {t('nav.library')}
-        </Link>
-        <span className="hidden text-parchment-dark min-[760px]:inline">/</span>
-        <span className="hidden text-ink-muted min-[760px]:inline">
-          {t(`library.category.${plant.category}`, { defaultValue: plant.category })}
-        </span>
-        <span className="hidden text-parchment-dark min-[760px]:inline">/</span>
-        <span className="text-ink-muted">{name}</span>
-      </nav>
+      {/* Breadcrumb: Library / <category> / <plant name>. */}
+      <div className="px-4 pt-4 md:px-8">
+        <Breadcrumb
+          items={[
+            { label: t('nav.library'), to: '/library' },
+            {
+              label: t(`library.category.${plant.category}`, { defaultValue: plant.category }),
+              to: `/library?category=${encodeURIComponent(plant.category)}`,
+            },
+            { label: name },
+          ]}
+        />
+      </div>
 
       {/* HERO */}
       <div className="relative mt-3 h-[420px] overflow-hidden sm:h-[480px]">
@@ -614,18 +626,22 @@ export function LibraryPlantPage() {
           <div>
             {/* H4: 20px gap below the tag row. H2: padding 2px 7px, font 9px. */}
             <div className="mb-5 flex flex-wrap gap-1.5">
-              {visibleHeroTags.map((tag, i) => (
-                <span
-                  key={i}
-                  className={`rounded-[2px] border px-[7px] py-[2px] text-[9px] font-semibold uppercase tracking-[0.1em] ${
-                    tag.primary
-                      ? 'border-copper bg-copper text-white'
-                      : 'border-white/25 bg-white/[0.06] text-white/70'
-                  }`}
-                >
-                  {tag.label}
-                </span>
-              ))}
+              {visibleHeroTags.map((tag, i) => {
+                const className = `rounded-[2px] border px-[7px] py-[2px] text-[9px] font-semibold uppercase tracking-[0.1em] transition ${
+                  tag.primary
+                    ? 'border-copper bg-copper text-white hover:bg-copper-light'
+                    : 'border-white/25 bg-white/[0.06] text-white/70 hover:border-white/50 hover:text-white'
+                }`;
+                return tag.to ? (
+                  <Link key={i} to={tag.to} className={className}>
+                    {tag.label}
+                  </Link>
+                ) : (
+                  <span key={i} className={className}>
+                    {tag.label}
+                  </span>
+                );
+              })}
             </div>
             {/* H3: dominant title — clamp(48px, 5vw, 72px) Playfair 700. */}
             <h1
@@ -878,6 +894,18 @@ export function LibraryPlantPage() {
                       >
                         {pest}
                       </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {plant.tags.length > 0 && (
+                <div className="border-b border-line px-[18px] py-[18px]">
+                  <p className="mb-2.5 text-[9px] font-bold uppercase tracking-[0.1em] text-ink-faint">
+                    {t('library.tagsTitle')}
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {plant.tags.map((tag) => (
+                      <TagChip key={tag} tag={tag} />
                     ))}
                   </div>
                 </div>

@@ -9,7 +9,19 @@ import type {
 } from '../types';
 
 export async function searchLibrary(params: LibrarySearchParams): Promise<LibraryListResponse> {
-  const res = await api.get<LibraryListResponse>('/plants/library', { params });
+  // Serialize explicitly so empty/false values are omitted and `enriched`
+  // is sent as the literal `true` the backend expects.
+  const query: Record<string, string | number> = {};
+  if (params.search) query.search = params.search;
+  if (params.category) query.category = params.category;
+  if (params.lifecycle) query.lifecycle = params.lifecycle;
+  if (params.difficulty) query.difficulty = params.difficulty;
+  if (params.sun) query.sun = params.sun;
+  if (params.tag) query.tag = params.tag;
+  if (params.enriched) query.enriched = 'true';
+  if (params.page) query.page = params.page;
+  if (params.page_size) query.page_size = params.page_size;
+  const res = await api.get<LibraryListResponse>('/plants/library', { params: query });
   return res.data;
 }
 

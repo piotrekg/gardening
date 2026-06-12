@@ -240,16 +240,29 @@ func (l *Library) categoriesDB() []string {
 	return cats
 }
 
-func (l *Library) searchDB(query, category, lifecycle string, page, pageSize int) ([]*Plant, int) {
+func (l *Library) searchDB(f Filter, page, pageSize int) ([]*Plant, int) {
 	page, pageSize = normalizePage(page, pageSize)
 	q := l.db.Model(&libraryRow{})
-	if category != "" {
-		q = q.Where("category = ?", category)
+	if f.Category != "" {
+		q = q.Where("category = ?", f.Category)
 	}
-	if lifecycle != "" {
-		q = q.Where("lifecycle = ?", lifecycle)
+	if f.Lifecycle != "" {
+		q = q.Where("lifecycle = ?", f.Lifecycle)
 	}
-	if s := strings.ToLower(strings.TrimSpace(query)); s != "" {
+	if f.Difficulty != "" {
+		q = q.Where("difficulty = ?", f.Difficulty)
+	}
+	if f.Sun != "" {
+		q = q.Where("sun_requirement = ?", f.Sun)
+	}
+	if f.Tag != "" {
+		// Tags are stored as a JSON array in text; match the exact quoted value.
+		q = q.Where(`tags LIKE ? ESCAPE '\'`, `%"`+escapeLike(strings.ToLower(f.Tag))+`"%`)
+	}
+	if f.EnrichedOnly {
+		q = q.Where("enriched = true")
+	}
+	if s := strings.ToLower(strings.TrimSpace(f.Query)); s != "" {
 		q = q.Where(`search_text LIKE ? ESCAPE '\'`, "%"+escapeLike(s)+"%")
 	}
 

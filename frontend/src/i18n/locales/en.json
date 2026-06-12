@@ -40,6 +40,23 @@
     "calendar": "Calendar",
     "settings": "Settings"
   },
+  "breadcrumb": {
+    "aria": "Breadcrumb"
+  },
+  "quickSearch": {
+    "open": "Search plants",
+    "openHintAria": "Search plants (Ctrl+K)",
+    "placeholder": "Search plants in the library…",
+    "label": "Quick search",
+    "shortcutKey": "K",
+    "empty": "No plants match \"{{query}}\".",
+    "typeToSearch": "Type to search the plant library.",
+    "searching": "Searching…",
+    "seeAll": "See all results for \"{{query}}\"",
+    "enrichedMarker": "Full profile",
+    "resultsAria": "Search results",
+    "close": "Close search"
+  },
   "pageEyebrow": {
     "dashboard": "The garden today",
     "gardens": "Your plots",
@@ -307,6 +324,20 @@
     "allCategories": "All categories",
     "filterLifecycle": "Filter by lifecycle",
     "allLifecycles": "All lifecycles",
+    "filterDifficulty": "Filter by difficulty",
+    "allDifficulties": "Any difficulty",
+    "filterSun": "Filter by sun requirement",
+    "allSun": "Any sun requirement",
+    "onlyDocumented": "Only documented",
+    "onlyDocumentedAria": "Show only fully documented plants",
+    "activeFilters": "Active filters",
+    "clearAll": "Clear all",
+    "removeFilter": "Remove filter: {{label}}",
+    "chip": {
+      "search": "Search: {{value}}",
+      "tag": "Tag: {{value}}"
+    },
+    "tagsTitle": "Tags",
     "loadError": "Could not load the plant library.",
     "emptyTitle": "No plants found",
     "emptyMessage": "Try a different search term or clear the filters.",

@@ -1,0 +1,351 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - link "PlantDiary" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - generic [ref=e8]: PlantDiary
+    - navigation [ref=e9]:
+      - link "Pulpit" [ref=e10] [cursor=pointer]:
+        - /url: /dashboard
+        - img [ref=e11]
+        - text: Pulpit
+      - link "Ogrody" [ref=e14] [cursor=pointer]:
+        - /url: /gardens
+        - img [ref=e15]
+        - text: Ogrody
+      - link "Biblioteka" [ref=e18] [cursor=pointer]:
+        - /url: /library
+        - img [ref=e19]
+        - text: Biblioteka
+      - link "Kalendarz" [ref=e21] [cursor=pointer]:
+        - /url: /calendar
+        - img [ref=e22]
+        - text: Kalendarz
+      - link "Ustawienia" [ref=e24] [cursor=pointer]:
+        - /url: /settings
+        - img [ref=e25]
+        - text: Ustawienia
+    - generic [ref=e28]: PlantDiary · rośnij z nami
+  - banner [ref=e29]:
+    - generic [ref=e30]:
+      - button "Szukaj roślin (Ctrl+K)" [ref=e31]:
+        - img [ref=e32]
+        - generic [ref=e35]: Szukaj roślin
+        - generic [ref=e36]: Cmd+K
+      - dialog "Szybkie wyszukiwanie" [ref=e565]:
+        - generic [ref=e566]:
+          - img [ref=e567]
+          - searchbox "Szybkie wyszukiwanie" [active] [ref=e570]
+          - button "Zamknij wyszukiwanie" [ref=e571]:
+            - img [ref=e572]
+        - listbox "Wyniki wyszukiwania" [ref=e575]:
+          - paragraph [ref=e576]: Wpisz, aby przeszukać bibliotekę roślin.
+      - group "Zmień język" [ref=e37]:
+        - button "Polski" [pressed] [ref=e39]: pl
+        - button "Angielski" [ref=e42]: en
+      - button "Powiadomienia" [ref=e44]:
+        - img [ref=e45]
+      - button "Menu użytkownika" [ref=e49]: T
+  - main [ref=e50]:
+    - generic [ref=e52]:
+      - generic [ref=e53]:
+        - paragraph [ref=e54]: Kompendium
+        - heading "Biblioteka roślin" [level=1] [ref=e55]
+        - paragraph [ref=e56]: Przewodniki uprawy wszystkich roślin, które zna PlantDiary.
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - searchbox "Szukaj roślin" [ref=e59]
+          - generic [ref=e60]:
+            - combobox "Filtruj według kategorii" [ref=e61]:
+              - option "Wszystkie kategorie"
+              - option "Kwiat"
+              - option "Owoc"
+              - option "Zioło" [selected]
+              - option "Roślina doniczkowa"
+              - option "Krzew lub drzewo"
+              - option "Warzywo"
+              - option "Dziko rosnąca"
+            - combobox "Filtruj według cyklu życia" [ref=e62]:
+              - option "Wszystkie cykle życia" [selected]
+              - option "Jednoroczna"
+              - option "Dwuletnia"
+              - option "Wieloletnia"
+            - combobox "Filtruj według trudności" [ref=e63]:
+              - option "Każda trudność"
+              - option "łatwa" [selected]
+              - option "średnia"
+              - option "trudna"
+            - combobox "Filtruj według stanowiska" [ref=e64]:
+              - option "Każde stanowisko" [selected]
+              - option "pełne słońce"
+              - option "półcień"
+              - option "cień"
+        - generic [ref=e65] [cursor=pointer]:
+          - checkbox "Pokaż tylko rośliny z pełnym opisem" [ref=e66]
+          - text: Tylko z pełnym opisem
+      - generic [ref=e67]:
+        - generic [ref=e68]: Aktywne filtry
+        - 'button "Usuń filtr: Zioło" [ref=e69]':
+          - text: Zioło
+          - img [ref=e70]
+        - 'button "Usuń filtr: łatwa" [ref=e73]':
+          - text: łatwa
+          - img [ref=e74]
+        - button "Wyczyść wszystko" [ref=e77]
+      - paragraph [ref=e103]: Znaleziono 54 rośliny
+      - generic [ref=e104]:
+        - link "Bazylia afrykańska (African Blue) Zioło African Blue Basil · Ocimum basilicum 'African Blue' Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e105] [cursor=pointer]:
+          - /url: /library/basil-mrihani
+          - generic [ref=e107]:
+            - heading "Bazylia afrykańska (African Blue)" [level=2] [ref=e108]
+            - generic [ref=e109]: Zioło
+          - paragraph [ref=e110]: African Blue Basil · Ocimum basilicum 'African Blue'
+          - generic [ref=e111]:
+            - generic [ref=e112]: Jednoroczna
+            - generic [ref=e113]: łatwa
+            - generic [ref=e114]:
+              - img [ref=e115]
+              - text: pełne słońce
+            - generic [ref=e121]:
+              - img [ref=e122]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia azjatycka (tulsi) Zioło Holy Basil (Tulsi) · Ocimum tenuiflorum Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e135] [cursor=pointer]:
+          - /url: /library/basil-holy-tulsi
+          - generic [ref=e137]:
+            - heading "Bazylia azjatycka (tulsi)" [level=2] [ref=e138]
+            - generic [ref=e139]: Zioło
+          - paragraph [ref=e140]: Holy Basil (Tulsi) · Ocimum tenuiflorum
+          - generic [ref=e141]:
+            - generic [ref=e142]: Jednoroczna
+            - generic [ref=e143]: łatwa
+            - generic [ref=e144]:
+              - img [ref=e145]
+              - text: pełne słońce
+            - generic [ref=e151]:
+              - img [ref=e152]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia cynamonowa Zioło Cinnamon Basil · Ocimum basilicum 'Cinnamon' Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e165] [cursor=pointer]:
+          - /url: /library/basil-cinnamon
+          - generic [ref=e167]:
+            - heading "Bazylia cynamonowa" [level=2] [ref=e168]
+            - generic [ref=e169]: Zioło
+          - paragraph [ref=e170]: Cinnamon Basil · Ocimum basilicum 'Cinnamon'
+          - generic [ref=e171]:
+            - generic [ref=e172]: Jednoroczna
+            - generic [ref=e173]: łatwa
+            - generic [ref=e174]:
+              - img [ref=e175]
+              - text: pełne słońce
+            - generic [ref=e181]:
+              - img [ref=e182]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia cytrynowa Zioło Lemon Basil · Ocimum basilicum var. citriodorum Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e195] [cursor=pointer]:
+          - /url: /library/basil-lemon
+          - generic [ref=e197]:
+            - heading "Bazylia cytrynowa" [level=2] [ref=e198]
+            - generic [ref=e199]: Zioło
+          - paragraph [ref=e200]: Lemon Basil · Ocimum basilicum var. citriodorum
+          - generic [ref=e201]:
+            - generic [ref=e202]: Jednoroczna
+            - generic [ref=e203]: łatwa
+            - generic [ref=e204]:
+              - img [ref=e205]
+              - text: pełne słońce
+            - generic [ref=e211]:
+              - img [ref=e212]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia czerwona 'Dark Opal' Zioło Purple Basil 'Dark Opal' · Ocimum basilicum 'Dark Opal' Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e225] [cursor=pointer]:
+          - /url: /library/basil-dark-opal
+          - generic [ref=e227]:
+            - heading "Bazylia czerwona 'Dark Opal'" [level=2] [ref=e228]
+            - generic [ref=e229]: Zioło
+          - paragraph [ref=e230]: Purple Basil 'Dark Opal' · Ocimum basilicum 'Dark Opal'
+          - generic [ref=e231]:
+            - generic [ref=e232]: Jednoroczna
+            - generic [ref=e233]: łatwa
+            - generic [ref=e234]:
+              - img [ref=e235]
+              - text: pełne słońce
+            - generic [ref=e241]:
+              - img [ref=e242]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia genueńska 'Genovese' Zioło Genovese Basil · Ocimum basilicum 'Genovese' Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e255] [cursor=pointer]:
+          - /url: /library/basil-genovese
+          - generic [ref=e257]:
+            - heading "Bazylia genueńska 'Genovese'" [level=2] [ref=e258]
+            - generic [ref=e259]: Zioło
+          - paragraph [ref=e260]: Genovese Basil · Ocimum basilicum 'Genovese'
+          - generic [ref=e261]:
+            - generic [ref=e262]: Jednoroczna
+            - generic [ref=e263]: łatwa
+            - generic [ref=e264]:
+              - img [ref=e265]
+              - text: pełne słońce
+            - generic [ref=e271]:
+              - img [ref=e272]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia grecka drobnolistna Zioło Greek Bush Basil · Ocimum basilicum var. minimum Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e285] [cursor=pointer]:
+          - /url: /library/basil-greek-bush
+          - generic [ref=e287]:
+            - heading "Bazylia grecka drobnolistna" [level=2] [ref=e288]
+            - generic [ref=e289]: Zioło
+          - paragraph [ref=e290]: Greek Bush Basil · Ocimum basilicum var. minimum
+          - generic [ref=e291]:
+            - generic [ref=e292]: Jednoroczna
+            - generic [ref=e293]: łatwa
+            - generic [ref=e294]:
+              - img [ref=e295]
+              - text: pełne słońce
+            - generic [ref=e301]:
+              - img [ref=e302]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia limonkowa Zioło Lime Basil · Ocimum americanum 'Lime' Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e315] [cursor=pointer]:
+          - /url: /library/basil-lime
+          - generic [ref=e317]:
+            - heading "Bazylia limonkowa" [level=2] [ref=e318]
+            - generic [ref=e319]: Zioło
+          - paragraph [ref=e320]: Lime Basil · Ocimum americanum 'Lime'
+          - generic [ref=e321]:
+            - generic [ref=e322]: Jednoroczna
+            - generic [ref=e323]: łatwa
+            - generic [ref=e324]:
+              - img [ref=e325]
+              - text: pełne słońce
+            - generic [ref=e331]:
+              - img [ref=e332]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia pospolita Zioło Basil · Ocimum basilicum Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e345] [cursor=pointer]:
+          - /url: /library/basil
+          - generic [ref=e347]:
+            - heading "Bazylia pospolita" [level=2] [ref=e348]
+            - generic [ref=e349]: Zioło
+          - paragraph [ref=e350]: Basil · Ocimum basilicum
+          - generic [ref=e351]:
+            - generic [ref=e352]: Jednoroczna
+            - generic [ref=e353]: łatwa
+            - generic [ref=e354]:
+              - img [ref=e355]
+              - text: pełne słońce
+            - generic [ref=e361]:
+              - img [ref=e362]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia 'Purple Ruffles' Zioło Basil 'Purple Ruffles' · Ocimum basilicum 'Purple Ruffles' Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e375] [cursor=pointer]:
+          - /url: /library/basil-purple-ruffles
+          - generic [ref=e377]:
+            - heading "Bazylia 'Purple Ruffles'" [level=2] [ref=e378]
+            - generic [ref=e379]: Zioło
+          - paragraph [ref=e380]: Basil 'Purple Ruffles' · Ocimum basilicum 'Purple Ruffles'
+          - generic [ref=e381]:
+            - generic [ref=e382]: Jednoroczna
+            - generic [ref=e383]: łatwa
+            - generic [ref=e384]:
+              - img [ref=e385]
+              - text: pełne słońce
+            - generic [ref=e391]:
+              - img [ref=e392]
+              - text: wrażliwa na przymrozki
+        - link "Bazylia tajska Zioło Thai Basil · Ocimum basilicum var. thyrsiflorum Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e405] [cursor=pointer]:
+          - /url: /library/basil-thai
+          - generic [ref=e407]:
+            - heading "Bazylia tajska" [level=2] [ref=e408]
+            - generic [ref=e409]: Zioło
+          - paragraph [ref=e410]: Thai Basil · Ocimum basilicum var. thyrsiflorum
+          - generic [ref=e411]:
+            - generic [ref=e412]: Jednoroczna
+            - generic [ref=e413]: łatwa
+            - generic [ref=e414]:
+              - img [ref=e415]
+              - text: pełne słońce
+            - generic [ref=e421]:
+              - img [ref=e422]
+              - text: wrażliwa na przymrozki
+        - link "Cząber górski Zioło Winter Savory · Satureja montana Wieloletnia łatwa pełne słońce" [ref=e435] [cursor=pointer]:
+          - /url: /library/savory-winter
+          - generic [ref=e437]:
+            - heading "Cząber górski" [level=2] [ref=e438]
+            - generic [ref=e439]: Zioło
+          - paragraph [ref=e440]: Winter Savory · Satureja montana
+          - generic [ref=e441]:
+            - generic [ref=e442]: Wieloletnia
+            - generic [ref=e443]: łatwa
+            - generic [ref=e444]:
+              - img [ref=e445]
+              - text: pełne słońce
+        - link "Cząber ogrodowy Zioło Summer Savory · Satureja hortensis Jednoroczna łatwa pełne słońce wrażliwa na przymrozki" [ref=e451] [cursor=pointer]:
+          - /url: /library/savory-summer
+          - generic [ref=e453]:
+            - heading "Cząber ogrodowy" [level=2] [ref=e454]
+            - generic [ref=e455]: Zioło
+          - paragraph [ref=e456]: Summer Savory · Satureja hortensis
+          - generic [ref=e457]:
+            - generic [ref=e458]: Jednoroczna
+            - generic [ref=e459]: łatwa
+            - generic [ref=e460]:
+              - img [ref=e461]
+              - text: pełne słońce
+            - generic [ref=e467]:
+              - img [ref=e468]
+              - text: wrażliwa na przymrozki
+        - link "Czosnek niedźwiedzi ogrodowy (szczypior czosnkowy) Zioło Garlic Chives · Allium tuberosum Wieloletnia łatwa półcień" [ref=e481] [cursor=pointer]:
+          - /url: /library/chives-garlic
+          - generic [ref=e483]:
+            - heading "Czosnek niedźwiedzi ogrodowy (szczypior czosnkowy)" [level=2] [ref=e484]
+            - generic [ref=e485]: Zioło
+          - paragraph [ref=e486]: Garlic Chives · Allium tuberosum
+          - generic [ref=e487]:
+            - generic [ref=e488]: Wieloletnia
+            - generic [ref=e489]: łatwa
+            - generic [ref=e490]:
+              - img [ref=e491]
+              - text: półcień
+        - link "Estragon rosyjski Zioło Russian Tarragon · Artemisia dracunculus subsp. dracunculoides Wieloletnia łatwa pełne słońce" [ref=e497] [cursor=pointer]:
+          - /url: /library/tarragon-russian
+          - generic [ref=e499]:
+            - heading "Estragon rosyjski" [level=2] [ref=e500]
+            - generic [ref=e501]: Zioło
+          - paragraph [ref=e502]: Russian Tarragon · Artemisia dracunculus subsp. dracunculoides
+          - generic [ref=e503]:
+            - generic [ref=e504]: Wieloletnia
+            - generic [ref=e505]: łatwa
+            - generic [ref=e506]:
+              - img [ref=e507]
+              - text: pełne słońce
+        - link "Hyzop lekarski Zioło Hyssop · Hyssopus officinalis Wieloletnia łatwa pełne słońce" [ref=e513] [cursor=pointer]:
+          - /url: /library/hyssop
+          - generic [ref=e515]:
+            - heading "Hyzop lekarski" [level=2] [ref=e516]
+            - generic [ref=e517]: Zioło
+          - paragraph [ref=e518]: Hyssop · Hyssopus officinalis
+          - generic [ref=e519]:
+            - generic [ref=e520]: Wieloletnia
+            - generic [ref=e521]: łatwa
+            - generic [ref=e522]:
+              - img [ref=e523]
+              - text: pełne słońce
+        - link "Kłosowiec anyżowy Zioło Anise Hyssop · Agastache foeniculum Wieloletnia łatwa pełne słońce" [ref=e529] [cursor=pointer]:
+          - /url: /library/anise-hyssop
+          - generic [ref=e531]:
+            - heading "Kłosowiec anyżowy" [level=2] [ref=e532]
+            - generic [ref=e533]: Zioło
+          - paragraph [ref=e534]: Anise Hyssop · Agastache foeniculum
+          - generic [ref=e535]:
+            - generic [ref=e536]: Wieloletnia
+            - generic [ref=e537]: łatwa
+            - generic [ref=e538]:
+              - img [ref=e539]
+              - text: pełne słońce
+        - link "Koper ogrodowy Zioło Dill · Anethum graveolens Jednoroczna łatwa pełne słońce" [ref=e545] [cursor=pointer]:
+          - /url: /library/dill
+          - generic [ref=e547]:
+            - heading "Koper ogrodowy" [level=2] [ref=e548]
+            - generic [ref=e549]: Zioło
+          - paragraph [ref=e550]: Dill · Anethum graveolens
+          - generic [ref=e551]:
+            - generic [ref=e552]: Jednoroczna
+            - generic [ref=e553]: łatwa
+            - generic [ref=e554]:
+              - img [ref=e555]
+              - text: pełne słońce
+      - generic [ref=e561]:
+        - button "Poprzednia" [disabled] [ref=e562]
+        - generic [ref=e563]: Strona 1 z 3
+        - button "Następna" [ref=e564]

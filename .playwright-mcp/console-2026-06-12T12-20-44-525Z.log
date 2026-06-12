@@ -1,0 +1,3 @@
+[  847108ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.50.11/api/notifications:0
+[  847115ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.50.11/api/plants/library/marigold:0
+[  847117ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.50.11/api/plants/library/marigold/companions:0
