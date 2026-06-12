@@ -7,6 +7,7 @@ import { getLibraryCategories, searchLibrary } from '../api/library';
 import { EmptyState } from '../components/EmptyState';
 import { GridSkeleton } from '../components/Skeleton';
 import { useLibraryPlantName } from '../i18n/libraryName';
+import { prettifySlug } from '../i18n/slug';
 import type { Difficulty, LibraryListResponse, SunRequirement } from '../types';
 
 const LIFECYCLES = ['annual', 'biennial', 'perennial'];
@@ -174,7 +175,9 @@ export function LibraryPage() {
     if (tag)
       chips.push({
         key: 'tag',
-        label: t('library.chip.tag', { value: tag }),
+        label: t('library.chip.tag', {
+          value: t(`tag.${tag}`, { defaultValue: prettifySlug(tag) }),
+        }),
         onRemove: () => setFilter('tag', ''),
       });
     if (enriched)

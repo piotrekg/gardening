@@ -32,6 +32,7 @@ import { Skeleton } from '../components/Skeleton';
 import { TagChip } from '../components/TagChip';
 import { useBilingual } from '../i18n/bilingual';
 import { useLibraryPlantName } from '../i18n/libraryName';
+import { prettifySlug } from '../i18n/slug';
 import type {
   CompanionsResponse,
   Garden,
@@ -892,7 +893,7 @@ export function LibraryPlantPage() {
                         key={pest}
                         className="rounded-[2px] border border-line bg-paper px-2 py-0.5 text-[10px] text-ink-muted"
                       >
-                        {pest}
+                        {t(`pest.${pest}`, { defaultValue: prettifySlug(pest) })}
                       </span>
                     ))}
                   </div>
