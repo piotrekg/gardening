@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -61,6 +62,25 @@ type Image struct {
 	ImageAttribution string `json:"image_attribution"`
 }
 
+// enrichmentSearchText assembles the lowercased full-text blob (both languages)
+// from an enrichment record, plus disease names, so search covers everything we
+// know about a plant — its description, care guide, and problems.
+func enrichmentSearchText(e Enrichment) string {
+	parts := []string{
+		e.DescriptionPL, e.DescriptionEN, e.WateringDetailPL, e.WateringDetailEN,
+		e.FertilizingPL, e.FertilizingEN, e.LightPL, e.LightEN, e.SoilPL, e.SoilEN,
+		e.PruningPL, e.PruningEN, e.PropagationPL, e.PropagationEN,
+		e.HarvestDetailPL, e.HarvestDetailEN, e.OverwinteringPL, e.OverwinteringEN,
+		e.ToxicityPL, e.ToxicityEN,
+	}
+	parts = append(parts, e.TipsPL...)
+	parts = append(parts, e.TipsEN...)
+	for _, d := range e.Diseases {
+		parts = append(parts, d.NamePL, d.NameEN)
+	}
+	return strings.ToLower(strings.Join(parts, " "))
+}
+
 // applyEnrichment overlays the enrichment + image data onto the library rows and
 // repopulates plant_diseases. It re-runs when the overlay content changed or the
 // base library was just reseeded (which clears the overlay columns).
@@ -81,7 +101,12 @@ func applyEnrichment(db *gorm.DB, enrichmentRaw, imagesRaw []byte, force bool) e
 		return nil
 	}
 
+	// overlaySchema is bumped whenever the columns the overlay writes change, so a
+	// schema change forces a re-apply even when the source JSON is unchanged.
+	// v2: added search_ext (full-text content column).
+	const overlaySchema = "v2"
 	h := sha256.New()
+	h.Write([]byte(overlaySchema))
 	h.Write(enrichmentRaw)
 	h.Write(imagesRaw)
 	version := hex.EncodeToString(h.Sum(nil))
@@ -154,6 +179,7 @@ func applyEnrichment(db *gorm.DB, enrichmentRaw, imagesRaw []byte, force bool) e
 				"tips_pl":            marshalStrs(e.TipsPL),
 				"tips_en":            marshalStrs(e.TipsEN),
 				"enriched":           true,
+				"search_ext":         enrichmentSearchText(e),
 			}).Error; err != nil {
 				return fmt.Errorf("apply enrichment %s: %w", id, err)
 			}

@@ -672,6 +672,17 @@ export function LibraryPlantPage() {
         </div>
       </div>
 
+      {/* Status sentence directly under the hero — the "what now / what next"
+          answer is the first thing you read. */}
+      <div className="mx-auto max-w-6xl px-4 pt-8 md:px-8">
+        <SeasonCalendar
+          section="status"
+          sowMonths={plant.sow_months}
+          transplantMonths={plant.transplant_months}
+          harvestMonths={plant.harvest_months}
+        />
+      </div>
+
       {/* MAIN GRID */}
       <div className="mx-auto max-w-6xl px-4 pb-20 md:px-8">
         <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_300px] lg:gap-16">
@@ -697,10 +708,11 @@ export function LibraryPlantPage() {
               </div>
             )}
 
-            {/* Season timeline — borderless, sits directly on the parchment at
-                the very top of the content, before the description. */}
+            {/* Season timeline axis — borderless, at the top of the content
+                column (the status sentence lives up under the hero). */}
             <section className="mt-10">
               <SeasonCalendar
+                section="axis"
                 sowMonths={plant.sow_months}
                 transplantMonths={plant.transplant_months}
                 harvestMonths={plant.harvest_months}

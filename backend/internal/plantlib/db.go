@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // libraryRow maps a plant to the library_plants table. Array-valued fields are
@@ -262,18 +263,31 @@ func (l *Library) searchDB(f Filter, page, pageSize int) ([]*Plant, int) {
 	if f.EnrichedOnly {
 		q = q.Where("enriched = true")
 	}
-	if s := strings.ToLower(strings.TrimSpace(f.Query)); s != "" {
-		q = q.Where(`search_text LIKE ? ESCAPE '\'`, "%"+escapeLike(s)+"%")
+	// Full-text: every whitespace-separated term must appear (in any order) in
+	// the combined haystack of names/latin/family/tags (search_text) plus the
+	// rich enrichment content (search_ext). This handles multi-word queries and
+	// finds plants by what's written about them, not just their name.
+	query := strings.ToLower(strings.TrimSpace(f.Query))
+	terms := strings.Fields(query)
+	for _, term := range terms {
+		q = q.Where(`(search_text || ' ' || search_ext) LIKE ? ESCAPE '\'`, "%"+escapeLike(term)+"%")
 	}
 
 	var total int64
 	q.Count(&total)
 
 	var rows []libraryRow
-	// Promote the plants we actually have rich data for: fully enriched first,
-	// then those with at least an image, then the rest — alphabetical within each
-	// tier. This surfaces the well-documented, popular species ahead of the bare
-	// catalog long tail.
+	// Relevance: when searching, rank name hits above body-only hits (full phrase
+	// as a name prefix, then anywhere in the name), then fall back to the
+	// data-richness tiers (enriched first, then has-image), alphabetical within.
+	if query != "" {
+		nameHay := "lower(common_name_pl || ' ' || common_name_en || ' ' || latin_name)"
+		q = q.Order(clause.Expr{
+			SQL: "CASE WHEN " + nameHay + " LIKE ? ESCAPE '\\' THEN 0 " +
+				"WHEN " + nameHay + " LIKE ? ESCAPE '\\' THEN 1 ELSE 2 END",
+			Vars: []any{escapeLike(query) + "%", "%" + escapeLike(query) + "%"},
+		})
+	}
 	q.Order("enriched DESC").
 		Order("(image_url <> '') DESC").
 		Order("sort_key").

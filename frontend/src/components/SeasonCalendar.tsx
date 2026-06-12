@@ -18,6 +18,12 @@ interface SeasonCalendarProps {
   harvestMonths: number[];
   /** Injectable "now" for tests; defaults to the real clock. */
   today?: Date;
+  /**
+   * Which part to render. 'status' = just the eyebrow + status sentence (placed
+   * directly under the hero); 'axis' = just the lane timeline + month scale;
+   * 'both' (default) = the full component.
+   */
+  section?: 'both' | 'status' | 'axis';
 }
 
 /** Segment fill colors — copper is reserved for harvest + today only. */
@@ -71,6 +77,7 @@ export function SeasonCalendar({
   transplantMonths,
   harvestMonths,
   today,
+  section = 'both',
 }: SeasonCalendarProps) {
   const { t } = useTranslation();
   const locale = useDateFnsLocale();
@@ -195,7 +202,7 @@ export function SeasonCalendar({
 
   return (
     <div>
-      {hasPeriods && (
+      {section !== 'status' && hasPeriods && (
         <div className="mb-10 sm:mb-12">
           {/* AXIS — stacked lanes with a single today-line across all of them */}
           <div
@@ -280,15 +287,19 @@ export function SeasonCalendar({
         </div>
       )}
 
-      {/* Eyebrow: DZIŚ · {date} — below the axis */}
-      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-copper">
-        {t('calendar.seasonTrack.eyebrow', { date: todayLabel })}
-      </p>
+      {section !== 'axis' && (
+        <>
+          {/* Eyebrow: DZIŚ · {date} */}
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-copper">
+            {t('calendar.seasonTrack.eyebrow', { date: todayLabel })}
+          </p>
 
-      {/* Status sentence — below the axis */}
-      <p className="mt-3 max-w-[34ch] font-display text-[20px] font-semibold leading-[1.3] text-ink sm:text-[26px]">
-        {sentence}
-      </p>
+          {/* Status sentence */}
+          <p className="mt-3 max-w-[34ch] font-display text-[20px] font-semibold leading-[1.3] text-ink sm:text-[26px]">
+            {sentence}
+          </p>
+        </>
+      )}
     </div>
   );
 }

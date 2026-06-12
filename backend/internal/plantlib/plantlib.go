@@ -240,7 +240,14 @@ func (l *Library) Search(f Filter, page, pageSize int) ([]*Plant, int) {
 		if query != "" {
 			hay := strings.ToLower(p.CommonNamePL + " " + p.CommonNameEN + " " +
 				p.LatinName + " " + p.Family + " " + strings.Join(p.Tags, " "))
-			if !strings.Contains(hay, query) {
+			allTerms := true
+			for _, term := range strings.Fields(query) {
+				if !strings.Contains(hay, term) {
+					allTerms = false
+					break
+				}
+			}
+			if !allTerms {
 				continue
 			}
 		}
