@@ -24,7 +24,7 @@ import { getApiErrorMessage } from '../api/client';
 import { listGardens } from '../api/gardens';
 import { getLibraryPlant, getLibraryPlantCompanions } from '../api/library';
 import { addPlantToGarden } from '../api/plants';
-import { BotanicalOrnament, HeroBotanical } from '../components/BotanicalArt';
+import { HeroBotanical } from '../components/BotanicalArt';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { Modal } from '../components/Modal';
 import { SeasonCalendar } from '../components/SeasonCalendar';
@@ -697,6 +697,17 @@ export function LibraryPlantPage() {
               </div>
             )}
 
+            {/* Season timeline — borderless, sits directly on the parchment at
+                the very top of the content, before the description. */}
+            <section className="mt-10">
+              <SeasonCalendar
+                sowMonths={plant.sow_months}
+                transplantMonths={plant.transplant_months}
+                harvestMonths={plant.harvest_months}
+              />
+            </section>
+            <hr className="copper-rule my-12" />
+
             {/* Description with drop cap */}
             {description && (
               <section className="mt-10">
@@ -743,20 +754,6 @@ export function LibraryPlantPage() {
                 </section>
               </>
             )}
-
-            {/* Season timeline */}
-            <BotanicalOrnament />
-            <section>
-              <SectionHeader
-                eyebrow={t('libraryPlant.eyebrow.season')}
-                title={t('libraryPlant.seasonCalendar')}
-              />
-              <SeasonCalendar
-                sowMonths={plant.sow_months}
-                transplantMonths={plant.transplant_months}
-                harvestMonths={plant.harvest_months}
-              />
-            </section>
 
             {/* Tips */}
             {tips.length > 0 && (

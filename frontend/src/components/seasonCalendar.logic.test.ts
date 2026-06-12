@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
+  assignLanes,
   buildPeriods,
   daysUntilMonthStart,
   markerFraction,
+  periodsOverlap,
   selectState,
   toWarsawDate,
   type SeasonPeriod,
@@ -150,6 +152,45 @@ describe('selectState — year-wrap period', () => {
       // Days left to Feb 28, 2026 from Jan 10, 2026 = 49.
       expect(s.daysLeft).toBe(49);
     }
+  });
+});
+
+describe('assignLanes — greedy interval lane-assignment', () => {
+  it('puts two non-overlapping periods on the same lane', () => {
+    const a: SeasonPeriod = { kind: 'siew', startMonth: 3, endMonth: 4 };
+    const b: SeasonPeriod = { kind: 'zbior', startMonth: 7, endMonth: 9 };
+    expect(assignLanes([a, b])).toEqual<SeasonPeriod[][]>([[a, b]]);
+  });
+
+  it('puts two overlapping periods on separate lanes', () => {
+    // Transplanting (4-6) overlaps harvest (5-8) in May/June.
+    const a: SeasonPeriod = { kind: 'przesadzanie', startMonth: 4, endMonth: 6 };
+    const b: SeasonPeriod = { kind: 'zbior', startMonth: 5, endMonth: 8 };
+    expect(assignLanes([a, b])).toEqual<SeasonPeriod[][]>([[a], [b]]);
+  });
+
+  it('detects overlap with a year-wrapping period', () => {
+    // Wrapping harvest 11..2 occupies {11,12,1,2}; a Jan-Feb sowing overlaps it.
+    const wrap: SeasonPeriod = { kind: 'zbior', startMonth: 11, endMonth: 2 };
+    const winterSow: SeasonPeriod = { kind: 'siew', startMonth: 1, endMonth: 2 };
+    expect(periodsOverlap(wrap, winterSow)).toBe(true);
+    expect(assignLanes([wrap, winterSow])).toEqual<SeasonPeriod[][]>([[wrap], [winterSow]]);
+  });
+
+  it('shares a lane with a wrapping period when months do not overlap', () => {
+    // Wrapping harvest 11..2 occupies {11,12,1,2}; a May-July sowing fits beside it.
+    const wrap: SeasonPeriod = { kind: 'zbior', startMonth: 11, endMonth: 2 };
+    const summerSow: SeasonPeriod = { kind: 'siew', startMonth: 5, endMonth: 7 };
+    expect(periodsOverlap(wrap, summerSow)).toBe(false);
+    expect(assignLanes([wrap, summerSow])).toEqual<SeasonPeriod[][]>([[wrap, summerSow]]);
+  });
+
+  it('packs three periods into two lanes (greedy)', () => {
+    const a: SeasonPeriod = { kind: 'siew', startMonth: 3, endMonth: 5 };
+    const b: SeasonPeriod = { kind: 'przesadzanie', startMonth: 4, endMonth: 6 };
+    const c: SeasonPeriod = { kind: 'zbior', startMonth: 7, endMonth: 9 };
+    // a + c share lane 0 (no overlap); b overlaps a so goes to lane 1.
+    expect(assignLanes([a, b, c])).toEqual<SeasonPeriod[][]>([[a, c], [b]]);
   });
 });
 

@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { useDateFnsLocale } from '../i18n/dateLocale';
 import {
+  assignLanes,
   buildPeriods,
   markerFraction,
   type PeriodKind,
@@ -26,43 +27,44 @@ const KIND_COLOR: Record<PeriodKind, string> = {
   zbior: '#B5672A', // copper
 };
 
+/** Vertical rhythm of the stacked lanes (px). */
+const LANE_HEIGHT = 13;
+const LANE_GAP = 22;
+
 interface Segment {
   kind: PeriodKind;
   leftPct: number;
   widthPct: number;
-  /** Center of this visual segment, 0-100. */
-  centerPct: number;
   /** True for the segment that should carry the period's label. */
   labelled: boolean;
-  /** When true, push the label below the track to avoid overlap. */
-  labelBelow: boolean;
 }
 
 /** Expand a (possibly wrapping) period into one or two visual segments. */
 function periodToSegments(period: SeasonPeriod): Segment[] {
-  const seg = (startMonth: number, endMonth: number): Omit<Segment, 'labelled' | 'labelBelow'> => {
+  const seg = (startMonth: number, endMonth: number): Omit<Segment, 'labelled'> => {
     const leftPct = ((startMonth - 1) / 12) * 100;
     const widthPct = ((endMonth - startMonth + 1) / 12) * 100;
-    return { kind: period.kind, leftPct, widthPct, centerPct: leftPct + widthPct / 2 };
+    return { kind: period.kind, leftPct, widthPct };
   };
 
   if (period.endMonth >= period.startMonth) {
-    return [{ ...seg(period.startMonth, period.endMonth), labelled: true, labelBelow: false }];
+    return [{ ...seg(period.startMonth, period.endMonth), labelled: true }];
   }
   // Wrapping period: startMonth..12 and 1..endMonth. Label rides the longer one.
   const tail = seg(period.startMonth, 12);
   const head = seg(1, period.endMonth);
   const tailLonger = tail.widthPct >= head.widthPct;
   return [
-    { ...tail, labelled: tailLonger, labelBelow: false },
-    { ...head, labelled: !tailLonger, labelBelow: false },
+    { ...tail, labelled: tailLonger },
+    { ...head, labelled: !tailLonger },
   ];
 }
 
 /**
- * Per-plant "Kalendarz sezonowy" — a single-track answer to "what do I do with
- * this plant now, and what's next": a status sentence, a today marker, and a
- * year axis with period segments. Replaces the old 3×12 grid.
+ * Per-plant "Kalendarz sezonowy" — a borderless answer to "what do I do with
+ * this plant now, and what's next". The year axis comes first: periods are
+ * stacked into non-overlapping lanes with a single copper today-line spanning
+ * all lanes, then the status sentence + eyebrow sit below it.
  */
 export function SeasonCalendar({
   sowMonths,
@@ -80,6 +82,8 @@ export function SeasonCalendar({
     () => buildPeriods(sowMonths, transplantMonths, harvestMonths),
     [sowMonths, transplantMonths, harvestMonths],
   );
+
+  const lanes = useMemo(() => assignLanes(periods), [periods]);
 
   const state = useMemo(() => selectState(periods, warsaw), [periods, warsaw]);
 
@@ -164,24 +168,10 @@ export function SeasonCalendar({
 
   const hasPeriods = periods.length > 0;
 
-  // ---- Axis geometry ----
-  const segments: Segment[] = useMemo(() => {
-    const all = periods.flatMap(periodToSegments);
-    // Resolve label collisions: if two labelled segment centers are within ~9%
-    // of each other, push the shorter one's label below the track.
-    const labelled = all.filter((s) => s.labelled);
-    for (let i = 0; i < labelled.length; i++) {
-      for (let j = i + 1; j < labelled.length; j++) {
-        if (Math.abs(labelled[i].centerPct - labelled[j].centerPct) < 9) {
-          const shorter = labelled[i].widthPct <= labelled[j].widthPct ? labelled[i] : labelled[j];
-          shorter.labelBelow = true;
-        }
-      }
-    }
-    return all;
-  }, [periods]);
-
   const markerLeftPct = markerFraction(warsaw) * 100;
+
+  // Total height of the stacked-lane block.
+  const lanesHeight = lanes.length * LANE_HEIGHT + Math.max(0, lanes.length - 1) * LANE_GAP;
 
   // Month scale labels at positions 1, 4, 7, 10 (Jan, Apr, Jul, Oct).
   const scaleMonths = [1, 4, 7, 10];
@@ -204,65 +194,75 @@ export function SeasonCalendar({
   });
 
   return (
-    <div
-      className="rounded-[14px] border border-line bg-surface px-[18px] py-6 sm:px-[30px] sm:pb-[38px] sm:pt-[34px]"
-    >
-      {/* Eyebrow: DZIŚ · {date} */}
-      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-copper">
-        {t('calendar.seasonTrack.eyebrow', { date: todayLabel })}
-      </p>
-
-      {/* Status sentence */}
-      <p className="mt-3 max-w-[26ch] font-display text-[20px] font-semibold leading-[1.3] text-ink sm:text-[26px]">
-        {sentence}
-      </p>
-
+    <div>
       {hasPeriods && (
-        <div className="mt-10">
-          {/* Track + segments + today marker */}
+        <div className="mb-10 sm:mb-12">
+          {/* AXIS — stacked lanes with a single today-line across all of them */}
           <div
             role="img"
             aria-label={axisLabel}
             className="relative"
-            style={{ height: 14 }}
+            style={{ height: lanesHeight }}
           >
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{ backgroundColor: 'var(--parchment-mid)' }}
-            />
-            {segments.map((s, i) => (
-              <div key={i} className="absolute" style={{ left: `${s.leftPct}%`, width: `${s.widthPct}%`, top: 0, bottom: 0 }}>
+            {lanes.map((lane, laneIdx) => {
+              const segments = lane.flatMap(periodToSegments);
+              return (
                 <div
-                  className="season-seg h-full rounded-full"
-                  style={{ backgroundColor: KIND_COLOR[s.kind] }}
-                />
-                {s.labelled && (
-                  <span
-                    className="pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-track"
-                    style={s.labelBelow ? { top: 'calc(100% + 8px)' } : { top: -24 }}
-                  >
-                    {kindLabel(s.kind)}
-                  </span>
-                )}
-              </div>
-            ))}
+                  key={laneIdx}
+                  className="absolute inset-x-0"
+                  style={{ top: laneIdx * (LANE_HEIGHT + LANE_GAP), height: LANE_HEIGHT }}
+                >
+                  {/* Lane track */}
+                  <div
+                    className="absolute inset-0 rounded-full"
+                    style={{ backgroundColor: 'var(--parchment-mid)' }}
+                  />
+                  {segments.map((s, i) => (
+                    <div
+                      key={i}
+                      className="absolute"
+                      style={{ left: `${s.leftPct}%`, width: `${s.widthPct}%`, top: 0, bottom: 0 }}
+                    >
+                      <div
+                        className="season-seg h-full rounded-full"
+                        style={{ backgroundColor: KIND_COLOR[s.kind] }}
+                      />
+                      {s.labelled && (
+                        <span
+                          className="pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-track"
+                          style={{ bottom: 'calc(100% + 5px)' }}
+                        >
+                          {kindLabel(s.kind)}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
 
-            {/* Today marker */}
-            <span
-              className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-              style={{
-                left: `${markerLeftPct}%`,
-                width: 22,
-                height: 22,
-                backgroundColor: 'var(--color-surface)',
-                border: '4px solid var(--copper)',
-                boxShadow: '0 0 0 4px rgba(181,103,42,0.15)',
-              }}
+            {/* Today marker — single copper line across all lanes + cap dot */}
+            <div
+              className="pointer-events-none absolute top-0 bottom-0 -translate-x-1/2"
+              style={{ left: `${markerLeftPct}%`, width: 2 }}
               aria-hidden="true"
-            />
+            >
+              <div
+                className="absolute inset-y-0 left-1/2 -translate-x-1/2"
+                style={{
+                  width: 2,
+                  backgroundColor: 'var(--copper)',
+                  boxShadow: '0 0 6px rgba(181,103,42,0.35)',
+                }}
+              />
+              <span
+                className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                style={{ width: 9, height: 9, backgroundColor: 'var(--copper)' }}
+              />
+            </div>
           </div>
 
-          {/* Month scale */}
+          {/* Month scale — full width below the lanes */}
           <div className="mt-[14px] grid grid-cols-12">
             {Array.from({ length: 12 }, (_, i) => {
               const m = i + 1;
@@ -279,6 +279,16 @@ export function SeasonCalendar({
           </div>
         </div>
       )}
+
+      {/* Eyebrow: DZIŚ · {date} — below the axis */}
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-copper">
+        {t('calendar.seasonTrack.eyebrow', { date: todayLabel })}
+      </p>
+
+      {/* Status sentence — below the axis */}
+      <p className="mt-3 max-w-[34ch] font-display text-[20px] font-semibold leading-[1.3] text-ink sm:text-[26px]">
+        {sentence}
+      </p>
     </div>
   );
 }

@@ -113,6 +113,55 @@ export function buildPeriods(
   ];
 }
 
+/**
+ * Set of months (1-12) a period occupies, accounting for year-wrap. A wrapping
+ * period (endMonth < startMonth) occupies [startMonth..12] plus [1..endMonth].
+ */
+function periodMonths(period: SeasonPeriod): Set<number> {
+  const months = new Set<number>();
+  if (period.endMonth >= period.startMonth) {
+    for (let m = period.startMonth; m <= period.endMonth; m++) months.add(m);
+  } else {
+    for (let m = period.startMonth; m <= 12; m++) months.add(m);
+    for (let m = 1; m <= period.endMonth; m++) months.add(m);
+  }
+  return months;
+}
+
+/** True when two periods share at least one calendar month (wrap-aware). */
+export function periodsOverlap(a: SeasonPeriod, b: SeasonPeriod): boolean {
+  const months = periodMonths(a);
+  for (const m of periodMonths(b)) {
+    if (months.has(m)) return true;
+  }
+  return false;
+}
+
+/**
+ * Greedy interval lane-assignment. Periods are placed into the lowest-indexed
+ * lane whose already-placed periods do not overlap (wrap-aware) with the
+ * incoming period. Two periods may share a lane only if their month ranges do
+ * NOT overlap. Input order is preserved within each lane.
+ *
+ * Returns an array of lanes, each lane being the list of periods on that row,
+ * in the order siew, przesadzanie, zbior as produced by buildPeriods.
+ */
+export function assignLanes(periods: SeasonPeriod[]): SeasonPeriod[][] {
+  const lanes: SeasonPeriod[][] = [];
+  for (const period of periods) {
+    let placed = false;
+    for (const lane of lanes) {
+      if (lane.every((p) => !periodsOverlap(p, period))) {
+        lane.push(period);
+        placed = true;
+        break;
+      }
+    }
+    if (!placed) lanes.push([period]);
+  }
+  return lanes;
+}
+
 /** True when `month` (1-12) falls inside the period, accounting for wrap. */
 export function periodContainsMonth(period: SeasonPeriod, month: number): boolean {
   if (period.endMonth >= period.startMonth) {
